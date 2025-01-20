@@ -1,0 +1,62 @@
+
+services:
+  postgres:
+    restart: always
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    image: trascendence_postgres:latest
+    container_name: postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - trascendence
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  backend_user:
+    depends_on:
+      - postgres
+    container_name: backend_user
+    build:
+      context: .
+      dockerfile: docker/backend_user/Dockerfile
+    image: trascendence_backend_user:latest
+    volumes:
+      - ./services/user_service:/app
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    networks:
+      - trascendence
+    restart: always
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: nginx
+    image: trascendence_nginx:latest
+    ports:
+      - "3042:3042"
+    networks:
+      - trascendence
+    restart: always
+    depends_on:
+      - backend_user
+
+networks:
+  trascendence:
+    name: trascendence
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: "/Users/asiercara/Documents/proyectos_separados/ft_transcendence42/data/postgres"
+      o: bind
