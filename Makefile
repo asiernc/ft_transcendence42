@@ -1,6 +1,6 @@
 up:
-	@if [ ! -d "./docker/postgres/db" ]; then \
-		mkdir -p "./docker/postgres/db"; \
+	@if [ ! -d "./data/postgres" ]; then \
+		mkdir -p "./data/postgres"; \
 	fi
 	docker compose -f docker-compose.yml up
 
