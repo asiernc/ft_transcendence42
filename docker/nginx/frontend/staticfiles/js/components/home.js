@@ -31,8 +31,6 @@ export default class HomeComponent extends HTMLElement {
         `;
         shadow.appendChild(style);
         shadow.appendChild(div);
-
-        this.attachListeners();
 	}
 }
 

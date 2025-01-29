@@ -88,7 +88,7 @@ export default class LoginComponent extends HTMLElement {
 				if (response.ok) {
 					document.cookie = `access_token=${data.token}; path=/`;
                     document.cookie = `refresh_token=${data.refresh}; path=/`;
-                    window.location.href = '/';
+                    navigateTo('/home');
 				} else {
 					this.shadowRoot.getElementById('message').textContent = data.error;
 				}
