@@ -19,7 +19,7 @@ echo "Running migrations..."
 python3 manage.py makemigrations
 python3 manage.py migrate
 
-python3 manage.py collectstatic --no-input
+python3 manage.py collectstatic --no-input --settings=users.settings
 
 echo "Starting Django server..."
-python3 manage.py runserver 0.0.0.0:8001
+python3 manage.py runserver 0.0.0.0:8001  --settings=users.settings

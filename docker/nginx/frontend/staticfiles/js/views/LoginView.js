@@ -1,7 +1,7 @@
-import LoginComponent from "../components/login";
+import LoginComponent from "../components/login.js";
 
-export function loginView() {
+export function LoginView() {
 	return `
-			<login-form></login-form>
+			<login-component></login-component>
 	`;
 }

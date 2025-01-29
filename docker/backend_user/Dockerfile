@@ -3,15 +3,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY services/user_service/requirements.txt requirements.txt
-COPY services/user_service /app
+COPY users/requirements.txt requirements.txt
+COPY users /app
 
 # Make setup.sh executable
-RUN chmod +x scripts/setup.sh
+RUN chmod +x setup.sh
 
 # Establecer las variables de entorno necesarias
-ENV DJANGO_SETTINGS_MODULE=user_service.settings
+ENV DJANGO_SETTINGS_MODULE=users.settings
 
 EXPOSE 8001
 
-CMD ["./scripts/setup.sh"]
+CMD ["./setup.sh"]

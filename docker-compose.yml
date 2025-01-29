@@ -19,13 +19,13 @@ services:
   backend_user:
     depends_on:
       - postgres
-    container_name: backend_user
+    container_name: users
     build:
       context: .
       dockerfile: docker/backend_user/Dockerfile
     image: transcendence_backend_user:latest
     volumes:
-      - ./services/user_service:/app
+      - ./users:/app
     ports:
       - "8001:8001"
     env_file:
