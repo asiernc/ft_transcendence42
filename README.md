@@ -8,7 +8,7 @@ chmod 755 data/postgres
 vim .env
 
 ENVIRONMENT
-
+´´´
 DJANGO_SECRET_KEY=leviosa4242
 
 
@@ -20,10 +20,10 @@ POSTGRES_PASSWORD=leviosa
 POSTGRES_DB=transcendence
 POSTGRES_EMAIL=harryasecas
 
-# DJANGO CREDENTIALS
+#DJANGO CREDENTIALS
 DJANGO_SUPERUSER_USERNAME=harryasecas
 DJANGO_SUPERUSER_PASSWORD=leviosa
-
+´´´
 
 make up
 
