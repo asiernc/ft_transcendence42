@@ -5,7 +5,7 @@ services:
     build:
       context: ./docker/postgres
       dockerfile: Dockerfile
-    image: transcendence_postgres:latest
+    image: postgres:latest
     container_name: postgres
     env_file:
       - .env
@@ -23,7 +23,6 @@ services:
     build:
       context: .
       dockerfile: docker/backend_user/Dockerfile
-    image: transcendence_backend_user:latest
     volumes:
       - ./users:/app
     ports:
@@ -39,11 +38,10 @@ services:
       context: .
       dockerfile: docker/nginx/Dockerfile
     container_name: nginx
-    image: transcendence_nginx:latest
     ports:
       - "3042:3042"
     volumes:
-      - frontend_data:/usr/share/nginx/frontend
+      - ./docker/nginx/frontend:/usr/share/nginx/frontend
     networks:
       - transcendence
     restart: always
@@ -61,10 +59,4 @@ volumes:
     driver_opts:
       type: none
       device: "/Users/asiercara/Documents/proyectos_separados/ft_transcendence42/data/postgres"
-      o: bind
-  frontend_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: "./docker/nginx/frontend"
       o: bind
