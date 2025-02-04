@@ -15,6 +15,10 @@ echo "Installing requirements..."
 pip install --upgrade pip
 pip install -r requirements.txt
 
+echo "Cleaning up old migrations and cache..."
+rm -rf users/api/migrations/*
+find . -name "__pycache__" -exec rm -rf {} +
+
 echo "Running migrations..."
 python3 manage.py makemigrations
 python3 manage.py migrate
