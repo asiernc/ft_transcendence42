@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import User
 from api.serializer import UserSerializer
 
@@ -9,25 +10,25 @@ from api.serializer import UserSerializer
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def getUsers(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
-    return Response(serializer.data)
+	users = User.objects.all()
+	serializer = UserSerializer(users, many=True)
+	return Response(serializer.data)
 
 #get user by id
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def getUser(request, pk):
-    try:
-        user = User.objects.get(id=pk)
-    except User.DoesNotExist:
-        return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-    serializer = UserSerializer(user, many=False, context={'request': request})
-    return Response(serializer.data)
+	try:
+		user = User.objects.get(id=pk)
+	except User.DoesNotExist:
+		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+	serializer = UserSerializer(user, many=False, context={'request': request})
+	return Response(serializer.data)
 
 #create user
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def createUser(request):
+def register_user(request):
 	serializer = UserSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
