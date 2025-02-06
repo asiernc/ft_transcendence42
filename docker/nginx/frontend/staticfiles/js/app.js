@@ -1,9 +1,13 @@
 import { HomeView } from './views/HomeView.js';
 import { LoginView } from './views/LoginView.js';
+import { RegisterView } from './views/RegisterView.js';
+import { OTPView } from './views/OTPView.js';
 
 const routes = {
 	'/home': HomeView,
     '/login': LoginView,
+    '/register': RegisterView,
+    '/otp': OTPView,
 };
 
 function handleRoute() {
@@ -18,7 +22,7 @@ function navigateTo(path) {
 }
 
 window.addEventListener('load', () => {
-        navigateTo('/login');
+        navigateTo('/register');
 });
 window.addEventListener('popstate', handleRoute);
 

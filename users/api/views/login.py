@@ -24,7 +24,7 @@ class UserLoginView(generics.GenericAPIView):
 			raise AuthenticationFailed('User not found.')
 
 		otp_random_code = random.randint(100000, 999999)
-		user.otp = otp_random_code
+		user.otp = str(otp_random_code)
 		user.otp_expire = timezone.now() + timedelta(minutes=15)
 		user.save()
 		
@@ -43,7 +43,7 @@ class UserLoginView(generics.GenericAPIView):
 @permission_classes([AllowAny])
 def verify_otp(request):
 	username = request.data.get('username')
-	otp_code = request.data.get('otp')
+	otp_code = request.data.get('otp_code')
 	
 	try:
 		user = User.objects.get(username=username)

@@ -1,6 +1,6 @@
 import { navigateTo } from '../app.js';
 
-export default class LoginComponent extends HTMLElement {
+export default class OTPComponent extends HTMLElement {
 	constructor() {
 		super();
 
@@ -49,9 +49,8 @@ export default class LoginComponent extends HTMLElement {
                 flex-direction: column;
                 align-content: center;
                 justify-content: space-between;
-                background-color: red;
                 padding: 2vw;
-                width: min-content;
+                width: 50vw;
                 height: min-content;
                 margin-top: 3vh;
                 margin-bottom: 3vh;
@@ -69,9 +68,14 @@ export default class LoginComponent extends HTMLElement {
             }
 
             .form-container {
-                height: min-content;
-                width: min-content;
-                margin: 2vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-content: center;
+                margin-left: 3vw;
+                margin-right: 3vw;
+                margin-top: 0;
+                margin-bottom: 2vh;
             }
 
             img {
@@ -86,7 +90,13 @@ export default class LoginComponent extends HTMLElement {
             }
 
             .title {
-                font-size: 40px;
+                font-size: 30px;
+            }
+
+            .subtitle {
+                text-align: center;
+                font-size: 10px;
+                opacity: 0.7;
             }
 
             @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
@@ -124,18 +134,6 @@ export default class LoginComponent extends HTMLElement {
                 animation: animate var(--speed-fast) steps(8) forwards;
             }
 
-            #a2 {
-                border: 1px solid var(--color-purple);
-            }
-            #a2:hover {
-                border: 1px solid transparent;
-                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
-                transition-delay: 0.8s;
-                background-size: 180px;
-                animation: animate var(--speed-fast) steps(8) forwards;
-                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
-            }
-
             @keyframes animate {
                 0% {
                 background-position-y: 0;
@@ -143,19 +141,6 @@ export default class LoginComponent extends HTMLElement {
                 100% {
                     background-position-y: -480px;
                 }
-            }
-
-            .separator {
-                width: 100%; 
-                text-align: center; 
-                border-bottom: 2px solid #31353C; 
-                line-height: 0.1em;
-                margin: 10px 0 20px;
-            } 
-            
-            .separator span {
-                background:#D9D9D9; 
-                padding:0 10px; 
             }
         `;
 
@@ -167,30 +152,18 @@ export default class LoginComponent extends HTMLElement {
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                 </div>
-                <div class="from-container m-4">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <p class="pixel-font title">LOG IN</p>
+                <div class="form-container">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <p class="pixel-font title">OTP VERIFY</p>
+                        <p class="pixel-font subtitle">Please enter the code sended to you email to verify your identity.</p>
                     </div>
-                    <form>
-                        <div class="mb-3">
-                            <label for="name" class="form-label pixel-font">Username</label>
-                            <input type="name" class="form-control" id="name" name="name" required>
-                        </div>
-                
-                        <div class="mb-3">
-                            <label for="password" class="form-label pixel-font">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                
-                        <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
-                            Invalid Username or Password. Please try again.
-                        </div>
-                        <a id="a2" href="javascript:void(0);" type="submit" class="pixel-font">Log In</a>
+                    <form class="d-flex justify-content-center align-items-center">
+                        <input type="number" class="form-control" style="text-align: center;" id="otp_code" name="otp_code" required max="999999">
                     </form>
-                    <div class="mt-3 pixel-font separator">
-                        <span class="d-none d-xl-inline" style="font-size: 12px;">Or if you are alredy registred</span>
+                    <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
+                        OTP code is incorrect. Please try again.
                     </div>
-                    <a id="a1" href="javascript:void(0);" class="pixel-font">Register</a>
+                    <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -198,6 +171,7 @@ export default class LoginComponent extends HTMLElement {
                 </div>
             </div>
 		`;
+
 		this.appendChild(style);
         div.className = 'bg';
 		this.appendChild(div);
@@ -206,59 +180,53 @@ export default class LoginComponent extends HTMLElement {
 	}
 
 	attachListeners() {
-		document.getElementById("a2").addEventListener("click", async function (e) {
-			e.preventDefault();
-
-            const alertMsg = document.getElementById("alert");
-            alertMsg.style.display = "none";
-
+        document.getElementById("a1").addEventListener("click", async function ()
+        {
             const form = document.querySelector("form");
-    
+
+            const otp_code = document.getElementById("otp_code");
+
             if (form.checkValidity())
-            {
-                const username = document.getElementById('name').value;
-                const password = document.getElementById('password').value;
-    
-                try {
-                    
-    
-                    const response = await fetch('/api/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ username, password })
-                    });
+                {
+                    try
+                    {
+                        document.getElementById("alert").style.display = "none";
+
+                        const response = await fetch('/api/verify-otp', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ 
+                                'username': localStorage.getItem("username"),
+                                'otp_code': otp_code.value,
+                            })
+                        });
     
                     const data = await response.json();
-    
-                    if (response.ok) {
-                        localStorage.setItem("username", username);
-                        navigateTo('/otp');
-                    } else {
-                        console.log(data.error);
-                        alertMsg.style.display = "flex";
+                    if (response.ok)
+                    {
+                        document.cookie = `access_token=${data.token}; path=/`;
+                        document.cookie = `refresh_token=${data.refresh}; path=/`;
+                        navigateTo('/home');
                     }
+                    else
+                    {
+                        console.log(data.error);
+                        document.getElementById("alert").style.display = "block";
+                    }
+                } catch (err) {
+                   console.log("Error: Problem sending the petition");
                 }
-                catch (err) {
-                    console.log("Error: Problem sending the petition");
-                }
-                
             } else {
                 form.reportValidity();
             }
-			
-		});
-
-        document.getElementById("a1").addEventListener("click", async function () {
-            navigateTo("/register");
         });
 	}
 
 	disconnectedCallback() {
 		this.querySelector("form").removeEventListener('submit', this);
-        this.querySelector("a").removeEventListener('click', this);
 	}
 }
 
-window.customElements.define('login-component', LoginComponent);
+window.customElements.define('otp-component', OTPComponent);

@@ -1,6 +1,6 @@
 import { navigateTo } from '../app.js';
 
-export default class LoginComponent extends HTMLElement {
+export default class RegisterComponent extends HTMLElement {
 	constructor() {
 		super();
 
@@ -49,12 +49,9 @@ export default class LoginComponent extends HTMLElement {
                 flex-direction: column;
                 align-content: center;
                 justify-content: space-between;
-                background-color: red;
                 padding: 2vw;
                 width: min-content;
                 height: min-content;
-                margin-top: 3vh;
-                margin-bottom: 3vh;
                 min-width: 50vw;
                 background-color: #D9D9D9;
                 border: 4px solid#31353C ;
@@ -70,8 +67,17 @@ export default class LoginComponent extends HTMLElement {
 
             .form-container {
                 height: min-content;
-                width: min-content;
-                margin: 2vw;
+                margin-top: 0;
+                margin-left: 2vw;
+                margin-right: 2vw;
+                margin-bottom: 2vh;
+            }
+
+            label {
+                font-size: 10px;
+            }
+            input {
+                height: 6vh;
             }
 
             img {
@@ -86,7 +92,7 @@ export default class LoginComponent extends HTMLElement {
             }
 
             .title {
-                font-size: 40px;
+                font-size: 20px;
             }
 
             @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
@@ -104,13 +110,12 @@ export default class LoginComponent extends HTMLElement {
                 align-items: center;
                 position: relative;
                 width: 100%;
-                height: 50px;
-                letter-spacing: 2px;
+                height: 40px;
                 text-decoration: none;
-                text-transform: uppercase;
                 text-align: center;
                 color: var(--color-white);
                 transition: var(--speed-normal);
+                font-size: 15px;
             }
 
             #a1 {
@@ -153,7 +158,7 @@ export default class LoginComponent extends HTMLElement {
                 margin: 10px 0 20px;
             } 
             
-            .separator span {
+            .separator span { 
                 background:#D9D9D9; 
                 padding:0 10px; 
             }
@@ -167,30 +172,37 @@ export default class LoginComponent extends HTMLElement {
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                 </div>
-                <div class="from-container m-4">
+                <div class="form-container">
                     <div class="d-flex justify-content-center align-items-center">
-                        <p class="pixel-font title">LOG IN</p>
+                        <p class="pixel-font title">REGISTER</p>
                     </div>
                     <form>
-                        <div class="mb-3">
-                            <label for="name" class="form-label pixel-font">Username</label>
-                            <input type="name" class="form-control" id="name" name="name" required>
+                        <div class="mb-1">
+                            <label for="name" class="form-label pixel-font mb-1">Username</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+
+                        <div class="mb-1">
+                            <label for="email" class="form-label pixel-font mb-1">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                 
-                        <div class="mb-3">
-                            <label for="password" class="form-label pixel-font">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="mb-1">
+                            <label for="password" class="form-label pixel-font mb-1">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                        </div>
+
+                        <div class="mb-1">
+                            <label for="repeatPassword" class="form-label pixel-font mb-1">Repeat password</label>
+                            <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required>
                         </div>
                 
-                        <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
-                            Invalid Username or Password. Please try again.
-                        </div>
-                        <a id="a2" href="javascript:void(0);" type="submit" class="pixel-font">Log In</a>
+                        <a id="a1" href="javascript:void(0);" type="submit" class="pixel-font mt-4">REGISTER</a>
                     </form>
                     <div class="mt-3 pixel-font separator">
-                        <span class="d-none d-xl-inline" style="font-size: 12px;">Or if you are alredy registred</span>
+                        <span class="d-none d-xl-inline" style="font-size: 10px;">Or if you are alredy registred</span>
                     </div>
-                    <a id="a1" href="javascript:void(0);" class="pixel-font">Register</a>
+                    <a id="a2" href="javascript:void(0);" class="pixel-font">LOG IN</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -198,6 +210,7 @@ export default class LoginComponent extends HTMLElement {
                 </div>
             </div>
 		`;
+
 		this.appendChild(style);
         div.className = 'bg';
 		this.appendChild(div);
@@ -206,52 +219,60 @@ export default class LoginComponent extends HTMLElement {
 	}
 
 	attachListeners() {
-		document.getElementById("a2").addEventListener("click", async function (e) {
-			e.preventDefault();
-
-            const alertMsg = document.getElementById("alert");
-            alertMsg.style.display = "none";
-
+        document.getElementById("a1").addEventListener("click", async function ()
+        {
             const form = document.querySelector("form");
-    
+
+            const username = document.getElementById("name");
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+            const repeatPassword = document.getElementById("repeatPassword");
+            
+            if (!/[A-Z]/.test(password.value) || !/[a-z]/.test(password.value) || !/[0-9]/.test(password.value)) {
+                password.setCustomValidity("lowercase, uppercase, and digit required");
+            } else {
+                password.setCustomValidity("");
+            }
+
+            if (password.value !== repeatPassword.value) {
+                repeatPassword.setCustomValidity("Passwords don't match");
+            } else {
+                repeatPassword.setCustomValidity("");
+            }
+            
             if (form.checkValidity())
-            {
-                const username = document.getElementById('name').value;
-                const password = document.getElementById('password').value;
-    
-                try {
-                    
-    
-                    const response = await fetch('/api/login', {
+                {
+                    try
+                    {
+                    const response = await fetch('/api/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ username, password })
+                        body: JSON.stringify({ 
+                            'username': username.value,
+                            'email': email.value, 
+                            'password': password.value,
+                            'password_check': repeatPassword.value,
+                        })
                     });
     
                     const data = await response.json();
-    
-                    if (response.ok) {
-                        localStorage.setItem("username", username);
-                        navigateTo('/otp');
-                    } else {
+                    if (response.ok)
+                        navigateTo('/login');
+                    else
                         console.log(data.error);
-                        alertMsg.style.display = "flex";
-                    }
+
+                } catch (err) {
+                   console.log("Error: Problem sending the petition");
                 }
-                catch (err) {
-                    console.log("Error: Problem sending the petition");
-                }
-                
             } else {
                 form.reportValidity();
             }
-			
-		});
+        });
 
-        document.getElementById("a1").addEventListener("click", async function () {
-            navigateTo("/register");
+        document.getElementById("a2").addEventListener("click", function () {
+            navigateTo('/login');
         });
 	}
 
@@ -261,4 +282,4 @@ export default class LoginComponent extends HTMLElement {
 	}
 }
 
-window.customElements.define('login-component', LoginComponent);
+window.customElements.define('register-component', RegisterComponent);
