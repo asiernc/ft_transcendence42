@@ -2,12 +2,18 @@ import { HomeView } from './views/HomeView.js';
 import { LoginView } from './views/LoginView.js';
 import { RegisterView } from './views/RegisterView.js';
 import { OTPView } from './views/OTPView.js';
+import { PlayView } from './views/PlayView.js';
+import { OptionsGameView } from './views/OptionsGameView.js';
+import { GameView } from './views/GameView.js'
 
 const routes = {
 	'/home': HomeView,
     '/login': LoginView,
     '/register': RegisterView,
     '/otp': OTPView,
+    '/play': PlayView,
+    '/options_game': OptionsGameView,
+    '/game': GameView,
 };
 
 function handleRoute() {
@@ -22,7 +28,7 @@ function navigateTo(path) {
 }
 
 window.addEventListener('load', () => {
-        navigateTo('/register');
+        navigateTo('/home');
 });
 window.addEventListener('popstate', handleRoute);
 

@@ -278,7 +278,7 @@ export default class RegisterComponent extends HTMLElement {
 
 	disconnectedCallback() {
 		this.querySelector("form").removeEventListener('submit', this);
-        this.querySelector("a").removeEventListener('click', this);
+        this.querySelectorAll("a").forEach( (e) => {e.removeEventListener('click', this)});
 	}
 }
 

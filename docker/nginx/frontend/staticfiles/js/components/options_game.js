@@ -1,6 +1,6 @@
 import { navigateTo } from '../app.js';
 
-export default class OTPComponent extends HTMLElement {
+export default class OptionsGame extends HTMLElement {
 	constructor() {
 		super();
 
@@ -78,6 +78,14 @@ export default class OTPComponent extends HTMLElement {
                 margin-bottom: 2vh;
             }
 
+            p {
+                align-self: flex-start;
+            }
+
+            label {
+                font-size: 13px;
+            }
+
             img {
                 width: 30px;
                 height: 30px;
@@ -91,12 +99,6 @@ export default class OTPComponent extends HTMLElement {
 
             .title {
                 font-size: 30px;
-            }
-
-            .subtitle {
-                text-align: center;
-                font-size: 10px;
-                opacity: 0.7;
             }
 
             @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
@@ -153,17 +155,44 @@ export default class OTPComponent extends HTMLElement {
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                 </div>
                 <div class="form-container">
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                        <p class="pixel-font title">OTP VERIFY</p>
-                        <p class="pixel-font subtitle">Please enter the code sended to you email to verify your identity.</p>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <p class="pixel-font title">GAME OPTIONS</p>
                     </div>
-                    <form class="d-flex justify-content-center align-items-center">
-                        <input type="number" class="form-control" style="text-align: center;" id="otp_code" name="otp_code" required max="999999">
+                    <form class="d-flex flex-column justify-content-around align-items-center" autocomplete="off">
+                        
+                        <p class="pixel-font mt-4">How many players?</p>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2" checked>
+                                <label class="form-check-label pixel-font" for="inlineRadio1">1vs1</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="4">
+                                <label class="form-check-label pixel-font" for="inlineRadio2">2vs2</label>
+                            </div>
+                        </div>
+
+                        <p class="pixel-font mt-5">Wich players are AI?</p>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                                <label class="form-check-label pixel-font" for="inlineCheckbox1">Player1</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                <label class="form-check-label pixel-font" for="inlineCheckbox2">Player2</label>
+                            </div>
+                            <div class="form-check form-check-inline" style="display: none;" name="change-checkbox" id="change-checkbox">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                                <label class="form-check-label pixel-font" for="inlineCheckbox3">Player3</label>
+                            </div>
+                            <div class="form-check form-check-inline" style="display: none;" name="change-checkbox" id="change-checkbox">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4">
+                                <label class="form-check-label pixel-font" for="inlineCheckbox4">Player4</label>
+                            </div>
+                        </div>
                     </form>
-                    <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
-                        OTP code is incorrect. Please try again.
-                    </div>
-                    <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
+                    <a id="a1" href="javascript:void(0);" class="pixel-font mt-5">READY!</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -180,54 +209,56 @@ export default class OTPComponent extends HTMLElement {
 	}
 
 	attachListeners() {
-        document.getElementById("a1").addEventListener("click", async function ()
+        this.radio1 = document.getElementById("inlineRadio1");
+        this.radio1.addEventListener("click", function () {
+            const changeCheckbox = document.querySelectorAll('div[id="change-checkbox"]');
+        
+            changeCheckbox.forEach(function changeVisibility(element) {
+                
+                if (element.style.display != "none")
+                    element.style.display = "none";
+            });
+        });
+        this.radio2 = document.getElementById("inlineRadio2");
+        this.radio2.addEventListener("click", function () {
+            const changeCheckbox = document.querySelectorAll('div[id="change-checkbox"]');
+        
+            changeCheckbox.forEach(function changeVisibility(element) {
+        
+                if (element.style.display == "none")
+                    element.style.display = "block";
+            });
+        });
+        
+        document.getElementById("a1").addEventListener("click", function ()
         {
             const form = document.querySelector("form");
+            let path = '/game?';
+        
+            const radioOption = Math.floor(document.querySelector('input[name="inlineRadioOptions"]:checked').value);
+            path += "players=" + radioOption;
 
-            const otp_code = document.getElementById("otp_code");
-
-            if (form.checkValidity())
+            const checkedBox = document.querySelectorAll('input[type="checkbox"]');
+        
+            checkedBox.forEach(function getAIs(element, index) {
+                
+                if (index >= radioOption)
                 {
-                    try
-                    {
-                        document.getElementById("alert").style.display = "none";
-
-                        const response = await fetch('/api/verify-otp', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ 
-                                'username': localStorage.getItem("username"),
-                                'otp_code': otp_code.value,
-                            })
-                        });
-    
-                    const data = await response.json();
-                    if (response.ok)
-                    {
-                        document.cookie = `access_token=${data.token}; path=/`;
-                        document.cookie = `refresh_token=${data.refresh}; path=/`;
-                        navigateTo('/home');
-                    }
-                    else
-                    {
-                        console.log(data.error);
-                        document.getElementById("alert").style.display = "block";
-                    }
-                } catch (err) {
-                   console.log("Error: Problem sending the petition");
+                    path += "&" + "player" + (index + 1) + "AI=undefined";
+                    return;
                 }
-            } else {
-                form.reportValidity();
-            }
+                path += "&" + "player" + (index + 1) + "AI=" + element.checked;
+            });
+            navigateTo(path);
         });
 	}
 
 	disconnectedCallback() {
 		this.querySelector("form").removeEventListener('submit', this);
         this.querySelector("a").removeEventListener('click', this);
+        this.radio1.removeEventListener('click', this);
+        this.radio2.removeEventListener('click', this);
 	}
 }
 
-window.customElements.define('otp-component', OTPComponent);
+window.customElements.define('options_game-component', OptionsGame);
