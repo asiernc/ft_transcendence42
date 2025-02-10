@@ -1,9 +1,11 @@
 import { HomeView } from './views/HomeView.js';
 import { LoginView } from './views/LoginView.js';
+import { Login42View } from './views/Login42View.js';
 
 const routes = {
 	'/home': HomeView,
     '/login': LoginView,
+	'/login42': Login42View,
 };
 
 function handleRoute() {
@@ -18,7 +20,7 @@ function navigateTo(path) {
 }
 
 window.addEventListener('load', () => {
-        navigateTo('/login');
+        navigateTo('/login42');
 });
 window.addEventListener('popstate', handleRoute);
 

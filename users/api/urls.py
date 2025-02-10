@@ -9,6 +9,8 @@ from .views.crud import (
 )
 from .views.login import UserLoginView, verify_otp
 from .views.refresh_tokens import refresh_tokens
+from .views.login42 import login42
+from .views.callback42 import callback42
 
 
 urlpatterns = [
@@ -21,6 +23,8 @@ urlpatterns = [
 	path('login', UserLoginView.as_view()), #/api/login
 	path('verify-otp', verify_otp), #/api/verify-otp
 	path('refresh-tokens', refresh_tokens), #/api/generate-or-refresh-jwt
+	path('login42/', login42), #/api/login42
+	path('callback42/', callback42), #/api/callback42
 
 	
 	# crud de user, refreshtokens, login42

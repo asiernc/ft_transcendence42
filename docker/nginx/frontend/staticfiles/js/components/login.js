@@ -57,6 +57,7 @@ export default class LoginComponent extends HTMLElement {
 						<input type="password" id="password" required>
 					</div>
 					<button type="submit">Login</button>
+					
 				</form>
 				<p id="message"></p>
 			</div>

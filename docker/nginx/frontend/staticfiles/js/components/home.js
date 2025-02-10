@@ -25,7 +25,7 @@ export default class HomeComponent extends HTMLElement {
         const div = document.createElement('div');
         div.innerHTML = `
             <div class="home-container">
-                <h1>Welcome to the Home Page</h1>
+                <h1>Welcome to the Home HOME Page</h1>
                 <p>You are logged in!</p>
             </div>
         `;
