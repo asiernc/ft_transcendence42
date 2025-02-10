@@ -241,12 +241,6 @@ export default class OptionsGame extends HTMLElement {
             const checkedBox = document.querySelectorAll('input[type="checkbox"]');
         
             checkedBox.forEach(function getAIs(element, index) {
-                
-                if (index >= radioOption)
-                {
-                    path += "&" + "player" + (index + 1) + "AI=undefined";
-                    return;
-                }
                 path += "&" + "player" + (index + 1) + "AI=" + element.checked;
             });
             navigateTo(path);
