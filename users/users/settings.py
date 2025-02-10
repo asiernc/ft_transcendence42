@@ -156,9 +156,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -190,5 +194,9 @@ EMAIL_HOST_PASSWORD = 'vibutozhnopmsnis'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+FT_CLIENT_ID=os.environ['FT_CLIENT_ID']
+FT_CLIENT_SECRET=os.environ['FT_CLIENT_SECRET']
+FT_REDIRECT_URI='https://localhost:3042/api/callback42'
 
 
