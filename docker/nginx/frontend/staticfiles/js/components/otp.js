@@ -160,7 +160,7 @@ export default class OTPComponent extends HTMLElement {
                     <form class="d-flex justify-content-center align-items-center">
                         <input type="number" class="form-control" style="text-align: center;" id="otp_code" name="otp_code" required max="999999">
                     </form>
-                    <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
+                    <div id="alert" style="display: none;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
                         OTP code is incorrect. Please try again.
                     </div>
                     <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
