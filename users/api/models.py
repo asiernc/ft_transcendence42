@@ -19,18 +19,20 @@ class User(AbstractUser):
 #     class Meta:
 #         unique_together = ('user', 'friend')
 
-# class GameHistory(models.Model):
-#     player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player1')
-#     player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player2')
-#     winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='winner')
+# class Match(models.Model):
+#     player1_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player1')
+#     player2_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player2')
+#     winner_id = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='winner')
 #     score_player1 = models.IntegerField()
 #     score_player2 = models.IntegerField()
 #     played_at = models.DateTimeField(auto_now_add=True)
+#     tournament_id = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='tournament_id')
 	
+
 # class Tournament(models.Model):
 # 	name = models.CharField(max_length=50, null=False)
-# 	description = models.TextField()
-# 	start_date = models.DateTimeField()
+# 	description = models.TextField(null=True, blank=True)
+# 	start_date = models.DateTimeField(auto_now_add=True)
 # 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='winner')
 # 	players = models.ManyToManyField(User, related_name='players')
 

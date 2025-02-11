@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'api',
+    'django_crontab',
 ]
 
 REST_FRAMEWORK = {
@@ -187,6 +188,14 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Security settings for HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#la cookie csrf only sends in https requests
+CSRF_COOKIE_SECURE = True
+# redirects http to https
+SECURE_SSL_REDIRECT = True
+
+# Email configuration
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'pongtranscendence42@gmail.com'
@@ -195,8 +204,22 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+# 
 FT_CLIENT_ID=os.environ['FT_CLIENT_ID']
 FT_CLIENT_SECRET=os.environ['FT_CLIENT_SECRET']
 FT_REDIRECT_URI='https://localhost:3042/api/callback42'
+
+# Cron tasks
+CRONJOBS = [
+    ('*/2 * * * *', 'users.api.cron.check_expired_otps'),
+]
+
+#configuration cookies
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 
 

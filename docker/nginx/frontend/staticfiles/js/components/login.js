@@ -234,6 +234,7 @@ export default class LoginComponent extends HTMLElement {
     
                     if (response.ok) {
                         localStorage.setItem("username", username);
+						
                         navigateTo('/otp');
                     } else {
                         console.log(data.error);

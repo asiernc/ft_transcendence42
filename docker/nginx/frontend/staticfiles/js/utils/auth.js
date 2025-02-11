@@ -25,16 +25,16 @@ function handleCallback() {
 				handleRouteChange();
 			}
 			else {
-				window.location.href = '/home';
+				window.location.href = '/login';
 				handleRouteChange();
 			}
 		})
 		.catch(error => {
-			window.location.href = '/home';
+			window.location.href = '/login';
 			handleRouteChange();
 		});
 	} else {
-		window.location.href = '/home';
+		window.location.href = '/login';
 		handleRouteChange();
 	}
 }

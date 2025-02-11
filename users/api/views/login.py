@@ -23,9 +23,9 @@ class UserLoginView(generics.GenericAPIView):
 		if user is None:
 			raise AuthenticationFailed('User not found.')
 
-		otp_random_code = random.randint(100000, 999999)
+		otp_random_code = random.randint(000000, 999999)
 		user.otp = str(otp_random_code)
-		user.otp_expire = timezone.now() + timedelta(minutes=15)
+		user.otp_expire = timezone.now() + timedelta(minutes=5)
 		user.save()
 		
 		send_mail(
@@ -67,6 +67,6 @@ def verify_otp(request):
 		'access': str(refresh.access_token)
 	}, status=status.HTTP_200_OK)
 
-	response.set_cookie(key='access_token', value=access_token, httponly=True)
-	response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+	response.set_cookie(key='access_token', value=access_token)
+	response.set_cookie(key='refresh_token', value=refresh_token)
 	return response

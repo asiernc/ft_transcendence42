@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+#ayudamefrom rest_framework_simplejwt.tokens import RefreshToken
 from api.models import User
 from api.serializer import UserSerializer
 
@@ -35,6 +35,14 @@ def register_user(request):
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#post image
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def upload_avatar(request):
+#     user = request.user
+#     try:
+        
+
 #update user
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -50,12 +58,12 @@ def updateUser(request, pk):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #delete user
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def deleteUser(request, pk):
-	try:
-		user = User.objects.get(id=pk)
-	except User.DoesNotExist:
-		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-	user.delete()
-	return Response({'detail': 'User deleted.'}, status=status.HTTP_204_NO_CONTENT)
+# @api_view(['DELETE'])
+# @permission_classes([IsAuthenticated])
+# def deleteUser(request, pk):
+# 	try:
+# 		user = User.objects.get(id=pk)
+# 	except User.DoesNotExist:
+# 		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+# 	user.delete()
+# 	return Response({'detail': 'User deleted.'}, status=status.HTTP_204_NO_CONTENT)
