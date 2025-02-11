@@ -196,7 +196,10 @@ export default class RegisterComponent extends HTMLElement {
                             <label for="repeatPassword" class="form-label pixel-font mb-1">Repeat password</label>
                             <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required>
                         </div>
-                
+                        
+                        <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
+                            This Username or Password is alredy in use. Please choose another one.
+                        </div>
                         <a id="a1" href="javascript:void(0);" type="submit" class="pixel-font mt-4">REGISTER</a>
                     </form>
                     <div class="mt-3 pixel-font separator">
@@ -221,6 +224,9 @@ export default class RegisterComponent extends HTMLElement {
 	attachListeners() {
         document.getElementById("a1").addEventListener("click", async function ()
         {
+            const alertMsg = document.getElementById("alert");
+            alertMsg.style.display = "none";
+
             const form = document.querySelector("form");
 
             const username = document.getElementById("name");
@@ -261,7 +267,10 @@ export default class RegisterComponent extends HTMLElement {
                     if (response.ok)
                         navigateTo('/login');
                     else
+                    {
                         console.log(data.error);
+                        alertMsg.style.display = "flex";
+                    }
 
                 } catch (err) {
                    console.log("Error: Problem sending the petition");

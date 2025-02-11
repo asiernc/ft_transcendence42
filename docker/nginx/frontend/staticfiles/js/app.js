@@ -28,7 +28,7 @@ function navigateTo(path) {
 }
 
 window.addEventListener('load', () => {
-        navigateTo('/home');
+        navigateTo('/register');
 });
 window.addEventListener('popstate', handleRoute);
 
