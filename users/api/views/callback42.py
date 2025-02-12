@@ -98,8 +98,9 @@ def callback42(request):
 		'last_name': user.last_name,
 		'email': user.email,
 	}, status=status.HTTP_200_OK)
-	response.set_cookie('access_token', access_token)
-	response.set_cookie('refresh_token', str(refreshtoken))
+
+	response.set_cookie(key='access_token', value=access_token)
+	response.set_cookie(key='refresh_token', value=str(refreshtoken))
 	return response
 
 #		'user_img': user.avatar_field,

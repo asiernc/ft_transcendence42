@@ -23,7 +23,15 @@ echo "Running migrations..."
 python3 manage.py makemigrations
 python3 manage.py migrate
 
+echo "Collecting static files..."
 python3 manage.py collectstatic --no-input --settings=users.settings
+
+echo "Adding cron jobs..."
+python3 manage.py crontab add
+python3 manage.py crontab show
+
+echo "Starting cron service..."
+service cron start
 
 echo "Starting Django server..."
 python3 manage.py runserver 0.0.0.0:8001  --settings=users.settings

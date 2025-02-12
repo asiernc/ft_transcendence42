@@ -1,18 +1,16 @@
 from rest_framework import serializers
-from .models import User
+from .models import User#, Match, Tournament
 from PIL import Image
 import imghdr
 
 class UserSerializer(serializers.ModelSerializer):
-	password_check = serializers.CharField(write_only=True)
 	avatar_field = serializers.ImageField(required=False)
 	
 	class Meta:
 		model = User
-		fields = [ 'username', 'email', 'password', 'password_check', 'avatar_field', 'otp', 'otp_expire', 'online_status' ]
+		fields = [ 'username', 'email', 'password', 'avatar_field', 'otp', 'otp_expire', 'online_status' ]
 		extra_kwargs = {
 			'password': {'write_only': True},
-			'password_check': {'write_only': True}
 		}
 
 	def validate_avatar_field(self, value):
@@ -49,12 +47,6 @@ class UserSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError("Image file too large ( > 2mb )")
 		
 		return value
-	# def validate(self, data):
-	# 	password = data.get('password')
-	# 	password_check = data.get('password_check')
-	# 	if password != password_check:
-	# 		raise serializers.ValidationError("Passwords do not match.")
-	# 	return data
 
 	def create(self, validated_data):
 		validated_data.pop('password_check', None)
@@ -74,3 +66,45 @@ class UserSerializer(serializers.ModelSerializer):
 	#         setattr(instance, attr, value)
 	#     instance.save()
 	#     return instance
+
+# class MatchSerializer(serializers.ModelSerializer):
+# 	player1_username = serializers.SerializerMethodField()
+# 	player2_username = serializers.SerializerMethodField()
+# 	winner_username = serializers.SerializerMethodField()
+# 	tourname_name = serializers.SerializerMethodField()
+
+# 	class Meta:
+# 		model = Match
+# 		fields = [
+# 			'player1_id', 'player1_username',
+# 			'player2_id', 'player2_username',
+# 			'winner_id', 'winner_username',
+# 			'score_player1', 'score_player2',
+# 			'played_at', 'tournament_id', 'tournament_name'
+# 		]
+	
+# 	def get_player1_username(self, obj):
+# 		return obj.player1.username
+
+# 	def get_player2_username(self, obj):
+# 		return obj.player2.username
+
+# 	def get_winner_username(self, obj):
+# 		return obj.winner.username if obj.winner else None
+
+# 	def get_tournament_name(self, obj):
+# 		return obj.tournament.name
+
+# 	def validate(self, data):
+# 		player1_id = data.get('player1_id')
+# 		player2_id = data.get('player2_id')
+# 		winner_id = data.get('winner_id')
+
+# 		if not User.objects.filter(id=player1_id).exists():
+# 			raise serializers.ValidationError(f"Player 1 id does not exists.")
+
+# 		if not User.objects.filter(id=player2_id).exists():
+# 			raise serializers.ValidationError(f"Player 2 id does not exists.")
+
+# 		if winner_id and not User.objects.filter(id=winner_id).exists():
+# 			raise serializers.ValidationError(f"Winned id does not exists.")

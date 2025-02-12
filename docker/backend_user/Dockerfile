@@ -6,6 +6,8 @@ WORKDIR /app
 COPY users/requirements.txt requirements.txt
 COPY users /app
 
+RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
+
 # Make setup.sh executable
 RUN chmod +x setup.sh
 
