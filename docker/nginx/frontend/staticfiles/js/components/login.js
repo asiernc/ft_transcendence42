@@ -228,7 +228,7 @@ export default class LoginComponent extends HTMLElement {
 						</a>
 					</form>
 					<div class="mt-3 pixel-font separator">
-						<span class="d-none d-xl-inline" style="font-size: 12px;">Or if you are alredy registred</span>
+						<span class="d-none d-xl-inline" style="font-size: 12px;">Or if you are not registred</span>
 					</div>
 					<a id="a1" href="javascript:void(0);" class="pixel-font">Register</a>
 				</div>
