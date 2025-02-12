@@ -24,12 +24,12 @@ function getCookie(name) {
 
 function handleRoute() {
     const path = window.location.pathname;
-	const access_token = getCookie('access_token');
-	const refresh_token = getCookie('refresh_token');
+	const access_token = localStorage.getItem('access_token');
+	const refresh_token = localStorage.getItem('refresh_token');
 	console.log(access_token)
 
 	if (!access_token && !refresh_token) {
-		if (path !== '/login' && path !== '/register') {
+		if (path !== '/login' && path !== '/register' && path !== '/otp') {
 			navigateTo('/login');
 			return ;
 		}
@@ -49,9 +49,7 @@ function navigateTo(path) {
     handleRoute();
 }
 
-window.addEventListener('load', () => {
-	handleRoute();
-});
+window.addEventListener('load', handleRoute);
 window.addEventListener('popstate', handleRoute);
 
 export { navigateTo };

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Match, Tournament
+from .models import User#, Match, Tournament
 from PIL import Image
 import imghdr
 
@@ -67,7 +67,6 @@ class UserSerializer(serializers.ModelSerializer):
 	#     instance.save()
 	#     return instance
 
-
 # class MatchSerializer(serializers.ModelSerializer):
 # 	player1_username = serializers.SerializerMethodField()
 # 	player2_username = serializers.SerializerMethodField()
@@ -92,3 +91,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 # 	def get_winner_username(self, obj):
 # 		return obj.winner.username if obj.winner else None
+
+# 	def get_tournament_name(self, obj):
+# 		return obj.tournament.name
+
+# 	def validate(self, data):
+# 		player1_id = data.get('player1_id')
+# 		player2_id = data.get('player2_id')
+# 		winner_id = data.get('winner_id')
+
+# 		if not User.objects.filter(id=player1_id).exists():
+# 			raise serializers.ValidationError(f"Player 1 id does not exists.")
+
+# 		if not User.objects.filter(id=player2_id).exists():
+# 			raise serializers.ValidationError(f"Player 2 id does not exists.")
+
+# 		if winner_id and not User.objects.filter(id=winner_id).exists():
+# 			raise serializers.ValidationError(f"Winned id does not exists.")

@@ -10,7 +10,7 @@ class User(AbstractUser):
 	avatar_field = models.ImageField(upload_to='images/', null=True, blank=True)
 	avatar_42_url = models.URLField(max_length=255, null=True, blank=True)
 	online_status = models.BooleanField(default=False)
-	
+
 
 # class Friends(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
@@ -20,19 +20,47 @@ class User(AbstractUser):
 #         unique_together = ('user', 'friend')
 
 # class Match(models.Model):
-#     player1_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player1')
-#     player2_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='player2')
-#     winner_id = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='winner')
+#     player1_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player1')
+#     player2_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player2')
+#     winner_id = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='match_wins', null=True, blank=True)
 #     score_player1 = models.IntegerField()
 #     score_player2 = models.IntegerField()
 #     played_at = models.DateTimeField(auto_now_add=True)
-#     tournament_id = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='tournament_id')
-	
+#     tournament_id = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='matches')
 
 # class Tournament(models.Model):
 # 	name = models.CharField(max_length=50, null=False)
-# 	description = models.TextField(null=True, blank=True)
+# 	#description = models.TextField(null=True, blank=True)
 # 	start_date = models.DateTimeField(auto_now_add=True)
-# 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='winner')
+# 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='tournament_wins', null=True, blank=True)
 # 	players = models.ManyToManyField(User, related_name='players')
+
+
+
+
+
+
+
+
+
+# def record_match(request):
+# 		player1_username= request.data.get('player1')
+# 		player2_username=request.data.get('player2')
+# 		winner_username = request.data.get('winner')
+# 		tournament_id = request.data.get('tournament_id')
+# 		try:
+# 			player1 = PongUser.objects.get(username=player1_username)
+# 			player2 = PongUser.objects.get(username=player2_username)
+# 			winner = PongUser.objects.get(username=winner_username)
+# 		except PongUser.DoesNotExist:
+# 			return Response({'detail': 'One or both users not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+# 		match_data = {
+#             'player1': player1.id,
+#             'player2': player2.id,
+#             'player1_score': request.data.get('player1_score'),
+#         	'player2_score': request.data.get('player2_score'),
+# 			'winner': winner.id,
+#         	'tournament_id': tournament_id
+#         }
 

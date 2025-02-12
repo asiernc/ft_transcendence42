@@ -206,8 +206,10 @@ export default class OTPComponent extends HTMLElement {
                     const data = await response.json();
                     if (response.ok)
                     {
-                        document.cookie = `access_token=${data.token}; path=/`;
-                        document.cookie = `refresh_token=${data.refresh}; path=/`;
+						localStorage.setItem('access_token', data.access_token);
+						localStorage.setItem('refresh_token', data.refresh_token);
+                        // document.cookie = `access_token=${data.token}; path=/`;
+                        // document.cookie = `refresh_token=${data.refresh}; path=/`;
                         navigateTo('/home');
                     }
                     else

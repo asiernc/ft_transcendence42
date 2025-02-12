@@ -11,6 +11,9 @@ import random
 from api.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 class UserLoginView(generics.GenericAPIView):
 	permission_classes = [AllowAny]
@@ -25,7 +28,7 @@ class UserLoginView(generics.GenericAPIView):
 
 		otp_random_code = random.randint(000000, 999999)
 		user.otp = str(otp_random_code)
-		user.otp_expire = timezone.now() + timedelta(minutes=5)
+		user.otp_expire = timezone.now() + timedelta(minutes=1)
 		user.save()
 		
 		send_mail(
@@ -36,7 +39,7 @@ class UserLoginView(generics.GenericAPIView):
 			fail_silently=False,
 		)
 		
-		return Response({'detail': 'OTP code sent successfully.'}, status=status.HTTP_200_OK)
+		return Response({'detail': 'OTP code sent successfully.', 'username': username}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -61,6 +64,8 @@ def verify_otp(request):
 	user.otp = None
 	user.otp_expire = None
 	user.save()
+
+	logger.info(f"Username == {username}")
 
 	response = Response({
 		'refresh': str(refresh),

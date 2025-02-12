@@ -9,6 +9,7 @@ from .views.login import UserLoginView, verify_otp
 from .views.refresh_tokens import refresh_tokens
 from .views.login42 import login42
 from .views.callback42 import callback42
+#from .views.matchs import create_match
 
 
 urlpatterns = [
@@ -21,5 +22,5 @@ urlpatterns = [
 	path('login42/', login42), #/api/login42
 	path('callback42/', callback42), #/api/callback42
 	path('update/<int:pk>', updateUser), #/api/update/<str:pk>
-
+	# path('create-match', create_match), #api/create-match
 ]
