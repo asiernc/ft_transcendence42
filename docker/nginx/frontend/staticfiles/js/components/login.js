@@ -98,7 +98,7 @@ export default class LoginComponent extends HTMLElement {
 			--speed-fast: 0.8s;
 			}
 
-			a {
+			#a1 {
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -111,6 +111,38 @@ export default class LoginComponent extends HTMLElement {
 				text-align: center;
 				color: var(--color-white);
 				transition: var(--speed-normal);
+			}
+			#a2 {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+				width: 100%;
+				height: 50px;
+				letter-spacing: 2px;
+				text-decoration: none;
+				text-transform: uppercase;
+				text-align: center;
+				color: var(--color-white);
+				transition: var(--speed-normal);
+			}
+
+			#login42 {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+				height: 50px;
+				letter-spacing: 2px;
+				text-decoration: none;
+				text-transform: uppercase;
+				text-align: center;
+				border: 1px solid black;
+			}
+
+			svg {
+				max-height: 100%;
+				max-width: 100%;
 			}
 
 			#a1 {
@@ -186,6 +218,14 @@ export default class LoginComponent extends HTMLElement {
 							Invalid Username or Password. Please try again.
 						</div>
 						<a id="a2" href="javascript:void(0);" type="submit" class="pixel-font">Log In</a>
+						<a id="login42" class="mt-2" href="https://localhost:3042/api/login42">
+							<svg version="1.1"id="Calque_1" sodipodi:docname="42_logo.svg" inkscape:version="0.48.2 r9819" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 -200 960 960"enable-background="new 0 -200 960 960" xml:space="preserve">
+								<polygon id="polygon5" points="32,412.6 362.1,412.6 362.1,578 526.8,578 526.8,279.1 197.3,279.1 526.8,-51.1 362.1,-51.1 32,279.1 "/>
+								<polygon id="polygon7" points="597.9,114.2 762.7,-51.1 597.9,-51.1 "/>
+								<polygon id="polygon9" points="762.7,114.2 597.9,279.1 597.9,443.9 762.7,443.9 762.7,279.1 928,114.2 928,-51.1 762.7,-51.1 "/>
+								<polygon id="polygon11" points="928,279.1 762.7,443.9 928,443.9 "/>
+							</svg>
+						</a>
 					</form>
 					<div class="mt-3 pixel-font separator">
 						<span class="d-none d-xl-inline" style="font-size: 12px;">Or if you are alredy registred</span>

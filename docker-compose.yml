@@ -58,5 +58,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: "/Users/asiercara/Documents/proyectos_separados/ft_transcendence42/data/postgres"
+      device: "/home/vallun/42/C_Cursus/ft_transcendence42/data/postgres"
       o: bind
