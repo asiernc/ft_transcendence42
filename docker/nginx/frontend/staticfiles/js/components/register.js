@@ -200,6 +200,9 @@ export default class RegisterComponent extends HTMLElement {
                         <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
                             This Username or Password is alredy in use. Please choose another one.
                         </div>
+                        <div id="succes" style="display: none; height: 15px;" class="alert alert-success mt-1 justify-content-center align-items-center" role="alert">
+                            User registred succesfully.
+                        </div>
                         <a id="a1" href="javascript:void(0);" type="submit" class="pixel-font mt-4">REGISTER</a>
                     </form>
                     <div class="mt-3 pixel-font separator">
@@ -226,6 +229,9 @@ export default class RegisterComponent extends HTMLElement {
         {
             const alertMsg = document.getElementById("alert");
             alertMsg.style.display = "none";
+            
+            const succesMsg = document.getElementById("succes");
+            succesMsg.style.display = "none";
 
             const form = document.querySelector("form");
 
@@ -265,7 +271,7 @@ export default class RegisterComponent extends HTMLElement {
     
                     const data = await response.json();
                     if (response.ok)
-                        navigateTo('/login');
+                        succesMsg.style.display = "flex";
                     else
                     {
                         console.log(data.error);
