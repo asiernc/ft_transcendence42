@@ -78,6 +78,14 @@ export default class LoginComponent extends HTMLElement {
 				width: 30px;
 				height: 30px;
 			}
+			
+			label {
+				font-size: 13px;
+			}
+				
+			p {
+				font-size: 13px;
+			}
 
 			.pixel-font {
 				color: inherit;
@@ -86,7 +94,7 @@ export default class LoginComponent extends HTMLElement {
 			}
 
 			.title {
-				font-size: 40px;
+				font-size: 30px;
 			}
 
 			@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
@@ -104,7 +112,7 @@ export default class LoginComponent extends HTMLElement {
 				align-items: center;
 				position: relative;
 				width: 100%;
-				height: 50px;
+				height: 40px;
 				letter-spacing: 2px;
 				text-decoration: none;
 				text-transform: uppercase;
@@ -118,13 +126,14 @@ export default class LoginComponent extends HTMLElement {
 				align-items: center;
 				position: relative;
 				width: 100%;
-				height: 50px;
+				height: 40px;
 				letter-spacing: 2px;
 				text-decoration: none;
 				text-transform: uppercase;
 				text-align: center;
 				color: var(--color-white);
 				transition: var(--speed-normal);
+				font-size: 15px;
 			}
 
 			#login42 {
@@ -132,7 +141,7 @@ export default class LoginComponent extends HTMLElement {
 				justify-content: center;
 				align-items: center;
 				width: 100%;
-				height: 50px;
+				height: 40px;
 				letter-spacing: 2px;
 				text-decoration: none;
 				text-transform: uppercase;
@@ -280,7 +289,8 @@ export default class LoginComponent extends HTMLElement {
 					}
 				}
 				catch (err) {
-					console.log("Error: Problem sending the petition");
+					console.log("Error: ", err);
+					alertMsg.style.display = "flex";
 				}
 				
 			} else {
