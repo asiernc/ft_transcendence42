@@ -172,7 +172,7 @@ export default class OptionsGame extends HTMLElement {
                             </div>
                         </div>
 
-                        <p class="pixel-font mt-5">Wich players are AI?</p>
+                        <p class="pixel-font mt-5">Which players are AI?</p>
                         <div class="d-flex justify-content-around align-items-center">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">

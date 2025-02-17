@@ -201,12 +201,12 @@ export default class RegisterComponent extends HTMLElement {
                             This Username or Password is alredy in use. Please choose another one.
                         </div>
                         <div id="succes" style="display: none; height: 15px;" class="alert alert-success mt-1 justify-content-center align-items-center" role="alert">
-                            User registred succesfully.
+                            User registered succesfully.
                         </div>
                         <a id="a1" href="javascript:void(0);" type="submit" class="pixel-font mt-4">REGISTER</a>
                     </form>
                     <div class="mt-3 pixel-font separator">
-                        <span class="d-none d-xl-inline" style="font-size: 10px;">Or if you are alredy registred</span>
+                        <span class="d-none d-xl-inline" style="font-size: 10px;">Or if you are alredy registered</span>
                     </div>
                     <a id="a2" href="javascript:void(0);" class="pixel-font">LOG IN</a>
                 </div>
@@ -216,7 +216,7 @@ export default class RegisterComponent extends HTMLElement {
                 </div>
             </div>
 		`;
-
+        
 		this.appendChild(style);
         div.className = 'bg';
 		this.appendChild(div);

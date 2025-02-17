@@ -1,7 +1,4 @@
-
-function redirectTo42Login() {
-	window.location.href = `https://localhost:3042/api/login42/`;
-}
+import { navigateTo } from "../app";
 
 function handleCallback() {
 	const urlParameters = new URLSearchParams(window.location.search);
@@ -19,14 +16,10 @@ function handleCallback() {
 		.then(response => response.json())
 		.then(data => {
 			if (data.access_token && data.refresh_token) {
-				document.cookie = `access_token=${data.access_token}`;
-				document.cookie = `refresh_token=${data.refresh_token}`;
-				window.location.href = '/home';
-				handleRouteChange();
+				
 			}
 			else {
-				window.location.href = '/login';
-				handleRouteChange();
+				navigateTo('/')
 			}
 		})
 		.catch(error => {
@@ -39,4 +32,4 @@ function handleCallback() {
 	}
 }
 
-export { redirectTo42Login, handleCallback };
+export { handleCallback };
