@@ -86,7 +86,6 @@ def callback42(request):
 	except Exception as e:
 		return Response({'error': f'Failed to save user: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
 	refreshtoken = RefreshToken.for_user(user)
 	access_token = str(refreshtoken.access_token)
 
