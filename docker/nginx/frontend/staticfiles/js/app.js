@@ -4,7 +4,8 @@ import { RegisterView } from './views/RegisterView.js';
 import { OTPView } from './views/OTPView.js';
 import { PlayView } from './views/PlayView.js';
 import { OptionsGameView } from './views/OptionsGameView.js';
-import { GameView } from './views/GameView.js'
+import { GameView } from './views/GameView.js';
+import { OptionsTournamentView } from './views/OptionsTournament.js';
 
 const routes = {
 	'/home': HomeView,
@@ -14,6 +15,7 @@ const routes = {
     '/play': PlayView,
     '/options_game': OptionsGameView,
     '/game': GameView,
+	'/options_tournament': OptionsTournamentView,
 };
 
 function getCookie(name) {

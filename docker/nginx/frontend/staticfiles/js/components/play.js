@@ -146,7 +146,7 @@ export default class PlayComponent extends HTMLElement {
         });
         this.tournament = this.shadowRoot.getElementById('tournament');
         this.tournament.addEventListener('click', () => {
-            console.log("TOURNAMENT");
+            navigateTo('/options_tournament');
         });
 	}
 
