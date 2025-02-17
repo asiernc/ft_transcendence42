@@ -5,7 +5,7 @@ import { OTPView } from './views/OTPView.js';
 import { PlayView } from './views/PlayView.js';
 import { OptionsGameView } from './views/OptionsGameView.js';
 import { GameView } from './views/GameView.js'
-import { HandleCallbackView } from './views/HandleCallbackView.js'
+import { handleCallback } from './components/handle_callback.js'
 
 const routes = {
 	'/home': HomeView,
@@ -15,7 +15,7 @@ const routes = {
     '/play': PlayView,
     '/options_game': OptionsGameView,
     '/game': GameView,
-	'/callback': HandleCallbackView,
+	'/callback': handleCallback,
 };
 
 function getCookie(name) {
@@ -29,6 +29,11 @@ function handleRoute() {
 	const access_token = localStorage.getItem('access_token');
 	const refresh_token = localStorage.getItem('refresh_token');
 	console.log(access_token)
+
+	if (path == '/callback') {
+		handleCallback();
+		return ;
+	}
 
 	if (!access_token && !refresh_token) {
 		if (path !== '/login' && path !== '/register' && path !== '/otp') {

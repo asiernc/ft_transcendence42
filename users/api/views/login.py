@@ -99,3 +99,13 @@ def verify_credentials(request):
 	if user is None:
 		raise Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 	return Response({'detail': 'Credentials are valid.'}, status=status.HTTP_200_OK)
+
+
+#logout view
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+	response = Response({'detail': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+	response.delete_cookie('access_token')
+	response.delete_cookie('refresh_token')
+	return response

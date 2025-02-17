@@ -5,7 +5,7 @@ from .views.crud import (
 	getUsers,
 	updateUser,
 	)
-from .views.login import UserLoginView, verify_otp, verify_credentials
+from .views.login import UserLoginView, verify_otp, verify_credentials, logout
 from .views.refresh_tokens import refresh_tokens
 from .views.login42 import login42
 from .views.callback42 import callback42
@@ -13,7 +13,6 @@ from .views.matchs import (create_match,
     get_matches,
     get_matches_by_username,
     )
-
 
 urlpatterns = [
 	path('get/<int:pk>', getUser), #/api/get/<str:pk>
@@ -29,4 +28,5 @@ urlpatterns = [
 	path('create-match', create_match), #api/create-match
 	path('get-matchs', get_matches),
 	path('get-matchs/<str:username>', get_matches_by_username),
+	path('logout', logout), #/api/logout
 ]
