@@ -10,8 +10,18 @@ class UserSerializer(serializers.ModelSerializer):
 		model = User
 		fields = [ 'username', 'email', 'password', 'avatar_field', 'otp', 'otp_expire', 'online_status' ]
 		extra_kwargs = {
-			'password': {'write_only': True},
+			'password': {'write_only': True, 'required': False}, #false for update
 		}
+	
+	def validate_username(self, value):	
+		if User.objects.filter(username=value).exclude(id=self.instance.id).exists():
+			raise serializers.ValidationError("Username already in use")
+		return value
+
+	def validate_email(self, value):
+		if User.objects.filter(email=value).exclude(id=self.instance.id).exists():
+			raise serializers.ValidationError("Email already in use")
+		return value
 
 	def validate_avatar_field(self, value):
 		try:
@@ -49,23 +59,27 @@ class UserSerializer(serializers.ModelSerializer):
 		return value
 
 	def create(self, validated_data):
-		validated_data.pop('password_check', None)
+		# se quita password del validated data, seguridad
 		password = validated_data.pop('password', None)
+		# se crea una instancia con los demas datos validades
 		instance = self.Meta.model(**validated_data)
 		if password is not None:
 			instance.set_password(password)
+		# se hashea la constraseña
 		instance.save()
 		return instance
 
-	# def update(self, instance, validated_data):
-	#     validated_data.pop('password_check', None)
-	#     password = validated_data.pop('password', None)
-	#     if password is not None:
-	#         instance.set_password(password)
-	#     for attr, value in validated_data.items():
-	#         setattr(instance, attr, value)
-	#     instance.save()
-	#     return instance
+	def update(self, instance, validated_data):
+		password = validated_data.pop('password', None)
+
+		for attr, value in validated_data.items():
+			setattr(instance, attr, value)
+
+		if password:
+			instance.set_password(password)
+
+		instance.save()
+		return
 
 class MatchSerializer(serializers.ModelSerializer):
 	player1_username = serializers.CharField(write_only=True)

@@ -5,6 +5,7 @@ import { OTPView } from './views/OTPView.js';
 import { PlayView } from './views/PlayView.js';
 import { OptionsGameView } from './views/OptionsGameView.js';
 import { GameView } from './views/GameView.js'
+import { HandleCallbackView } from './views/HandleCallbackView.js'
 
 const routes = {
 	'/home': HomeView,
@@ -14,6 +15,7 @@ const routes = {
     '/play': PlayView,
     '/options_game': OptionsGameView,
     '/game': GameView,
+	'/callback': HandleCallbackView,
 };
 
 function getCookie(name) {

@@ -207,7 +207,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # 
 FT_CLIENT_ID=os.environ['FT_CLIENT_ID']
 FT_CLIENT_SECRET=os.environ['FT_CLIENT_SECRET']
-FT_REDIRECT_URI='https://localhost:3042/api/callback42'
+FT_REDIRECT_URI='https://localhost:3042/callback'
 
 # Cron tasks
 CRONJOBS = [
