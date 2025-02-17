@@ -222,4 +222,27 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3042",
+    "http://127.0.0.1:3042",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+	"accept",
+    "authorization",
+    "content-type",
+    "dnt",
+    'token',
+    "origin",
+    "user-agent",
+]
+
+
+
 

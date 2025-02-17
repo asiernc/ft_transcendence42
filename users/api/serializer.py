@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User#, Match, Tournament
+from .models import User, Match, Tournament
 from PIL import Image
 import imghdr
 
@@ -67,44 +67,69 @@ class UserSerializer(serializers.ModelSerializer):
 	#     instance.save()
 	#     return instance
 
-# class MatchSerializer(serializers.ModelSerializer):
-# 	player1_username = serializers.SerializerMethodField()
-# 	player2_username = serializers.SerializerMethodField()
-# 	winner_username = serializers.SerializerMethodField()
-# 	tourname_name = serializers.SerializerMethodField()
+class MatchSerializer(serializers.ModelSerializer):
+	player1_username = serializers.CharField(write_only=True)
+	player2_username = serializers.CharField(write_only=True)
+	winner_username = serializers.CharField(write_only=True, required=False, allow_null=True)
+	tournament_name = serializers.SerializerMethodField()
+	player1_username_read = serializers.CharField(source='player1.username', read_only=True)
+	player2_username_read = serializers.CharField(source='player2.username', read_only=True)
+	winner_username_read = serializers.CharField(source='winner.username', read_only=True, allow_null=True)
 
-# 	class Meta:
-# 		model = Match
-# 		fields = [
-# 			'player1_id', 'player1_username',
-# 			'player2_id', 'player2_username',
-# 			'winner_id', 'winner_username',
-# 			'score_player1', 'score_player2',
-# 			'played_at', 'tournament_id', 'tournament_name'
-# 		]
-	
-# 	def get_player1_username(self, obj):
-# 		return obj.player1.username
+	class Meta:
+		model = Match
+		fields = [
+			'player1_username', 'player2_username', 'winner_username',
+			'score_player1', 'score_player2', 'played_at', 'tournament_name',
+			'player1_username_read', 'player2_username_read', 'winner_username_read'
+		]
 
-# 	def get_player2_username(self, obj):
-# 		return obj.player2.username
+	def get_tournament_name(self, obj):
+		return obj.tournament.name if obj.tournament else None
 
-# 	def get_winner_username(self, obj):
-# 		return obj.winner.username if obj.winner else None
+	def validate(self, data):
+		player1_username = data.get('player1_username')
+		player2_username = data.get('player2_username')
+		winner_username = data.get('winner_username')
+		tournament_name = data.get('tournament_name')
 
-# 	def get_tournament_name(self, obj):
-# 		return obj.tournament.name
+		try:
+			player1 = User.objects.get(username=player1_username)
+		except User.DoesNotExist:
+			raise serializers.ValidationError(f"Player 1 with username {player1_username} does not exist.")
 
-# 	def validate(self, data):
-# 		player1_id = data.get('player1_id')
-# 		player2_id = data.get('player2_id')
-# 		winner_id = data.get('winner_id')
+		try:
+			player2 = User.objects.get(username=player2_username)
+		except User.DoesNotExist:
+			raise serializers.ValidationError(f"Player 2 with username {player2_username} does not exist.")
 
-# 		if not User.objects.filter(id=player1_id).exists():
-# 			raise serializers.ValidationError(f"Player 1 id does not exists.")
+		if winner_username:
+			try:
+				winner = User.objects.get(username=winner_username)
+			except User.DoesNotExist:
+				raise serializers.ValidationError(f"Winner with username {winner_username} does not exist.")
+		else:
+			winner = None
 
-# 		if not User.objects.filter(id=player2_id).exists():
-# 			raise serializers.ValidationError(f"Player 2 id does not exists.")
+		if tournament_name:
+			try:
+				tournament = Tournament.objects.get(name=tournament_name)
+			except Tournament.DoesNotExist:
+				raise serializers.ValidationError(f"Tournament with {tournament_name} does not exist.")
+		else:
+			tournament = None
 
-# 		if winner_id and not User.objects.filter(id=winner_id).exists():
-# 			raise serializers.ValidationError(f"Winned id does not exists.")
+		data['player1'] = player1
+		data['player2'] = player2
+		data['winner'] = winner
+		data['tournament'] = tournament
+
+		return data
+
+	def create(self, validated_data):
+		validated_data.pop('player1_username')
+		validated_data.pop('player2_username')
+		validated_data.pop('winner_username', None)
+		validated_data.pop('tournament_name', None)
+		return super().create(validated_data)
+
