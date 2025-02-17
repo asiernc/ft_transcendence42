@@ -8,12 +8,14 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import User
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def callback42(request):
-	code = request.GET.get('code')
-	state = request.GET.get('state')
-	
+	print('Request data:', request.data)
+	state = request.data.get('state')
+	code = request.data.get('code')
+	print('State:', state)
+	print('Code:', code)
 	if not code or not state:
 		return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -50,7 +52,7 @@ def callback42(request):
 	print("Token Response:", token_json)
 	access_token = token_json['access_token']
 	user_info_url = "https://api.intra.42.fr/v2/me"
-	# para cada una de las peticiones a la api de 42? ==> headers = {'Authorization': f'Bearer {access_token}'}
+	# para cada una de las peticiones a la api de 42 se debe enviar el token de acceso en el header
 	user_info_headers = {
 		'Authorization': f'Bearer {access_token}',
 	}
