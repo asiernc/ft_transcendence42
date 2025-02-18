@@ -1,0 +1,21 @@
+.bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: gray;
+	box-shadow: inset 0 0 0 20px white; /* Borde blanco interno */
+	border-radius: 40px;
+	z-index: -1; /* Envía el fondo detrás del contenido */
+}
+
+.trophy-icon {
+	position: fixed;
+	top: 30%;
+	
+	width: 50vw;
+	width: 35vh;
+	background-color: pink;
+}
+  
