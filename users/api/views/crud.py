@@ -52,24 +52,38 @@ def updateUser(request, username):
 		user = User.objects.get(username=username)
 	except User.DoesNotExist:
 		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+	
+	# intra user
+	if user.intra_user:
+		protected_fields = ['username', 'email', 'password']
+		request_data = request.data
+		for field in protected_fields:
+			if field in request_data:
+				return Response(
+					{'error': f'Field "{field}" is protected for 42 intra users.'},
+					status=status.HTTP_403_FORBIDDEN
+                    )
+	else:
+		request_data = request.data
+
 	old_email = user.email
 	serializer = UserSerializer(instance=user, data=request.data, partial=True)
 	if serializer.is_valid():
 		user = serializer.save()
-		if old_email != user.email:
+		if not user.intra_user and old_email != user.email:
 			send_mail(
 			subject='Your Email Has Been Updated',
 			message=f'''
-				Hello {user.username},
+Hello {user.username},
 
-				We wanted to let you know that your email has been successfully updated on our platform.
+We wanted to let you know that your email has been successfully updated on our platform.
 
-				New email: {user.email}
+New email: {user.email}
 
-				If you did not request this change, please contact our support team immediately.
+If you did not request this change, please contact our support team immediately.
 
-				Best regards,  
-				The Support Team
+Best regards,
+The Support Team
 				''',
 			from_email=settings.EMAIL_HOST_USER,
 			recipient_list=[user.email],

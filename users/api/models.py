@@ -10,6 +10,7 @@ class User(AbstractUser):
 	avatar_field = models.ImageField(upload_to='images/', null=True, blank=True)
 	avatar_42_url = models.URLField(max_length=255, null=True, blank=True)
 	online_status = models.BooleanField(default=False)
+	intra_user = models.BooleanField(default=False)
 
 # class Friends(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')

@@ -75,6 +75,7 @@ def callback42(request):
 			user.email = user_info_json['email']
 			user.first_name = user_info_json['first_name']
 			user.last_name = user_info_json['last_name']
+			user.intra_user = True
 			#user.avatar_field = user_info_json['image_url']
 			user.save()
 		else:
@@ -83,6 +84,7 @@ def callback42(request):
 			user.email = user_info_json['email']
 			user.first_name = user_info_json['first_name']
 			user.last_name = user_info_json['last_name']
+			user.intra_user = True
 			#user.avatar_field = user_info_json['image_url']
 			user.save()
 	except Exception as e:

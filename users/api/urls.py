@@ -24,7 +24,7 @@ urlpatterns = [
 	path('login42/', login42), #/api/login42
 	path('callback42/', callback42), #/api/callback42
 	path('verify-credentials', verify_credentials), #/api/verify-credentials
-	path('update/<int:pk>', updateUser), #/api/update/<str:pk>
+	path('update/<str:username>', updateUser), #/api/update/<str:pk>
 	path('create-match', create_match), #api/create-match
 	path('get-matchs', get_matches),
 	path('get-matchs/<str:username>', get_matches_by_username),

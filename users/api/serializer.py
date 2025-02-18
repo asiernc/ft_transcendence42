@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 		model = User
 		fields = [ 'username', 'email', 'password', 'avatar_field', 'otp', 'otp_expire', 'online_status' ]
 		extra_kwargs = {
-			'password': {'write_only': True, 'required': False}, #false for update
+			'password': {'write_only': True, 'required': False},
 		}
 	
 	def validate_username(self, value):	
@@ -79,7 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
 			instance.set_password(password)
 
 		instance.save()
-		return
+		return instance
 
 class MatchSerializer(serializers.ModelSerializer):
 	player1_username = serializers.CharField(write_only=True)

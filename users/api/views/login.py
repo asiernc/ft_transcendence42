@@ -35,16 +35,16 @@ class UserLoginView(generics.GenericAPIView):
 		send_mail(
 			subject='🔐 Secure Login Verification',
 			message=f'''
-				Hello {user.username},
+	Hello {user.username},
 
-				A login attempt was made to your account. To complete the login, please enter the following OTP code:
+	A login attempt was made to your account. To complete the login, please enter the following OTP code:
 
-				🔢 OTP Code: {otp_random_code}
+	🔢 OTP Code: {otp_random_code}
 
-				This code is valid for the next 5 minutes. If you did not request this login, please reset your password immediately.
+	This code is valid for the next 5 minutes. If you did not request this login, please reset your password immediately.
 
-				Best regards,  
-				The Security Team
+	Best regards,  
+	The Security Team
 				''',
 			from_email=settings.EMAIL_HOST_USER,
 			recipient_list=[user.email],
