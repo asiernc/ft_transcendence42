@@ -8,7 +8,7 @@ class User(AbstractUser):
 	otp = models.CharField(max_length=6, blank=True, null=True)
 	otp_expire = models.DateTimeField(blank=True, null=True)
 	avatar_field = models.ImageField(upload_to='images/', null=True, blank=True)
-	avatar_42_url = models.URLField(max_length=255, null=True, blank=True)
+	avatar_42_url = models.URLField(null=True, blank=True)
 	online_status = models.BooleanField(default=False)
 	intra_user = models.BooleanField(default=False)
 

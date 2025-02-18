@@ -6,6 +6,10 @@ from api.models import User
 from api.serializer import UserSerializer
 from django.core.mail import send_mail
 from django.conf import settings
+from PIL import Image
+import imghdr
+from ..utils.image_validator import validate_image
+import os
 
 #get all users
 @api_view(['GET'])
@@ -37,11 +41,37 @@ def register_user(request):
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #post image
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def upload_avatar(request):
-#     user = request.user
-#     try:
+@api_view(['POST', 'PUT'])
+@permission_classes([IsAuthenticated])
+def handle_avatar(request):
+	"""
+	Handle both upload and update of user avatars.
+	POST: Initial upload
+	PUT: Update existing avatar
+	"""
+	if 'avatar' not in request.FILES:
+		return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
+
+	avatar = request.FILES['avatar']
+	try:
+		validate_image(avatar)
+	except (IOError, SyntaxError) as e:
+		return Response({'error': str(e) }, status=status.HTTP_400_BAD_REQUEST)
+	
+	user = request.user
+	
+	old_avatar = user.avatar_field if request.method == 'PUT' else None
+
+	user.avatar_field = avatar
+	user.save()
+
+	if old_avatar and os.path.exists(old_avatar.path):
+		try:
+			os.remove(old_avatar.path)
+		except Exception as e:
+			print({f'Failed to remove old avatar: {str(e)}'})
+	message = 'Avatar uploaded successfully.' if request.method == 'POST' else 'Avatar updated successfully.'
+	return Response({'detail': message}, status=status.HTTP_200_OK)
 
 
 #update user
@@ -62,7 +92,7 @@ def updateUser(request, username):
 				return Response(
 					{'error': f'Field "{field}" is protected for 42 intra users.'},
 					status=status.HTTP_403_FORBIDDEN
-                    )
+					)
 	else:
 		request_data = request.data
 

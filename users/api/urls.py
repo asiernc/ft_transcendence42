@@ -4,6 +4,7 @@ from .views.crud import (
 	getUser,
 	getUsers,
 	updateUser,
+	handle_avatar
 	)
 from .views.login import UserLoginView, verify_otp, verify_credentials, logout
 from .views.refresh_tokens import refresh_tokens
@@ -17,7 +18,8 @@ from .views.matchs import (create_match,
 urlpatterns = [
 	path('get/<int:pk>', getUser), #/api/get/<str:pk>
 	path('get', getUsers), #/api/get
-	path('register', register_user), #/api/register || ¿? /api/crud/createUser 
+	path('register', register_user), #/api/register || ¿? /api/crud/createUser
+	path('avatar', handle_avatar), #/api/upload-avatar
 	path('login', UserLoginView.as_view()), #/api/login
 	path('verify-otp', verify_otp), #/api/verify-otp
 	path('refresh-tokens', refresh_tokens), #/api/generate-or-refresh-jwt

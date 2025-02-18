@@ -15,16 +15,21 @@ export function handleCallback() {
 			credentials: 'include',
 			body: JSON.stringify({ code, state }),
 		})
-		.then(response => response.json())
+		.then(response => {
+			if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		return response.json();
+		})
 		.then(data => {
 			if (data.access_token && data.refresh_token) {
 				localStorage.setItem('access_token', data.access_token);
 				localStorage.setItem('refresh_token', data.refresh_token);
-				console.log("outside handleCallback1");
+				console.log("Tokens stored, navigating to home");
 				navigateTo('/home');
 			}
 			else {
-				console.log("outside handleCallback2");
+				console.error("No tokens in response");
 				navigateTo('/login');
 			}
 		})
@@ -33,6 +38,7 @@ export function handleCallback() {
 			navigateTo('/login');
 		});
 	} else {
+		console.error("No code or state in URL");
 		navigateTo('/login');
 	}
 }
