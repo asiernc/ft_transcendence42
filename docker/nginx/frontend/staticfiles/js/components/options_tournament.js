@@ -2,9 +2,9 @@ import { navigateTo } from '../app.js';
 
 export default class OptionsTournament extends HTMLElement {
 	constructor() {
-		super();
-
-        const username = localStorage.getItem("username");
+        super();
+        
+        const my_username = localStorage.getItem("username");
 		const style = document.createElement('style');
         style.textContent = `
             .bg {
@@ -263,15 +263,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_1:</p>
                                     <form autocomplete="off">
                                         <div style="visibility: hidden;" class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest1" value="2" disabled>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest1" disabled>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioNoUser1" value="2" checked disabled>
-                                            <label class="form-check-label pixel-font" for="inlineRadio1">${username}</label>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="${my_username}" id="radioNoUser1" checked disabled>
+                                            <label class="form-check-label pixel-font" for="inlineRadio1">${my_username}</label>
                                         </div>
                                         <div style="visibility: hidden;" class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2" disabled>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI1" disabled>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -280,15 +280,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_2:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest2" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest2" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser2" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser2">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI2">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -299,15 +299,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_3:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest3" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest3" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser3" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser3">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI3">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -316,15 +316,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_4:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest4" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest4" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser4" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser4">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI4">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -335,15 +335,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_5:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest5" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest5" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser5" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser5">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI5">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -352,15 +352,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_6:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest6" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest6" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser6" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser6">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI6">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -371,15 +371,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_7:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest7" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest7" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser7" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser7">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI7">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -388,15 +388,15 @@ export default class OptionsTournament extends HTMLElement {
                                     <p class="pixel-font">PLAYER_8:</p>
                                     <form autocomplete="off">
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioGuest8" value="2" checked>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="Guest" id="radioGuest8" checked>
                                             <label class="form-check-label pixel-font" for="inlineRadio1">Guest</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-1">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioUser8" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="" id="radioUser8">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">User</label>
                                         </div>
                                         <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="2">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="AI" id="radioAI8">
                                             <label class="form-check-label pixel-font" for="inlineRadio1">AI</label>
                                         </div>
                                     </form>
@@ -410,11 +410,11 @@ export default class OptionsTournament extends HTMLElement {
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
                 </div>
-
-                <div class="modal-container" id="modal_container">
-                    <div id="modal-content" class="modal-content"></div>
-                </div>
             </div>
+
+            <div class="modal-container" id="modal_container">
+				<div id="modal-content" class="modal-content"></div>
+			</div>
 		`;
 
 		this.appendChild(style);
@@ -502,6 +502,7 @@ export default class OptionsTournament extends HTMLElement {
                 
                                 if (response.ok) {
                                     succesMsg.style.display = "flex";
+                                    document.getElementById("radioUser" + playerNum).value = response.username;
                                     setTimeout(() => document.getElementById("modal_container").classList.remove("show"), 800);
                                     document.getElementById("modal_container").removeEventListener('click', activate);
                                 } else {
@@ -522,8 +523,21 @@ export default class OptionsTournament extends HTMLElement {
         }); 
         
         document.getElementById("a3").addEventListener('click', () => {
-            // SAME THAT LOGIN
-            // SAVE USENAME OF API RESPONSE TO RADIO VALUE MAYBE
+
+            let userInfo = {};
+            document.querySelectorAll("form").forEach((e, i) => {
+                
+                const radioValue = e.querySelector('input[type="radio"]:checked').value;
+                userInfo["player" + (i + 1)]  = {
+                    username: radioValue,
+                };
+            });
+            localStorage.setItem('user_info', JSON.stringify(userInfo));
+
+            // CREATE TOURNAMENT
+            // SAVE ID
+
+            navigateTo('/options_alias');
         });
 	}
 
