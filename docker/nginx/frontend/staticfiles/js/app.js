@@ -18,18 +18,14 @@ const routes = {
 	'/callback': handleCallback,
 };
 
-function getCookie(name) {
-	const value = `; ${document.cookie}`;
-	const parts = value.split(`; ${name}=`);
-	if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
 function handleRoute() {
-    const path = window.location.pathname;
+    let path = window.location.pathname;
 	const access_token = localStorage.getItem('access_token');
 	const refresh_token = localStorage.getItem('refresh_token');
-	console.log(access_token)
 
+	if (path == '/') {
+		path = '/home';
+	}
 	if (path == '/callback') {
 		handleCallback();
 		return ;

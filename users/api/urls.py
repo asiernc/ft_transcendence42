@@ -4,7 +4,8 @@ from .views.crud import (
 	getUser,
 	getUsers,
 	updateUser,
-	handle_avatar
+	handle_avatar,
+	deleteUser
 	)
 from .views.login import UserLoginView, verify_otp, verify_credentials, logout
 from .views.refresh_tokens import refresh_tokens
@@ -31,4 +32,5 @@ urlpatterns = [
 	path('get-matchs', get_matches),
 	path('get-matchs/<str:username>', get_matches_by_username),
 	path('logout', logout), #/api/logout
+	path('delete/<int:pk>', deleteUser),
 ]

@@ -12,10 +12,8 @@ from api.models import User
 @permission_classes([AllowAny])
 def callback42(request):
 	try:
-		print('Request data:', request.data)
 		state = request.data.get('state')
 		code = request.data.get('code')
-		print('Callback42 request data:', request.data)
 		if not code or not state:
 			return Response(
 				{'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -43,7 +41,6 @@ def callback42(request):
 			return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		# gettting user info
-		print("Token Response:", token_json)
 		access_token = token_json['access_token']
 		user_info_url = "https://api.intra.42.fr/v2/me"
 		# para cada una de las peticiones a la api de 42 se debe enviar el token de acceso en el header
@@ -69,7 +66,6 @@ def callback42(request):
 				user.first_name = user_info_json['first_name']
 				user.last_name = user_info_json['last_name']
 				user.intra_user = True
-				print("User Image url:", user_info_json['image']['link'])
 				user.avatar_42_url = user_info_json['image']['link']
 				user.save()
 			else:

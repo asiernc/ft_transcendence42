@@ -44,11 +44,6 @@ def register_user(request):
 @api_view(['POST', 'PUT'])
 @permission_classes([IsAuthenticated])
 def handle_avatar(request):
-	"""
-	Handle both upload and update of user avatars.
-	POST: Initial upload
-	PUT: Update existing avatar
-	"""
 	if 'avatar' not in request.FILES:
 		return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,6 +62,7 @@ def handle_avatar(request):
 
 	if old_avatar and os.path.exists(old_avatar.path):
 		try:
+			print({f'Old avatar removed: {old_avatar.path}'})
 			os.remove(old_avatar.path)
 		except Exception as e:
 			print({f'Failed to remove old avatar: {str(e)}'})
@@ -77,7 +73,7 @@ def handle_avatar(request):
 #update user
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def updateUser(request, username):
+def updateUser(request, username):	
 	try:
 		user = User.objects.get(username=username)
 	except User.DoesNotExist:
@@ -123,12 +119,12 @@ The Support Team
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #delete user
-# @api_view(['DELETE'])
-# @permission_classes([IsAuthenticated])
-# def deleteUser(request, pk):
-# 	try:
-# 		user = User.objects.get(id=pk)
-# 	except User.DoesNotExist:
-# 		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-# 	user.delete()
-# 	return Response({'detail': 'User deleted.'}, status=status.HTTP_204_NO_CONTENT)
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def deleteUser(request, pk):
+	try:
+		user = User.objects.get(id=pk)
+	except User.DoesNotExist:
+		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+	user.delete()
+	return Response({'detail': 'User deleted.'}, status=status.HTTP_204_NO_CONTENT)
