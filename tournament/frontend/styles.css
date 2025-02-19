@@ -13,11 +13,12 @@
 
 .trophy-icon {
 	position: absolute;
-	align-items: center;
+	display: flex;
 	justify-content: center;
+	align-items: center;
 	top: 90px;
-	width: 20vw;
-	height: 25vh;
+	width: 290px;
+	height: 120px;
 	background-color: #d13ab7;
 	border-style: solid;
 	border-width: thick;
@@ -26,8 +27,6 @@
 
 .next-match-button {
 	position: absolute;
-	align-items: center;
-	justify-content: center;
 	font-weight: bold;
 	font-size: 24px;
 	-webkit-text-stroke: 1.5px black;
@@ -41,6 +40,10 @@
 	border-color: #c900a7;
 }
 
+.next-match-button:hover {
+	background-color: aqua;
+	cursor: url(https://cur.cursors-4u.net/sports/spo-1/spo15.cur), pointer;
+}
 .svg-sword-left {
 	position: absolute;
 	width: 80px;
