@@ -145,6 +145,7 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		
 		// petition to server
 		const username = localStorage.getItem("username");
+		console.log(localStorage.getItem('access_token'));
 		if (username)
 		{
 			try {
@@ -161,7 +162,7 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 						"winner_username": results.winner,
 						"score_player1": results.score_player1,
 						"score_player2": results.score_player2,
-						"tournament_id": tournament_id,
+						// "tournament_name": tournament_id,
 					}),
 				});
 
