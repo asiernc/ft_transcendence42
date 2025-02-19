@@ -34,34 +34,3 @@ class Match(models.Model):
     score_player2 = models.IntegerField()
     played_at = models.DateTimeField(auto_now_add=True)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)
-
-
-
-
-
-
-
-
-
-
-# def record_match(request):
-# 		player1_username= request.data.get('player1')
-# 		player2_username=request.data.get('player2')
-# 		winner_username = request.data.get('winner')
-# 		tournament_id = request.data.get('tournament_id')
-# 		try:
-# 			player1 = PongUser.objects.get(username=player1_username)
-# 			player2 = PongUser.objects.get(username=player2_username)
-# 			winner = PongUser.objects.get(username=winner_username)
-# 		except PongUser.DoesNotExist:
-# 			return Response({'detail': 'One or both users not found'}, status=status.HTTP_400_BAD_REQUEST)
-
-# 		match_data = {
-#             'player1': player1.id,
-#             'player2': player2.id,
-#             'player1_score': request.data.get('player1_score'),
-#         	'player2_score': request.data.get('player2_score'),
-# 			'winner': winner.id,
-#         	'tournament_id': tournament_id
-#         }
-

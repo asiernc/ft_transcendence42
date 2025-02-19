@@ -7,6 +7,7 @@ import { OptionsGameView } from './views/OptionsGameView.js';
 import { GameView } from './views/GameView.js';
 import { OptionsTournamentView } from './views/OptionsTournament.js';
 import { OptionsAliasView } from './views/OptionsAlias.js';
+import { handleCallback } from './components/handle_callback.js'
 
 const routes = {
 	'/home': HomeView,
@@ -18,6 +19,7 @@ const routes = {
     '/game': GameView,
 	'/options_tournament': OptionsTournamentView,
 	'/options_alias': OptionsAliasView,
+	'/callback': handleCallback,
 };
 
 function handleRoute() {
@@ -57,4 +59,4 @@ function navigateTo(path) {
 window.addEventListener('load', handleRoute);
 window.addEventListener('popstate', handleRoute);
 
-export { navigateTo, getCookie };
+export { navigateTo };

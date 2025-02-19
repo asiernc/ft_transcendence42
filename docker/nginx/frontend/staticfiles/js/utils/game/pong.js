@@ -4,7 +4,6 @@ import Ball from './ball.js';
 import Paddle from './paddle.js';
 import Scoreboard from './scoreboard.js';
 import { navigateTo } from '../../app.js';
-import { getCookie } from '../../app.js';
 
 export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4AI)
 {
@@ -143,13 +142,103 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 	async function endGame(versus, tournament_id, results)
 	{
 		
+		// show winner to user
+		document.getElementById("modal_container").classList.add("show");
+		document.getElementById("modal-content").innerHTML = `
+		<div class="screw-container">
+		<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+		<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+		</div>
+		<div class="d-flex flex-column justify-content-center align-items-center">
+		<h1 class="pixel-font title">
+		<span>AND THE WINNER</span><span>${numPlayers == 2 ? " IS" : "S ARE"}</span>
+		</h1>
+		<h1 class="pixel-font winnerText">
+		<span style="color: ${results.winner == username ? "#0000FF" : "#FF0000"};">${results.winner == username ? username : (versus == "localhost" ? "player_2" : versus)}</span>
+		<span class="${numPlayers == 2 ? "d-none" : "d-block"}"><span> & </span><span style="color: ${results.winner == username ? "#00FF00" : "#FF00FF"};">${results.winner == username ? "player_3" : "player_4"}</span>
+		</span>
+		</h1>
+			</div>
+			<a id="a1" href="javascript:void(0);" style="height: 50px; font-size: 20px;" class="pixel-font mt-1 mb-3">NEXT!</a>
+			<div class="screw-container">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				</div>
+				
+				<div class="modal-container" id="modal_container">
+				<div id="modal-content" class="modal-content"></div>
+				</div>
+				`;
+				
+				// get game on z-index -1 for confetti
+				document.getElementById("game").style.zIndex = "-1";
+				
+				//confetti
+				const confettiCanvas = document.getElementById("confetti");
+				const ctx = confettiCanvas.getContext("2d");
+				
+				confettiCanvas.width = window.innerWidth;
+				confettiCanvas.height = window.innerHeight;
+				
+				
+				const confettis = [];
+				const colors = ["#FF007A", "#7A00FF", "#00FF7A", "#FFD700", "#00D4FF"];
+				
+				function createConfetti() {
+					const confetti = {
+				x: Math.random() * confettiCanvas.width,
+				y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+				size: Math.random() * 10 + 5,
+				color: colors[Math.floor(Math.random() * colors.length)],
+				speedX: Math.random() * 3 - 1.5,
+				speedY: Math.random() * 5 + 2,
+				rotation: Math.random() * 360
+			};
+			confettis.push(confetti);
+		}
+		
+		for (let i = 0; i < 200; i++) {
+			createConfetti();
+		}
+	
+		function animateConfetti() {
+			ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+			confettis.forEach((confetti, index) => {
+				confetti.x += confetti.speedX;
+				confetti.y += confetti.speedY;
+				confetti.rotation += confetti.speedX;
+				
+				ctx.save();
+				ctx.translate(confetti.x, confetti.y);
+				ctx.rotate((confetti.rotation * Math.PI) / 180);
+				ctx.fillStyle = confetti.color;
+				ctx.fillRect(-confetti.size / 2, -confetti.size / 2, confetti.size, confetti.size);
+				ctx.restore();
+				
+				if (confetti.y > confettiCanvas.height) {
+					confettis.splice(index, 1);
+				}
+			});
+			
+			if (confettis.length > 0) {
+				requestAnimationFrame(animateConfetti);
+			}
+		}
+		animateConfetti();
+		
+		document.getElementById("modal_container").addEventListener("click", function activate() {
+			document.getElementById("modal_container").classList.remove("show");
+			document.getElementById("modal_container").removeEventListener('click', activate);
+			navigateTo('/home');
+		});
+		
 		// petition to server
 		const username = localStorage.getItem("username");
 		console.log(localStorage.getItem('access_token'));
 		if (username)
 		{
 			try {
-
+		
 				const response = await fetch('/api/create-match', {
 					method: 'POST',
 					headers: {
@@ -162,10 +251,10 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 						"winner_username": results.winner,
 						"score_player1": results.score_player1,
 						"score_player2": results.score_player2,
-						// "tournament_name": tournament_id,
+						"tournament_id": tournament_id,
 					}),
 				});
-
+		
 				if (!response.ok)
 					console.log("Error: The match could not be stored correctly.");
 			}
@@ -173,96 +262,6 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 				console.log("Error: ", err);
 			}
 		}
-		
-		// show winner to user
-		document.getElementById("modal_container").classList.add("show");
-		document.getElementById("modal-content").innerHTML = `
-			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-			</div>
-			<div class="d-flex flex-column justify-content-center align-items-center">
-				<h1 class="pixel-font title">
-					<span>AND THE WINNER</span><span>${numPlayers == 2 ? " IS" : "S ARE"}</span>
-				</h1>
-				<h1 class="pixel-font winnerText">
-					<span style="color: ${results.winner == username ? "#0000FF" : "#FF0000"};">${results.winner == username ? username : (versus == "localhost" ? "player_2" : versus)}</span>
-					<span class="${numPlayers == 2 ? "d-none" : "d-block"}"><span> & </span><span style="color: ${results.winner == username ? "#00FF00" : "#FF00FF"};">${results.winner == username ? "player_3" : "player_4"}</span>
-					</span>
-				</h1>
-			</div>
-			<a id="a1" href="javascript:void(0);" style="height: 50px; font-size: 20px;" class="pixel-font mt-1 mb-3">NEXT!</a>
-			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-			</div>
-			
-			<div class="modal-container" id="modal_container">
-				<div id="modal-content" class="modal-content"></div>
-			</div>
-		`;
-
-		// get game on z-index -1 for confetti
-		document.getElementById("game").style.zIndex = "-1";
-
-		//confetti
-		const confettiCanvas = document.getElementById("confetti");
-		const ctx = confettiCanvas.getContext("2d");
-	
-		confettiCanvas.width = window.innerWidth;
-		confettiCanvas.height = window.innerHeight;
-	
-
-		const confettis = [];
-		const colors = ["#FF007A", "#7A00FF", "#00FF7A", "#FFD700", "#00D4FF"];
-	
-		function createConfetti() {
-			const confetti = {
-				x: Math.random() * confettiCanvas.width,
-				y: Math.random() * confettiCanvas.height - confettiCanvas.height,
-				size: Math.random() * 10 + 5,
-				color: colors[Math.floor(Math.random() * colors.length)],
-				speedX: Math.random() * 3 - 1.5,
-				speedY: Math.random() * 5 + 2,
-				rotation: Math.random() * 360
-			};
-			confettis.push(confetti);
-		}
-	
-		for (let i = 0; i < 200; i++) {
-			createConfetti();
-		}
-	
-		function animateConfetti() {
-			ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-			confettis.forEach((confetti, index) => {
-				confetti.x += confetti.speedX;
-				confetti.y += confetti.speedY;
-				confetti.rotation += confetti.speedX;
-	
-				ctx.save();
-				ctx.translate(confetti.x, confetti.y);
-				ctx.rotate((confetti.rotation * Math.PI) / 180);
-				ctx.fillStyle = confetti.color;
-				ctx.fillRect(-confetti.size / 2, -confetti.size / 2, confetti.size, confetti.size);
-				ctx.restore();
-	
-				if (confetti.y > confettiCanvas.height) {
-					confettis.splice(index, 1);
-				}
-			});
-	
-			if (confettis.length > 0) {
-				requestAnimationFrame(animateConfetti);
-			}
-		}
-		animateConfetti();
-
-		document.getElementById("modal_container").addEventListener("click", function activate() {
-			document.getElementById("modal_container").classList.remove("show");
-			document.getElementById("modal_container").removeEventListener('click', activate);
-			navigateTo('/home');
-		});
 	}
 		
 	return (0);

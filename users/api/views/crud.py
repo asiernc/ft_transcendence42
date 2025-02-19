@@ -78,7 +78,7 @@ def updateUser(request, username):
 		user = User.objects.get(username=username)
 	except User.DoesNotExist:
 		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-	
+	{'username':'asier'}
 	# intra user
 	if user.intra_user:
 		protected_fields = ['username', 'email', 'password']
