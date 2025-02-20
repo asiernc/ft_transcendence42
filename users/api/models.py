@@ -12,12 +12,12 @@ class User(AbstractUser):
 	online_status = models.BooleanField(default=False)
 	intra_user = models.BooleanField(default=False)
 
-# class Friends(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
-#     friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend of')
+class Friends(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
+    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_of')
 	
-#     class Meta:
-#         unique_together = ('user', 'friend')
+    class Meta:
+        unique_together = ('user', 'friend')
 
 class Tournament(models.Model):
 	name = models.CharField(max_length=55, null=False)
@@ -27,10 +27,10 @@ class Tournament(models.Model):
 	players = models.ManyToManyField(User, related_name='players')
 
 class Match(models.Model):
-    player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player1')
-    player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player2')
-    winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='match_wins', null=True, blank=True)
-    score_player1 = models.IntegerField()
-    score_player2 = models.IntegerField()
-    played_at = models.DateTimeField(auto_now_add=True)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)
+	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player1')
+	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player2')
+	winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='match_wins', null=True, blank=True)
+	score_player1 = models.IntegerField()
+	score_player2 = models.IntegerField()
+	played_at = models.DateTimeField(auto_now_add=True)
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)

@@ -40,6 +40,8 @@ def register_user(request):
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
 #post image
 @api_view(['POST', 'PUT'])
 @permission_classes([IsAuthenticated])

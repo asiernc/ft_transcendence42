@@ -15,7 +15,6 @@ def validate_image(image_file):
 
     magic_numbers = {
         "jpg": [b"\xFF\xD8\xFF"],
-        "jpeg": [b"\xFF\xD8\xFF"],
         "png": [b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"],
         "gif": [b"GIF89a", b"GIF87a"]
     }

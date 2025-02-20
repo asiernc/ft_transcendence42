@@ -15,6 +15,7 @@ from .views.matchs import (create_match,
     get_matches,
     get_matches_by_username,
     )
+from .views.profile import getProfile
 
 urlpatterns = [
 	path('get/<int:pk>', getUser), #/api/get/<str:pk>
@@ -33,4 +34,5 @@ urlpatterns = [
 	path('get-matchs/<str:username>', get_matches_by_username),
 	path('logout', logout), #/api/logout
 	path('delete/<int:pk>', deleteUser),
+	path('profile/<str:username>', getProfile)
 ]
