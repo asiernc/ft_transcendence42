@@ -82,7 +82,7 @@ body {
 .player-box {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: center;
 	border: 1px solid black;
 	width: 100%;
