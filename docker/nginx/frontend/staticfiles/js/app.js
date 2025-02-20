@@ -8,8 +8,11 @@ import { GameView } from './views/GameView.js';
 import { OptionsTournamentView } from './views/OptionsTournament.js';
 import { OptionsAliasView } from './views/OptionsAlias.js';
 import { handleCallback } from './components/handle_callback.js'
+import { AboutUsView } from './views/AboutUsView.js';
+import { LandingView } from './views/LandingView.js';
 
 const routes = {
+	'/': LandingView,
 	'/home': HomeView,
     '/login': LoginView,
     '/register': RegisterView,
@@ -20,6 +23,7 @@ const routes = {
 	'/options_tournament': OptionsTournamentView,
 	'/options_alias': OptionsAliasView,
 	'/callback': handleCallback,
+	'/about_us': AboutUsView,
 };
 
 function handleRoute() {
@@ -27,16 +31,13 @@ function handleRoute() {
 	const access_token = localStorage.getItem('access_token');
 	const refresh_token = localStorage.getItem('refresh_token');
 
-	if (path == '/') {
-		path = '/home';
-	}
 	if (path == '/callback') {
 		handleCallback();
 		return ;
 	}
 
 	if (!access_token && !refresh_token) {
-		if (path !== '/login' && path !== '/register' && path !== '/otp') {
+		if (path !== '/login' && path !== '/register' && path !== '/otp' && path !== '/') {
 			navigateTo('/login');
 			return ;
 		}

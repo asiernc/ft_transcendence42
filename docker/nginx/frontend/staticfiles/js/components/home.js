@@ -149,12 +149,13 @@ export default class HomeComponent extends HTMLElement {
                     </svg>
                     <p class="pixel-font mb-0">LEADERBOARD</p>
                 </div>
-                <div class="longcards yellow" id="settings">
-                    <svg style="enable-background:new 0 0 24 24;" version="1.1" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <title>Settings</title>
-                        <path d="M22.2,14.4L21,13.7c-1.3-0.8-1.3-2.7,0-3.5l1.2-0.7c1-0.6,1.3-1.8,0.7-2.7l-1-1.7c-0.6-1-1.8-1.3-2.7-0.7   L18,5.1c-1.3,0.8-3-0.2-3-1.7V2c0-1.1-0.9-2-2-2h-2C9.9,0,9,0.9,9,2v1.3c0,1.5-1.7,2.5-3,1.7L4.8,4.4c-1-0.6-2.2-0.2-2.7,0.7   l-1,1.7C0.6,7.8,0.9,9,1.8,9.6L3,10.3C4.3,11,4.3,13,3,13.7l-1.2,0.7c-1,0.6-1.3,1.8-0.7,2.7l1,1.7c0.6,1,1.8,1.3,2.7,0.7L6,18.9   c1.3-0.8,3,0.2,3,1.7V22c0,1.1,0.9,2,2,2h2c1.1,0,2-0.9,2-2v-1.3c0-1.5,1.7-2.5,3-1.7l1.2,0.7c1,0.6,2.2,0.2,2.7-0.7l1-1.7   C23.4,16.2,23.1,15,22.2,14.4z M12,16c-2.2,0-4-1.8-4-4c0-2.2,1.8-4,4-4s4,1.8,4,4C16,14.2,14.2,16,12,16z" id="settings"></path>
+                <div class="longcards yellow" id="about_us">
+                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path class="cls-1" d="M48,29.5v4.5c0,2.21-1.79,4-4,4h-7.09c.06-.32.09-.66.09-1v-6c0-3.02-1.05-5.86-2.85-8.1.83-.68,1.78-1.2,2.82-1.52-1.76-.91-2.97-2.75-2.97-4.88,0-3.04,2.46-5.5,5.5-5.5s5.5,2.46,5.5,5.5c0,2.13-1.21,3.97-2.97,4.88,3.46,1.08,5.97,4.31,5.97,8.12Z"></path>
+                        <path class="cls-1" d="M11,31v6c0,.34.03.68.09,1h-7.09c-2.21,0-4-1.79-4-4v-4.5c0-3.81,2.51-7.04,5.97-8.12-1.76-.91-2.97-2.75-2.97-4.88,0-3.04,2.46-5.5,5.5-5.5s5.5,2.46,5.5,5.5c0,2.13-1.21,3.97-2.97,4.88,1.04.32,1.99.84,2.82,1.52-1.8,2.24-2.85,5.08-2.85,8.1Z"></path>
+                        <path class="cls-1" d="M26.854,20.387c2.442-1.093,4.146-3.539,4.146-6.387,0-3.866-3.134-7-7-7s-7,3.134-7,7c0,2.848,1.704,5.294,4.146,6.387-4.689,1.259-8.146,5.526-8.146,10.613v6c0,2.209,1.791,4,4,4h14c2.209,0,4-1.791,4-4v-6c0-5.086-3.457-9.354-8.146-10.613Z"></path>
                     </svg>
-                    <p class="pixel-font mb-0">SETTINGS</p>
+                    <p class="pixel-font mb-0">ABOUT US</p>
                 </div>
             </div>
         `;
@@ -178,9 +179,9 @@ export default class HomeComponent extends HTMLElement {
         this.leaderboard.addEventListener('click', () => {
             console.log("LEADERBOARD");
         });
-        this.settings = this.shadowRoot.getElementById('settings');
+        this.settings = this.shadowRoot.getElementById('about_us');
         this.settings.addEventListener('click', () => {
-            console.log("SETTINGS");
+            navigateTo('/about_us');
         });
 	}
 
