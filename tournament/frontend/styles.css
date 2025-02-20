@@ -39,10 +39,10 @@ body {
 	align-items: center;
 	overflow: hidden;
 	font-family: "Press Start 2P";
-	font-size: 26px;
+	font-size: 2vw;
+	-webkit-text-stroke: 0.08em black;
 	font-weight: bold;
 	color: #c900a7;
-	-webkit-text-stroke: 1.5px black;
 	top: 80%;
 	width: 23%;
 	height: 12%;
@@ -72,7 +72,7 @@ body {
 	width: 14%;
 	height: 12%;
 	font-family: "Press Start 2P";
-	font-size: 14px;
+	font-size: 1vw;
 	background-color: gray;
 	border-style: solid;
 	border-width:medium;
@@ -96,11 +96,10 @@ body {
 	justify-content: center;
 	overflow: hidden;
 	align-items: center;
-
 	width: 17%;
 	height: 17%;
 	font-family: "Press Start 2P";
-	font-size: 14px;
+	font-size: 1vw;
 	background-color: gray;
 	border-style: solid;
 	border-width:medium;
