@@ -28,7 +28,6 @@ def callback42(request):
 			'state': state,
 			'redirect_uri': settings.FT_REDIRECT_URI,
 		}
-
 		#peticion post al endpoint de token de 42 para obtener el token de acceso
 		try:
 			token_response = requests.post(token_url, data=token_data)
