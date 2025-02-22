@@ -8,6 +8,9 @@ import { GameView } from './views/GameView.js';
 import { OptionsTournamentView } from './views/OptionsTournament.js';
 import { OptionsAliasView } from './views/OptionsAlias.js';
 import { handleCallback } from './components/handle_callback.js'
+import { ProfileView } from './views/ProfileView.js';
+import { ProfileEditView } from './views/ProfileEditView.js';
+import { LeaderboardView } from './views/LeaderboardView.js';
 import { AboutUsView } from './views/AboutUsView.js';
 import { LandingView } from './views/LandingView.js';
 
@@ -23,6 +26,9 @@ const routes = {
 	'/options_tournament': OptionsTournamentView,
 	'/options_alias': OptionsAliasView,
 	'/callback': handleCallback,
+    '/profile': ProfileView,
+    '/profile/edit': ProfileEditView,
+    '/leaderboard': LeaderboardView,
 	'/about_us': AboutUsView,
 };
 
