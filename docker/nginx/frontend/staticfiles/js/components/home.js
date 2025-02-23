@@ -169,7 +169,7 @@ export default class HomeComponent extends HTMLElement {
     attachListeners() {
 		this.profile = this.shadowRoot.getElementById('profile');
         this.profile.addEventListener('click', () => {
-            console.log("PROFILE");
+            navigateTo("/profile");
         });
         this.play = this.shadowRoot.getElementById('play');
         this.play.addEventListener('click', () => {
@@ -177,7 +177,7 @@ export default class HomeComponent extends HTMLElement {
         });
         this.leaderboard = this.shadowRoot.getElementById('leaderboard');
         this.leaderboard.addEventListener('click', () => {
-            console.log("LEADERBOARD");
+            navigateTo("/leaderboard");
         });
         this.settings = this.shadowRoot.getElementById('about_us');
         this.settings.addEventListener('click', () => {
