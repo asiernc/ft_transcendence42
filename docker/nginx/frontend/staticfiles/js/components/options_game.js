@@ -148,7 +148,6 @@ export default class OptionsGame extends HTMLElement {
 
 		const div = document.createElement('div');
 		div.innerHTML = `
-            <div class="sidebar"></div>
             <div class="general-poster">
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">

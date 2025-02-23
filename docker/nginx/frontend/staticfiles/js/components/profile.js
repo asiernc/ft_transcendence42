@@ -4,51 +4,11 @@ export default class ProfileComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        const shadow = this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: 'open' });
+		this.render();
+	}
 
-		const jsonResponse = {
-			"user": {
-				"name": "Albert Caballero",
-				"username": "alcaball",
-				"bio": "Best Pong Player",
-				"wins": 2,
-				"losses": 1
-			},
-			"friends": [
-				{
-					"name": "Pedrito Juanito",
-					"username": "pjuanito"
-				},
-				{
-					"name": "Juan Pablito",
-					"username": "jpablito"
-				}
-			],
-			"history": [
-				{
-					"p2": "pjuanito",
-					"p1score": 10,
-					"p2score": 2,
-					"duration": "0:55",
-					"date": "2025-01-15"
-				},
-				{
-					"p2": "pjuanito",
-					"p1score": 10,
-					"p2score": 20,
-					"duration": "7:27",
-					"date": "2025-01-12"
-				},
-				{
-					"p2": "pjuanito",
-					"p1score": 1000,
-					"p2score": 20,
-					"duration": "12:42",
-					"date": "2025-01-03"
-				}
-			]
-		}
-
+	async render(){
 		const style = document.createElement('style');
         style.textContent = `
 		.bg {
@@ -57,14 +17,11 @@ export default class ProfileComponent extends HTMLElement {
             align-items: center;
             min-height: 100vh;
             width: 100vw;
-            margin: 0;
 			padding: 3rem 0;
-			gap: 3rem;
-
+			gap: 2rem;
             background: linear-gradient(-45deg, #31353C, #000000, #31353C, #000000);
                 background-size: 400% 400%;
                 animation: gradient 10s ease infinite;
-                height: 100vh;
             }
 
             @keyframes gradient {
@@ -104,6 +61,8 @@ export default class ProfileComponent extends HTMLElement {
 			font-size: 40px;
 			font-weight: 700;
 			border-top: 2px solid black;
+            font-family: "Press Start 2P", Arial;
+			
 		}
 		.history_dates{
 			font-size: 30px;
@@ -119,10 +78,9 @@ export default class ProfileComponent extends HTMLElement {
 		}
 
 		.pfp{
+			margin-left: 3px;
 			width: 170px;
 			height: 170px;
-			border-radius: 50%;
-			/* background-color: rgb(23, 206, 93); */
 		}
 
 		.name{
@@ -135,18 +93,10 @@ export default class ProfileComponent extends HTMLElement {
 			width: 55%;
 		}
 		.stats{
-			text-align: center;
-			width: 150px;
-		}
-		.match{
 			display: flex;
-			padding: 10px;
-			justify-content: space-evenly;
-			/* background-color: rgba(129, 71, 71, 0.877); */
-			border-top: 1px solid black;
-			margin-top: 10px;
-			align-items: center;
-			height: 90px;
+			justify-content: space-around;
+			width: 50%;
+			padding: 0.5%
 		}
 
 		.friends{
@@ -157,10 +107,10 @@ export default class ProfileComponent extends HTMLElement {
 			padding: 10px;
 			border-top: 1px solid black;
 			justify-content: space-between;
-			/* background-color: rgba(129, 71, 71, 0.877); */
 			margin-top: 10px;
 			align-items: center;
 			height: 70px;
+			font-family: "Press Start 2P", Arial;
 		}
 			.friend:hover h2{
 				text-decoration: underline;
@@ -174,10 +124,17 @@ export default class ProfileComponent extends HTMLElement {
 			align-content: center;
 			height: 30px;
 		}
+		.pixel-font {
+            font-family: "Press Start 2P", Arial;
+		}
         `;
 
+
+
+		const userData = await this.getUserInfo();
+		console.log(userData);
 		let match_history = "";
-		jsonResponse['history'].forEach(match => {
+		userData['matches'].forEach(match => {
 			const winner =  match['p1score'] > match['p2score'];
 			match_history += `
 				<tr class="history_scores">
@@ -193,9 +150,12 @@ export default class ProfileComponent extends HTMLElement {
 				</tr>
 			`;
 		});
+		if (match_history === ""){
+			match_history = "No matches played";
+		}
 
 		let friends = "";
-		jsonResponse['friends'].forEach(friend => {
+		userData['friends'].forEach(friend => {
 			friends += `
 			<div class="friend">
 				<img src="https://play-lh.googleusercontent.com/2zorpA9peRFcwZM5SLSAx80gLCA3YrknRXQwPW-Hz2AJyBcvBJiO9vuP6DvlX3FRZXMv=w526-h296-rw" width="60px">
@@ -207,26 +167,29 @@ export default class ProfileComponent extends HTMLElement {
 			</div>
 			`;
 		});
+		if (friends === ""){
+			friends = "No friends :(";
+		}
 
         const div = document.createElement('div');
         div.innerHTML = `
 	<div style="width: 80%; display: flex; justify-content: space-between">
-	<div style="display:flex;">
-		<div style="margin-right: 20px;">
-			<img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="pfp" id="usr_img">
+		<div style="display:flex;">
+			<div style="margin-right: 20px;">
+				<img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="pfp" id="usr_img">
+			</div>
+			<div class="name">
+				<h1 class="pixel-font" style="font-size: 40px">${userData['user']['username']}</h1>
+				<h3 class="pixel-font" style="font-size: larger;">${userData['user']['bio']}</h3>
+			</div>
 		</div>
-		<div class="name">
-			<h1 style="font-size: 40px;">${jsonResponse['user']['name']}</h1>
-			<h3 style="font-size: larger;">${jsonResponse['user']['bio']}</h3>
-		</div>
+		<div style="display:flex; align-items: flex-start">
+			<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
+			</div>
 	</div>
-	<div style="display:flex; align-items: flex-start">
-		<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
-		<div class="box stats">
-			<h1 title="Wins/Losses">${jsonResponse['user']['wins']} / ${jsonResponse['user']['losses']}</h1>
-			<h1 title="Score Ratio">37.0</h1>
-		</div>
-		</div>
+	<div class="box stats">
+		<span class="pixel-font" style="font-size: larger;" title="Wins/Losses">W/L: ${userData['user']['wins']}/${userData['user']['losses']}</span>
+		<span class="pixel-font" style="font-size: larger;" title="Score Ratio">Ratio: 37.0</span>
 	</div>
 	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
 		<div class="box history">
@@ -234,7 +197,7 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
-			<h1>MATCH HISTORY</h1>
+			<h1 class="pixel-font">MATCH HISTORY</h1>
 			<table style="width: 90%; margin: auto;" id="match_history">
 				${match_history}
 			</table>
@@ -248,7 +211,7 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
-			<h1>FRIENDS</h1>
+			<h1 class="pixel-font">FRIENDS</h1>
 				${friends}
 			<div class="screw-container">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -257,9 +220,9 @@ export default class ProfileComponent extends HTMLElement {
 		</div>
 	</div>
         `;
-		shadow.appendChild(style);
+		this.shadowRoot.appendChild(style);
         div.className = 'bg';
-		shadow.appendChild(div);
+		this.shadowRoot.appendChild(div);
 
         this.attachListeners();
 	}
@@ -273,6 +236,50 @@ export default class ProfileComponent extends HTMLElement {
 
 	disconnectedCallback() {
         this.editProfile.removeEventListener('click', this);
+	}
+
+	async getUserInfo() {
+		const username = localStorage.getItem('username');
+		if (!username){
+			//haz algoooo!
+		}
+
+		// const refreshToken = localStorage.getItem('refresh_token');
+		// if (!refreshToken){
+		// 	console.error('no refresh token, gonna log out');
+		// 	//navigateTo('logout');
+		// }
+		// await fetch('/api/refresh-tokens', {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'application/json'
+		// 	},
+		// 	body: JSON.stringify({ refresh_token: refreshToken })
+		// })
+		// .then(response => response.json())
+		// .then(data => {
+		// 	if (data.access_token) {
+		// 		localStorage.setItem('access_token', data.access_token);
+		// 	} else {
+		// 		console.error('Refresh token invalid, user must log in again.');
+		// 	}
+		// });
+
+		const token = localStorage.getItem("access_token");
+		try{
+			const response = await fetch(`/api/profile/${username}`, {
+					method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					},
+				}
+			);
+			const data = await response.json();
+			return data;
+		} catch (err) {
+			console.error("Error: Problem sending the petition");
+		} 
 	}
 }
 

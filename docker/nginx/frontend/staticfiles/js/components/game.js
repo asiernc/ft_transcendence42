@@ -147,7 +147,6 @@ export default class GameComponent extends HTMLElement {
 
 		const div = document.createElement('div');
 		div.innerHTML = `
-            <div class="sidebar"></div>
             <div id="game"></div>
             <div class="modal-container" id="modal_container">
                 <div id="modal-content" class="modal-content"></div>
