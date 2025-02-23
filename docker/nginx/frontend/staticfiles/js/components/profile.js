@@ -52,17 +52,41 @@ export default class ProfileComponent extends HTMLElement {
 		const style = document.createElement('style');
         style.textContent = `
 		.bg {
-            background-color: rgb(127, 172, 255);
-            }	
-		body{
-			background-color: rgb(208, 127, 255);
-			font-family: "Press Start 2P", arial;
-			/* font-size: x-small; */
-			font-family: arial;
+            display: flex;
+			flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            margin: 0;
+			padding: 3rem 0;
+			gap: 3rem;
+
+            background: linear-gradient(-45deg, #31353C, #000000, #31353C, #000000);
+                background-size: 400% 400%;
+                animation: gradient 10s ease infinite;
+                height: 100vh;
+            }
+
+            @keyframes gradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+		.box{
+			background-color: rgba(217, 217, 217, 0.548);
+			border-radius: 3px;
+			border: 4px solid #31353C;
+			padding: 1%;
 		}
 		button{
 			border: none;
-			background-color: rgba(217, 217, 217, 0.548);
+			background-color: rgba(133, 214, 102, 0.55);
 			padding: 10px;
 			cursor: pointer;
 		}
@@ -102,27 +126,16 @@ export default class ProfileComponent extends HTMLElement {
 		}
 
 		.name{
-			position: absolute;
-			left: calc(12% + 200px);
-			right: 580px;
 			white-space: nowrap;
 			padding-left: 18px;
 			padding-bottom: 18px;
+			color: white;
 		}
 		.history{
 			width: 55%;
-			background-color: rgba(217, 217, 217, 0.548);
-			border-radius: 3px;
-			padding: 1%;
-			float: left;
-			border: 4px solid #31353C;
 		}
 		.stats{
-			float: right; 
 			text-align: center;
-			border-radius: 3px;
-			background-color: rgba(217, 217, 217, 0.548);
-			padding: 10px;
 			width: 150px;
 		}
 		.match{
@@ -138,11 +151,6 @@ export default class ProfileComponent extends HTMLElement {
 
 		.friends{
 			width: 35%;
-			background-color: rgba(217, 217, 217, 0.548);
-			border-radius: 3px;
-			padding: 1%;
-			float: right;
-			border: 4px solid #31353C;
 		}
 		.friend{
 			display: flex;
@@ -202,22 +210,26 @@ export default class ProfileComponent extends HTMLElement {
 
         const div = document.createElement('div');
         div.innerHTML = `
-	<div style="width: 80%; margin: 3% auto; min-height: 200px;">
-		<div style="float: left; margin-right: 20px;">
+	<div style="width: 80%; display: flex; justify-content: space-between">
+	<div style="display:flex;">
+		<div style="margin-right: 20px;">
 			<img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="pfp" id="usr_img">
 		</div>
 		<div class="name">
 			<h1 style="font-size: 40px;">${jsonResponse['user']['name']}</h1>
 			<h3 style="font-size: larger;">${jsonResponse['user']['bio']}</h3>
 		</div>
-		<div class="stats">
+	</div>
+	<div style="display:flex; align-items: flex-start">
+		<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
+		<div class="box stats">
 			<h1 title="Wins/Losses">${jsonResponse['user']['wins']} / ${jsonResponse['user']['losses']}</h1>
 			<h1 title="Score Ratio">37.0</h1>
 		</div>
-		<button style="float: right; margin-right: 20px;" id="editProfile">Edit Profile</button>
+		</div>
 	</div>
-	<div style="width: 80%; text-align: center; margin: 3% auto;">
-		<div class="history">
+	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
+		<div class="box history">
 			<div class="screw-container">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -231,7 +243,7 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 		</div>
-		<div class="friends">
+		<div class="box friends">
 			<div class="screw-container">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
