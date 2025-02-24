@@ -58,5 +58,10 @@ volumes:
     driver: local
     driver_opts:
       type: none
+<<<<<<< HEAD
       device: "/home/rcortes-b/ft_transcendence42/data/postgres"
       o: bind
+=======
+      device: "./data/postgres"
+      o: bind
+>>>>>>> origin/main

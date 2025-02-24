@@ -76,6 +76,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'api.middleware.VerifyUserMiddleware',
 ]
 
 ROOT_URLCONF = 'users.urls'
@@ -207,7 +208,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # 
 FT_CLIENT_ID=os.environ['FT_CLIENT_ID']
 FT_CLIENT_SECRET=os.environ['FT_CLIENT_SECRET']
-FT_REDIRECT_URI='https://localhost:3042/api/callback42'
+FT_REDIRECT_URI='https://localhost:3042/callback'
 
 # Cron tasks
 CRONJOBS = [
@@ -220,6 +221,29 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3042",
+    "http://127.0.0.1:3042",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+	"accept",
+    "authorization",
+    "content-type",
+    "dnt",
+    'token',
+    "origin",
+    "user-agent",
+]
+
 
 
 

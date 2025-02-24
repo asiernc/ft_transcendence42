@@ -12,7 +12,6 @@ def generate_state():
 @permission_classes([AllowAny])
 def login42(request):
 	state = generate_state()
-	request.session["oauth_state"] = state
 	
 	url = (
 		"https://api.intra.42.fr/oauth/authorize"

@@ -6,10 +6,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 def check_expired_otps():
-    users = User.objects.filter(otp_expire__lt=timezone.now())
+    users = User.objects.filter(otp_expire__lte=timezone.now())
     for user in users:
         otp_random_code = random.randint(000000,999999)
-        user.otp = otp_random_code
+        user.otp = str(otp_random_code)
         user.otp_expire = timezone.now() + timedelta(minutes=5)
         user.save()
         send_mail(
