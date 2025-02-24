@@ -33,6 +33,23 @@ services:
       - transcendence
     restart: always
 
+  backend_tournament:
+    depends_on:
+      - postgres
+    container_name: tournament
+    build:
+      context: .
+      dockerfile: docker/backend_tournament/Dockerfile
+    volumes:
+      - ./tournament:/tournament_app
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
+
   nginx:
     build:
       context: .
@@ -58,10 +75,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-<<<<<<< HEAD
-      device: "/home/rcortes-b/ft_transcendence42/data/postgres"
-      o: bind
-=======
       device: "./data/postgres"
       o: bind
->>>>>>> origin/main
