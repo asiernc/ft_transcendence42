@@ -141,6 +141,7 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 
 	async function endGame(versus, tournament_id, results)
 	{
+		const username = localStorage.getItem("username");
 		
 		// show winner to user
 		document.getElementById("modal_container").classList.add("show");
@@ -233,8 +234,6 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		});
 		
 		// petition to server
-		const username = localStorage.getItem("username");
-		console.log(localStorage.getItem('access_token'));
 		if (username)
 		{
 			try {
@@ -256,7 +255,11 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 				});
 		
 				if (!response.ok)
-					console.log("Error: The match could not be stored correctly.");
+				{
+					const err_mmsg = await response.json()
+						.catch( () => new Error( "The match could not be stored correctly." ) );
+				  	return Promise.reject(err_mmsg);
+				}
 			}
 			catch (err) {
 				console.log("Error: ", err);
