@@ -244,26 +244,26 @@ export default class ProfileComponent extends HTMLElement {
 			//haz algoooo!
 		}
 
-		// const refreshToken = localStorage.getItem('refresh_token');
-		// if (!refreshToken){
-		// 	console.error('no refresh token, gonna log out');
-		// 	//navigateTo('logout');
-		// }
-		// await fetch('/api/refresh-tokens', {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json'
-		// 	},
-		// 	body: JSON.stringify({ refresh_token: refreshToken })
-		// })
-		// .then(response => response.json())
-		// .then(data => {
-		// 	if (data.access_token) {
-		// 		localStorage.setItem('access_token', data.access_token);
-		// 	} else {
-		// 		console.error('Refresh token invalid, user must log in again.');
-		// 	}
-		// });
+		const refreshToken = localStorage.getItem('refresh_token');
+		if (!refreshToken){
+			console.error('no refresh token, gonna log out');
+			//navigateTo('logout');
+		}
+		await fetch('/api/refresh-tokens', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ refresh_token: refreshToken })
+		})
+		.then(response => response.json())
+		.then(data => {
+			if (data.access_token) {
+				localStorage.setItem('access_token', data.access_token);
+			} else {
+				console.error('Refresh token invalid, user must log in again.');
+			}
+		});
 
 		const token = localStorage.getItem("access_token");
 		try{

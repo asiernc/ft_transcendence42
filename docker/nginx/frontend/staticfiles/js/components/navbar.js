@@ -6,6 +6,10 @@ export default class NavbarComponent extends HTMLElement {
 
         const shadow = this.attachShadow({ mode: 'open' });
 
+		// if (window.location.pathname == '/')
+		// 	return;
+		// NECESITAMOS QUE NO APAREZCA EN LANDING
+
 		const style = document.createElement('style');
         style.textContent = `
 			.nav_bar{
@@ -66,7 +70,6 @@ export default class NavbarComponent extends HTMLElement {
 		shadow.appendChild(style);
         div.className = 'nav_bar';
 		shadow.appendChild(div);
-
         this.attachListeners();
 	}
 

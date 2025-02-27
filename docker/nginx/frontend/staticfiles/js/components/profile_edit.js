@@ -81,8 +81,47 @@ export default class ProfileEditComponent extends HTMLElement {
 			align-content: center;
 			height: 30px;
 		}
+
+
+		.profile-pic-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    cursor: pointer; /* Makes it clear it's clickable */
+    display: inline-block;
+}
+
+/* Profile Image */
+.profile-pic-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Pencil Icon (Hidden by Default) */
+.edit-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Show Icon on Hover */
+.profile-pic-container:hover .edit-icon {
+    opacity: 1;
+}
         `;
 
+		// <input id="image-file" type="file">
+		// 	<img id="id_image" src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="userImg">
+		// </input>
 		const user = await this.getUserInfo();
 		// const user = {"name": "Albert Caballero", "username": "alcaball", "bio": "best pong player", "email": "alcaball@student.42.fr" };
 
@@ -95,7 +134,12 @@ export default class ProfileEditComponent extends HTMLElement {
 		</div>
 		<form id="contactForm" method="POST" enctype="multipart/form-data" action="" style="padding: 20px;">
 			<div style="display: flex; flex-direction: row; gap: 2%;">
-				<img id="id_image" src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="userImg">
+			<label class="profile-pic-container">
+				<input type="file" id="profile-upload" accept="image/*" hidden>
+				<img id="profile-image" src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" alt="Profile Picture">
+				<div class="edit-icon">✏️</div>
+			</label>
+			<input type="hidden" id="image-data" name="profile_picture">
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
 					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user['user']['name']}" class="input"></input>
 					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user['user']['username']}" class="input"></input>
@@ -121,10 +165,17 @@ export default class ProfileEditComponent extends HTMLElement {
 	}
 
     attachListeners() {
-		this.pfp = this.shadowRoot.getElementById('id_image');
-        this.pfp.addEventListener('click', () => {
-            alert('changes image');
-        });
+		this.shadowRoot.getElementById("profile-upload").addEventListener("change", (event) => {
+			const file = event.target.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					this.shadowRoot.getElementById("profile-image").src = e.target.result;
+					this.shadowRoot.getElementById("image-data").value = e.target.result;
+				};
+				reader.readAsDataURL(file);
+			}
+		});
 
 		this.submit = this.shadowRoot.getElementById('submitBtn');
         this.submit.addEventListener('click', async () => { //UPDATE USER
@@ -139,10 +190,10 @@ export default class ProfileEditComponent extends HTMLElement {
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
-							'name': document.getElementById("id_name").value,
-							'username': document.getElementById("id_username").value,
-							'email': document.getElementById("id_email").value,
-							// 'password': document.getElementById("id_name").value,
+							'name': this.shadowRoot.getElementById("id_name").value,
+							'username': this.shadowRoot.getElementById("id_username").value,
+							'email': this.shadowRoot.getElementById("id_email").value,
+							'pfp': this.shadowRoot.getElementById("image-data").value,
 						})
 					});
 					const data = await response.json();
