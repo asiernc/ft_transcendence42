@@ -11,6 +11,29 @@ import { handleCallback } from './components/handle_callback.js'
 import { AboutUsView } from './views/AboutUsView.js';
 import { LandingView } from './views/LandingView.js';
 
+let ws;
+
+function connectWebSocket(username) {
+	ws = new WebSocket(`wss://127.0.0.1:3042/ws/friends/${username}/`);
+
+	ws.onopen = function(event) {
+		console.log("Websocket is connected.")
+	}
+
+	ws.onclose = function(event) {
+		//logout
+		console.log("Websocket is closed.")
+	};
+
+	ws.onerror = function(event) {
+		console.log("Websocket error: ", event);
+	};
+
+/* 	window.addEventListener('beforeunload', function() {
+		ws.close();
+	}) */
+}
+
 const routes = {
 	'/': LandingView,
 	'/home': HomeView,
@@ -50,6 +73,11 @@ function handleRoute() {
 
     const view = routes[path] || (() => '<h1>404 Not Found</h1>');
     document.getElementById('app').innerHTML = view();
+
+	if (path == '/home') {
+		const username = localStorage.getItem('username');
+		connectWebSocket(username);
+	}
 }
 
 function navigateTo(path) {
@@ -59,5 +87,6 @@ function navigateTo(path) {
 
 window.addEventListener('load', handleRoute);
 window.addEventListener('popstate', handleRoute);
+
 
 export { navigateTo };

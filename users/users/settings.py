@@ -55,8 +55,10 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt',
 	'corsheaders',
 	'django_crontab',
+	'channels',
 	'api',
 ]
+
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -98,6 +100,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'users.wsgi.application'
+
+ASGI_APPLICATION = "users.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Guardar conexiones en RAM
+    },
+}
 
 
 # Database
