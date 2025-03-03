@@ -10,6 +10,7 @@ import { OptionsAliasView } from './views/OptionsAlias.js';
 import { handleCallback } from './components/handle_callback.js'
 import { AboutUsView } from './views/AboutUsView.js';
 import { LandingView } from './views/LandingView.js';
+import { TournamentComponentView } from './views/TournamentView.js';
 
 const routes = {
 	'/': LandingView,
@@ -22,6 +23,7 @@ const routes = {
     '/game': GameView,
 	'/options_tournament': OptionsTournamentView,
 	'/options_alias': OptionsAliasView,
+	'/tournament' : TournamentComponentView,
 	'/callback': handleCallback,
 	'/about_us': AboutUsView,
 };

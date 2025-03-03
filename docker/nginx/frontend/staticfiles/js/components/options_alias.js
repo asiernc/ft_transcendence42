@@ -261,6 +261,7 @@ export default class OptionsAlias extends HTMLElement {
                 return;
 
             localStorage.setItem('user_info', JSON.stringify(this.userInfo));
+			navigateTo('/tournament');
             // NAVIGATE TO TOURNAMENT
         });
 	}
