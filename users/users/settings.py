@@ -32,6 +32,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
 	"http://localhost:3042",
+	"http://127.0.0.1:3042",
 ]
 
 ALLOWED_HOSTS = ['*']  # For development only
@@ -99,7 +100,7 @@ TEMPLATES = [
 	},
 ]
 
-WSGI_APPLICATION = 'users.wsgi.application'
+# WSGI_APPLICATION = 'users.wsgi.application'
 
 ASGI_APPLICATION = "users.asgi.application"
 
