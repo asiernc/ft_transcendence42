@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class FriendConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		self.username = self.scope['url_route']['kwargs']['username']
-		logger.info(f'USERNAME IS {self.username}\n\n\n\n\n')
+		logger.info(f'USERNAME IS {self.username}')
 		self.group_name = f'friends_{self.username}'
 
 		await self.accept()

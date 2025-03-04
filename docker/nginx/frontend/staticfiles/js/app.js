@@ -14,7 +14,7 @@ import { LandingView } from './views/LandingView.js';
 let ws;
 
 function connectWebSocket(username) {
-	ws = new WebSocket(`wss://127.0.0.1:3042/ws/friends/${username}/`);
+	ws = new WebSocket(`wss://localhost:3042/ws/friends/${username}/`);
 
 	ws.onopen = function(event) {
 		console.log("Websocket is connected.")
