@@ -29,9 +29,9 @@ function connectWebSocket(username) {
 		console.log("Websocket error: ", event);
 	};
 
- 	// window.addEventListener('beforeunload', function() {
-	// 	ws.close();
-	// })
+ 	window.addEventListener('beforeunload', function() {
+		ws.close();
+	})
 }
 
 const routes = {
