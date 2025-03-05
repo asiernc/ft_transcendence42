@@ -1,6 +1,6 @@
 import { HomeView } from './views/HomeView.js';
 import { LoginView } from './views/LoginView.js';
-import { RegisterView } from './views/RegisterView.js';
+import { RegisterView } from './views/RegisterView.js';``
 import { OTPView } from './views/OTPView.js';
 import { PlayView } from './views/PlayView.js';
 import { OptionsGameView } from './views/OptionsGameView.js';

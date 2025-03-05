@@ -57,8 +57,8 @@ class FriendConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_friends(self):
         user = User.objects.get(username=self.username)
-        friendships = Friends.objects.filter(user1=user) | Friends.objects.filter(user2=user)
-        return [friendship.user1.username if friendship.user2 == user else friendship.user2.username for friendship in friendships]
+        friendships = Friends.objects.filter(user=user) | Friends.objects.filter(friend=user)
+        return [friendship.user.username if friendship.friend == user else friendship.friend.username for friendship in friendships]
     
     async def notify_friends(self, status):
         friends = await self.get_friends()

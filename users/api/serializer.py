@@ -124,3 +124,8 @@ class MatchSerializer(serializers.ModelSerializer):
 		validated_data.pop('winner_username', None)
 		return super().create(validated_data)
 
+
+class FriendSerializer(serializers.ModelSerializer):
+	class Meta:
+		fields = '__all__'
+
