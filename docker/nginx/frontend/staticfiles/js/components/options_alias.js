@@ -222,7 +222,7 @@ export default class OptionsAlias extends HTMLElement {
                             </div>
                         </div>
                     </div>
-                    <a id="a1" href="javascript:void(0);" class="pixel-font mt-2">READY!</a>
+                    <a id="a1" - class="pixel-font mt-2">READY!</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">

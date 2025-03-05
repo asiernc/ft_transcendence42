@@ -1,9 +1,10 @@
 import { navigateTo } from '../app.js';
 
+let	g_round = 0;
+
 export default class TournamentComponent extends HTMLElement {
 	constructor() {
 		super();
-
 		const style = document.createElement('style');
         style.textContent = `
 			.bg {
@@ -37,6 +38,7 @@ export default class TournamentComponent extends HTMLElement {
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
+				overflow: hidden;
 				-webkit-text-stroke: 0.08em black;
 				font-weight: bold;
 				color: #c900a7;
@@ -129,7 +131,7 @@ export default class TournamentComponent extends HTMLElement {
 						</g>
 					</svg>
 				</div>
-				<div class="next-match-button">
+				<div class="next-match-button" id="next-match-button">
 					<svg class="svg-sword" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
 						<title>Play</title>
 						<path d="M5.018,12.088l12.892,12.1-1.968,2.1,5.77,5.77L24,29.91l2.288,2.148,5.77-5.77L12.088,5.018a.963.963,0,0,0-.62-.3l-6.36-.71a.983.983,0,0,0-1.1,1.1l.71,6.36A.963.963,0,0,0,5.018,12.088Z"></path><path d="M43.967,39.8a2.479,2.479,0,0,0-1.36-1.84l-.36-.17a3.423,3.423,0,0,1-.8-.58l-4.5-4.5-4.24,4.24,4.49,4.49a3.249,3.249,0,0,1,.57.78l.2.4a2.456,2.456,0,0,0,1.83,1.35,2.693,2.693,0,0,0,.4.03,2.505,2.505,0,0,0,1.77-.73l1.3-1.3A2.5,2.5,0,0,0,43.967,39.8Z"></path><path d="M36.244,26.344a1,1,0,0,0-1.415,0l-8.485,8.485a1,1,0,0,0,0,1.415,3,3,0,0,0,4.243,0l5.657-5.657A3,3,0,0,0,36.244,26.344Z"></path><path d="M42.982,12.088a.963.963,0,0,0,.3-.62l.71-6.36a.983.983,0,0,0-1.1-1.1l-6.36.71a.963.963,0,0,0-.62.3L25.372,16.244l6.176,6.579Z"></path><path d="M6.553,37.21a3.423,3.423,0,0,1-.8.58l-.36.17a2.5,2.5,0,0,0-.66,4.01l1.3,1.3A2.505,2.505,0,0,0,7.8,44a2.693,2.693,0,0,0,.4-.03,2.456,2.456,0,0,0,1.83-1.35l.2-.4a3.249,3.249,0,0,1,.57-.78l4.49-4.49-4.24-4.24Z"></path><path d="M13.171,26.344a1,1,0,0,0-1.415,0,3,3,0,0,0,0,4.243l5.657,5.657a3,3,0,0,0,4.243,0,1,1,0,0,0,0-1.415Z"></path>
@@ -143,71 +145,71 @@ export default class TournamentComponent extends HTMLElement {
 				<div class="players-grid" style="left: 6.5%; top: 20%;"> <!-- Box left-up -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m1-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m1-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 70%;"> <!-- Box left-bottom -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m2-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m2-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 22%;"> <!-- Box left-center -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m5-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m5-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="finalists-grid"> <!-- Box finalists(center) -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m7-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m7-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 22%;"> <!-- Box right-center -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m6-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m6-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 20%;"> <!-- Box right-up -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m3-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m3-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 70%;"> <!-- Box right-bottom -->
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 1 </p>
+						<p class="players-text" id="m4-p1"> PLAYER 1 </p>
 					</div>
 					<div class="player-box">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text"> PLAYER 2 </p>
+						<p class="players-text" id="m4-p2"> PLAYER 2 </p>
 					</div>
 				</div>
 			</div>
@@ -218,56 +220,73 @@ export default class TournamentComponent extends HTMLElement {
 		this.appendChild(div);
 
 		this.attachListeners();
+		const MatchList = this.randomizeMatches();
+		if (MatchList === false);
+				//throw Error o como se haga en web
+		console.log(MatchList); //to delete
+		document.getElementById("m1-p1").textContent = MatchList[0].player1.alias;
+		document.getElementById("m1-p2").textContent = MatchList[0].player2.alias;
+		document.getElementById("m2-p1").textContent = MatchList[1].player1.alias;
+		document.getElementById("m2-p2").textContent = MatchList[1].player2.alias;
+		document.getElementById("m3-p1").textContent = MatchList[2].player1.alias;
+		document.getElementById("m3-p2").textContent = MatchList[2].player2.alias;
+		document.getElementById("m4-p1").textContent = MatchList[3].player1.alias;
+		document.getElementById("m4-p2").textContent = MatchList[3].player2.alias;
 	}
+	addParticipant(user_info, playerID) {
+		const user_name = user_info['player' + playerID].username;
+		const user_alias = user_info['player' + playerID].alias;
+		const isIA = (user_name === "IA");
+		
+		const newPlayer = {
+			username: user_name,
+			alias: user_alias,
+			IA: isIA
+		};
 
+		return newPlayer;
+	}
+	randomizeMatches() {
+		const LocalStorageItem = localStorage.getItem('user_info');
+		if (LocalStorageItem) {
+			const MatchList = [];
+			const user_info = JSON.parse(LocalStorageItem);
+			let playerID = [1, 2, 3, 4, 5, 6, 7, 8];
+			let add_player1, add_player2;
+			let isPlayer1 = true;
+			while (playerID.length > 0)
+			{
+				
+				let num = Math.floor((Math.random() * playerID[playerID.length - 1]) + 1);
+				if (playerID.indexOf(num) != -1) {
+					if (isPlayer1 === false) {
+						add_player2 = this.addParticipant(user_info, num);
+						let MatchItem = {
+							player1 : add_player1,
+							player2 : add_player2
+						};
+						MatchList.push(MatchItem);
+					}
+					else
+						add_player1 = this.addParticipant(user_info, num);
+					isPlayer1 = !isPlayer1;
+					playerID.splice(playerID.indexOf(num), 1);
+				}
+			}
+			return MatchList;
+		}
+		return false;
+	}
 	attachListeners() {
-        document.getElementById("a1").addEventListener("click", async function ()
+        document.getElementById("next-match-button").addEventListener("click", async function ()
         {
-            const form = document.querySelector("form");
-
-            const otp_code = document.getElementById("otp_code");
-
-            if (form.checkValidity())
-                {
-                    try
-                    {
-                        document.getElementById("alert").style.display = "none";
-
-                        const response = await fetch('/api/verify-otp', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ 
-                                'username': localStorage.getItem("username"),
-                                'otp_code': otp_code.value,
-                            })
-                        });
-    
-                    const data = await response.json();
-                    if (response.ok)
-                    {
-						localStorage.setItem('access_token', data.access);
-						localStorage.setItem('refresh_token', data.refresh);
-                        navigateTo('/home');
-                    }
-                    else
-                    {
-                        console.log(data.error);
-                        document.getElementById("alert").style.display = "block";
-                    }
-                } catch (err) {
-                   console.log("Error: Problem sending the petition");
-                }
-            } else {
-                form.reportValidity();
-            }
+			navigateTo('/game');
+            
         });
 	}
 
 	disconnectedCallback() {
-		this.querySelector("form").removeEventListener('submit', this);
-        this.querySelector("a").removeEventListener('click', this);
+        this.querySelector("next-match-button").removeEventListener('click', this);
 	}
 }
 
