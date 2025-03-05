@@ -12,13 +12,6 @@ export default class LeaderboardComponent extends HTMLElement {
 	}
 
 	async render(){
-		// const users = [
-		// 	{"name": "alcaball2", "matches": 1000, "stats": "11 / 11 : 50%" },
-		// 	{"name": "User2", "matches": 381, "stats": "11 / 11 : 50%" },
-		// 	{"name": "Pedrito", "matches": 280, "stats": "11 / 11 : 50%" },
-		// 	{"name": "User33", "matches": 38, "stats": "11 / 11 : 50%" },
-		// 	{"name": "User5", "matches": 2, "stats": "11 / 11 : 50%" },
-		// ];
 		const users = await this.getUsers();
 
 		const style = document.createElement('style');
@@ -112,7 +105,7 @@ export default class LeaderboardComponent extends HTMLElement {
 			users_table += `
 			<tr class="history_scores">
 				<td>#${i}</td>
-				<td><img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" width="70px"></td>
+				<td><img src="${user['avatar_field']}" width="70px"></td>
 				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
 				<td>${user['matches']}</td>
 				<td>${user['stats']}</td>
@@ -121,6 +114,33 @@ export default class LeaderboardComponent extends HTMLElement {
 			`;
 			++i;
 		});
+		if (users_table == ""){
+			users_table = `
+			<table>
+			<tr>
+				<td>YOU DONT HAVE FRIENDS :(</td>
+			</tr>
+			</table>
+			`
+		}else{
+			users_table =`
+				<table style="width: 60%; margin-left: auto; margin-right: auto;" id="leaderboard">
+				<thead>
+				<tr>
+					<th style="width: 50px;"></th>
+					<th style="width: 100px;"></th>
+					<th>Name </th>
+					<th>Matches</th>
+					<th>Stats</th>
+					<th style="width: 50px;"></th>
+				</tr>
+				</thead>
+				<tbody>
+					${users_table}
+				</tbody>
+				</table>`;
+		}
+
         const div = document.createElement('div');
         div.innerHTML = `
 		<div style="width: 80%; margin-left: auto; margin-bottom: 40px;">
@@ -130,27 +150,13 @@ export default class LeaderboardComponent extends HTMLElement {
 		<table style="width: 50%; margin-left: auto; margin-right: auto; margin-bottom: 60px;" id="user">
 			<tbody>
 				<td>#${i}</td>
-				<td><img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" width="70px"></td>
+				<td><img src="${users['user']['avatar_field']}" width="70px"></td>
 				<td>${users['user']['username']}</td>
 				<td>${users['user']['matches']}</td>
 				<td>${users['user']['stats']}</td>
 			</tbody>
 		</table>
-		<table style="width: 60%; margin-left: auto; margin-right: auto;" id="leaderboard">
-			<thead>
-			<tr>
-				<th style="width: 50px;"></th>
-				<th style="width: 100px;"></th>
-				<th>Name </th>
-				<th>Matches</th>
-				<th>Stats</th>
-				<th style="width: 50px;"></th>
-			</tr>
-			</thead>
-			<tbody>
-				${users_table}
-			</tbody>
-		</table>
+		${users_table}
         `;
 		this.shadowRoot.appendChild(style);
         div.className = 'bg';

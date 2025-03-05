@@ -92,10 +92,15 @@ export default class NavbarComponent extends HTMLElement {
         });
 		this.logout = this.shadowRoot.getElementById('logout');
         this.logout.addEventListener('click', () => {
-            navigateTo('/logout');
+            this.logout();
         });
 	}
 
+	async logout(){
+		let resp = fetch('api/logout', {method: 'GET'});
+		console.log(resp);
+	}
+	
 	disconnectedCallback() {
         this.profile.removeEventListener('click', this);
         this.play.removeEventListener('click', this);

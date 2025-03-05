@@ -43,7 +43,7 @@ export default class ProfileComponent extends HTMLElement {
 		}
 		button{
 			border: none;
-			background-color: rgba(133, 214, 102, 0.55);
+			background-color: rgba(217, 217, 217, 0.548);
 			padding: 10px;
 			cursor: pointer;
 		}
@@ -167,16 +167,16 @@ export default class ProfileComponent extends HTMLElement {
 			</div>
 			`;
 		});
-		if (friends === ""){
-			friends = "No friends :(";
-		}
+		if (friends === ""){friends = "No friends :("; }
+		if (!userData['user']['avatar_field']) {
+			userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 
         const div = document.createElement('div');
         div.innerHTML = `
 	<div style="width: 80%; display: flex; justify-content: space-between">
 		<div style="display:flex;">
 			<div style="margin-right: 20px;">
-				<img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="pfp" id="usr_img">
+				<img src="${userData['user']['avatar_field']}" class="pfp" id="usr_img">
 			</div>
 			<div class="name">
 				<h1 class="pixel-font" style="font-size: 40px">${userData['user']['username']}</h1>
