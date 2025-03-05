@@ -287,11 +287,12 @@ export default class LoginComponent extends HTMLElement {
 						alertMsg.style.display = "flex";
 						const err_msg = await response.json()
 							.catch( () => new Error( "Login was not succesful." ) );
-				  		return Promise.reject(err_msg);
+
+				  		throw Error(err_msg);
 					}
 				}
 				catch (err) {
-					console.log("Error: ", err);
+					console.log(err);
 				}
 				
 			} else {
