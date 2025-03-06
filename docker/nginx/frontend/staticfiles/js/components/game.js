@@ -147,7 +147,6 @@ export default class GameComponent extends HTMLElement {
 
 		const div = document.createElement('div');
 		div.innerHTML = `
-            <div class="sidebar"></div>
             <div id="game"></div>
             <div class="modal-container" id="modal_container">
                 <div id="modal-content" class="modal-content"></div>
@@ -166,7 +165,7 @@ export default class GameComponent extends HTMLElement {
 	startGame() {
         const urlParams = new URLSearchParams(window.location.search);
         const players = urlParams.get('players');
-        const versus = urlParams.get('vs') == null ? "localhost" : urlParams.get('vs');
+        const versus = urlParams.get('vs') == null ? ( urlParams.get('player2AI') == 'true' ? "ia" : "localhost"): urlParams.get('vs');
         // check if user exists maybe
         const tournament_id = urlParams.get('tournament_id');
         // check if tournament exists maybe

@@ -17,19 +17,19 @@ class UserSerializer(serializers.ModelSerializer):
 	def validate_username(self, value):
 		if self.instance:
 			if User.objects.filter(username=value).exclude(id=self.instance.id).exists():
-				raise serializers.ValidationError("Username already in use")
+				raise serializers.ValidationError("Username or email already in use")
 		else:
 			if User.objects.filter(username=value).exists():
-				raise serializers.ValidationError("Username already in use")
+				raise serializers.ValidationError("Username or email already in use")
 		return value
 
 	def validate_email(self, value):
 		if self.instance:
 			if User.objects.filter(email=value).exclude(id=self.instance.id).exists():
-				raise serializers.ValidationError("Username already in use")
+				raise serializers.ValidationError("Email or email already in use")
 		else:
 			if User.objects.filter(email=value).exists():
-				raise serializers.ValidationError("Username already in use")
+				raise serializers.ValidationError("Email or email already in use")
 		return value
 
 	def validate_avatar_field(self, value):
@@ -123,4 +123,9 @@ class MatchSerializer(serializers.ModelSerializer):
 		validated_data.pop('player2_username')
 		validated_data.pop('winner_username', None)
 		return super().create(validated_data)
+
+
+class FriendSerializer(serializers.ModelSerializer):
+	class Meta:
+		fields = '__all__'
 

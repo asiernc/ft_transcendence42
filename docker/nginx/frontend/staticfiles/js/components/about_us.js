@@ -293,7 +293,6 @@ export default class AboutUsComponent extends HTMLElement {
 
 		const div = document.createElement('div');
 		div.innerHTML = `
-            <div class="sidebar"></div>
             <header class="pixel-font" style="text-align: center;">
                 <div class="showcase">
                     <div class="container-text">
@@ -316,11 +315,11 @@ export default class AboutUsComponent extends HTMLElement {
                                 <div class="team-image">
                                     <img src="./staticfiles/js/utils/images/team_members/alcaball.png">
                                     <p class="description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Always developing random things.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/albertcaballero"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/albert-caballero-coll/"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">

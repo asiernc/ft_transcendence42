@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.models import User
+from api.models import User, Friends
 from api.serializer import UserSerializer
 from django.core.mail import send_mail
 from django.conf import settings
@@ -130,3 +130,55 @@ def deleteUser(request, pk):
 		return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 	user.delete()
 	return Response({'detail': 'User deleted.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_friend(request):
+	user_username = request.user.username
+	friend_username = request.data.get('friend_username')
+
+	if not friend_username:
+		return Response({'detail': 'Friend username is required.'}, status=status.HTTP_404_NOT_FOUND)
+
+	try:
+		user = User.objects.get(username=user_username)
+		friend = User.objects.get(username=friend_username)
+		if user == friend:
+			return Response({'detail': 'User and friend must be differents.'}, status=status.HTTP_404_NOT_FOUND)
+	except User.DoesNotExist:
+		return Response({'detail': 'User or friend not found.'}, status=status.HTTP_404_NOT_FOUND)
+	
+	if (Friends.objects.filter(user=user, friend=friend).exists() or
+	 	Friends.objects.filter(user=friend, friend=user).exists()):
+		return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+	friendship = Friends(user=user, friend=friend)
+	friendship.save()
+
+	return Response({'detail': 'Friend added succesfully.'}, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if Friendship.objects.filter(user1=current_user, user2=friend_user).exists() or \
+# 		Friendship.objects.filter(user1=friend_user, user2=current_user).exists():
+# 		return Response({'error': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+# 	data = {
+# 		'user1': current_user.username,
+# 		'user2': friend_user.username
+# 	}
+# 	serializer = FriendshipSerializer(data=data)
+# 	if serializer.is_valid():
+# 		serializer.save()
+# 		return Response(seriali

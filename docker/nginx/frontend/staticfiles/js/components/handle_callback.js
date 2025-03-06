@@ -26,6 +26,7 @@ export function handleCallback() {
 				localStorage.setItem('access_token', data.access_token);
 				localStorage.setItem('refresh_token', data.refresh_token);
 				console.log("Tokens stored, navigating to home");
+				localStorage.setItem("username", data.username);
 				navigateTo('/home');
 			}
 			else {

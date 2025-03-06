@@ -125,7 +125,6 @@ export default class HomeComponent extends HTMLElement {
 
         const div = document.createElement('div');
         div.innerHTML = `
-            <div class="sidebar"></div>
             <div class="options">
                 <div class="longcards red-l" id="profile">
                     <svg version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -169,7 +168,7 @@ export default class HomeComponent extends HTMLElement {
     attachListeners() {
 		this.profile = this.shadowRoot.getElementById('profile');
         this.profile.addEventListener('click', () => {
-            console.log("PROFILE");
+            navigateTo("/profile");
         });
         this.play = this.shadowRoot.getElementById('play');
         this.play.addEventListener('click', () => {
@@ -177,7 +176,7 @@ export default class HomeComponent extends HTMLElement {
         });
         this.leaderboard = this.shadowRoot.getElementById('leaderboard');
         this.leaderboard.addEventListener('click', () => {
-            console.log("LEADERBOARD");
+            navigateTo("/leaderboard");
         });
         this.settings = this.shadowRoot.getElementById('about_us');
         this.settings.addEventListener('click', () => {

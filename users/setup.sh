@@ -33,5 +33,11 @@ python3 manage.py crontab show
 echo "Starting cron service..."
 service cron start
 
-echo "Starting Django server..."
-python3 manage.py runserver 0.0.0.0:8001  --settings=users.settings
+#echo "Starting Django server..."
+#python3 manage.py runserver 0.0.0.0:8001  --settings=users.settings
+
+echo "Initializing Django setup..."
+python3 -c "import django; django.setup()"
+
+echo "Starting Daphne server..."
+daphne -b 0.0.0.0 -p 8001 users.asgi:application
