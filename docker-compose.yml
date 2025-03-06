@@ -33,6 +33,23 @@ services:
       - transcendence
     restart: always
 
+  backend_tournament:
+    depends_on:
+      - postgres
+    container_name: tournament
+    build:
+      context: .
+      dockerfile: docker/backend_tournament/Dockerfile
+    volumes:
+      - ./tournament:/tournament_app
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
+
   nginx:
     build:
       context: .

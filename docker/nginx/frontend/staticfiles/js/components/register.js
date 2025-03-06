@@ -273,13 +273,19 @@ export default class RegisterComponent extends HTMLElement {
                         succesMsg.style.display = "flex";
                     else
                     {
-                        console.log(data.error);
                         alertMsg.style.display = "flex";
+                        const err_msg = await response.json()
+                            .catch( () => new Error("Login was not succesful."));
+                        
+                        throw Error(err_msg);
                     }
 
                 } catch (err) {
-                   console.log("Error: Problem sending the petition");
+                   console.log(err);
                 }
+
+                document.querySelectorAll("input").forEach((e) => { e.value = null });
+
             } else {
                 form.reportValidity();
             }

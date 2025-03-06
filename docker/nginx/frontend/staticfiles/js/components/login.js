@@ -283,13 +283,15 @@ export default class LoginComponent extends HTMLElement {
 						localStorage.setItem("username", data.username);
 						navigateTo('/otp');
 					} else {
-						console.log(data.error);
 						alertMsg.style.display = "flex";
+						const err_msg = await response.json()
+							.catch( () => new Error( "Login was not succesful." ) );
+
+				  		throw Error(err_msg);
 					}
 				}
 				catch (err) {
-					console.log("Error: ", err);
-					alertMsg.style.display = "flex";
+					console.log(err);
 				}
 				
 			} else {
