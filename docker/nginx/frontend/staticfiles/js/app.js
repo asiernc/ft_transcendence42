@@ -8,6 +8,9 @@ import { GameView } from './views/GameView.js';
 import { OptionsTournamentView } from './views/OptionsTournament.js';
 import { OptionsAliasView } from './views/OptionsAlias.js';
 import { handleCallback } from './components/handle_callback.js'
+import { ProfileView } from './views/ProfileView.js';
+import { ProfileEditView } from './views/ProfileEditView.js';
+import { LeaderboardView } from './views/LeaderboardView.js';
 import { AboutUsView } from './views/AboutUsView.js';
 import { LandingView } from './views/LandingView.js';
 import { TournamentComponentView } from './views/TournamentView.js';
@@ -76,6 +79,9 @@ const routes = {
 	'/options_alias': OptionsAliasView,
 	'/tournament' : TournamentComponentView,
 	'/callback': handleCallback,
+    '/profile': ProfileView,
+    '/profile/edit': ProfileEditView,
+    '/leaderboard': LeaderboardView,
 	'/about_us': AboutUsView,
 };
 
@@ -117,6 +123,5 @@ function navigateTo(path) {
 
 window.addEventListener('load', handleRoute);
 window.addEventListener('popstate', handleRoute);
-
 
 export { navigateTo };

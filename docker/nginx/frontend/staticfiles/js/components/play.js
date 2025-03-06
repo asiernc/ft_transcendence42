@@ -109,7 +109,6 @@ export default class PlayComponent extends HTMLElement {
 
         const div = document.createElement('div');
         div.innerHTML = `
-            <div class="sidebar"></div>
             <div class="options">
                 <div class="longcards turquoise" id="versus">
                     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 303.7375 226.7466" enable-background="new 0 0 303.7375 226.7466" xml:space="preserve">
