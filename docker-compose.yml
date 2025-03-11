@@ -61,6 +61,7 @@ services:
       - "3042:3042"
     volumes:
       - ./docker/nginx/frontend:/usr/share/nginx/frontend
+      - ./users/media:/app/media
     networks:
       - transcendence
     restart: always
