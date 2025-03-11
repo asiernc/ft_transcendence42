@@ -6,12 +6,14 @@ WORKDIR /app
 COPY users/requirements.txt requirements.txt
 COPY users /app
 
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
 
 RUN touch /var/log/cron.log
 
 # Make setup.sh executable
-RUN chmod +x setup.sh
+RUN chmod +x /app/setup.sh
 
 # Establecer las variables de entorno necesarias
 ENV DJANGO_SETTINGS_MODULE=users.settings

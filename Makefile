@@ -1,6 +1,7 @@
 up:
 	@if [ ! -d "./data/postgres" ]; then \
 		mkdir -p "./data/postgres"; \
+		chmod -R 777 "./data/postgres"; \
 	fi
 	docker compose -f docker-compose.yml up
 

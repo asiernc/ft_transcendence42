@@ -1,13 +1,15 @@
 
 FROM python:3.11-slim
 
-WORKDIR /tournament_app
+WORKDIR /app
 
 COPY tournament/requirements.txt requirements.txt
-COPY tournament /tournament_app
+COPY tournament /app
+
+RUN apt-get update && apt-get install -y netcat-openbsd
 
 # Make setup.sh executable
-RUN chmod +x setup.sh
+RUN chmod +x /app/setup.sh
 
 EXPOSE 8002
 

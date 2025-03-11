@@ -1,10 +1,6 @@
 
 services:
   postgres:
-    restart: always
-    build:
-      context: ./docker/postgres
-      dockerfile: Dockerfile
     image: postgres:latest
     container_name: postgres
     env_file:
@@ -15,11 +11,17 @@ services:
       - transcendence
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d transcendence"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 10s
 
   backend_user:
     depends_on:
-      - postgres
-    container_name: users
+      postgres: {condition: service_healthy}
+    container_name: backend_users
     build:
       context: .
       dockerfile: docker/backend_user/Dockerfile
@@ -33,22 +35,22 @@ services:
       - transcendence
     restart: always
 
-  backend_tournament:
-    depends_on:
-      - postgres
-    container_name: tournament
-    build:
-      context: .
-      dockerfile: docker/backend_tournament/Dockerfile
-    volumes:
-      - ./tournament:/tournament_app
-    ports:
-      - "8002:8002"
-    env_file:
-      - .env
-    networks:
-      - transcendence
-    restart: always
+  # backend_tournament:
+  #   depends_on:
+  #     - backend_user
+  #   container_name: backend_tournament
+  #   build:
+  #     context: .
+  #     dockerfile: docker/backend_tournament/Dockerfile
+  #   volumes:
+  #     - ./tournament:/app
+  #   ports:
+  #     - "8002:8002"
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - transcendence
+  #   restart: always
 
   nginx:
     build:

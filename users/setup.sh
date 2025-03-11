@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ "$DATABASE" = "transcendence" ]
+if [ "$DATABASE_NAME" = "transcendence" ]
 then
     echo "Waiting for postgres..."
 
-    while ! nc -z $DATABASE_HOST $POSTGRES_PORT; do
+    while ! nc -z $POSTGRES_HOST $POSTGRES_PORT; do
     	sleep 0.1
     done
 
