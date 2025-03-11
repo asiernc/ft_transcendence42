@@ -321,11 +321,11 @@ export default class AboutUsComponent extends HTMLElement {
                                 <div class="team-image">
                                     <img src="./staticfiles/js/utils/images/team_members/anovio-c.png">
                                     <p class="description">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Charizard is on fire.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="#">https://github.com/asiernc<i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="#">https://www.linkedin.com/in/asierncara/<i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
