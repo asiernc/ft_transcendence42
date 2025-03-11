@@ -35,22 +35,22 @@ services:
       - transcendence
     restart: always
 
-  # backend_tournament:
-  #   depends_on:
-  #     - backend_user
-  #   container_name: backend_tournament
-  #   build:
-  #     context: .
-  #     dockerfile: docker/backend_tournament/Dockerfile
-  #   volumes:
-  #     - ./tournament:/app
-  #   ports:
-  #     - "8002:8002"
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendence
-  #   restart: always
+  backend_tournament:
+    depends_on:
+      - backend_user
+    container_name: backend_tournament
+    build:
+      context: .
+      dockerfile: docker/backend_tournament/Dockerfile
+    volumes:
+      - ./tournament:/app
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
 
   nginx:
     build:
@@ -66,6 +66,7 @@ services:
     restart: always
     depends_on:
       - backend_user
+      - backend_tournament
 
 networks:
   transcendence:
