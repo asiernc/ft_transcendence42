@@ -324,8 +324,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         Charizard is on fire.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#">https://github.com/asiernc<i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#">https://www.linkedin.com/in/asierncara/<i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/asiernc"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/asierncara/"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">

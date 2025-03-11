@@ -168,8 +168,9 @@ export default class ProfileComponent extends HTMLElement {
 			`;
 		});
 		if (friends === ""){friends = "No friends :("; }
-		if (!userData['user']['avatar_field']) {
-			userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+
+		if (userData['user']['avatar_42_url']) {userData['user']['avatar_field'] = userData['user']['avatar_42_url'];}
+		if (!userData['user']['avatar_field']) {userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 
         const div = document.createElement('div');
         div.innerHTML = `

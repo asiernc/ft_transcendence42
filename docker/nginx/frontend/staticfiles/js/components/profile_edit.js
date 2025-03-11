@@ -116,13 +116,9 @@ export default class ProfileEditComponent extends HTMLElement {
 		}
         `;
 
-		// <input id="image-file" type="file">
-		// 	<img id="id_image" src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" class="userImg">
-		// </input>
 		const user = await this.getUserInfo();
-		let avatar = user['avatar_field']
-		if (!avatar) {avatar = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
-		// const user = {"name": "Albert Caballero", "username": "alcaball", "bio": "best pong player", "email": "alcaball@student.42.fr" };
+		if (user['user']['avatar_42_url']) {user['user']['avatar_field'] = user['user']['avatar_42_url'];}
+		if (!user['user']['avatar_field']) {user['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 
         const div = document.createElement('div');
         div.innerHTML = /*html*/`
@@ -135,7 +131,7 @@ export default class ProfileEditComponent extends HTMLElement {
 			<div style="display: flex; flex-direction: row; gap: 2%;">
 			<label class="profile-pic-container">
 				<input type="file" id="profile-upload" accept="image/*" hidden>
-				<img id="profile-image" src="${avatar}" alt="Profile Picture">
+				<img id="profile-image" src="${user['user']['avatar_field']}" alt="Profile Picture">
 				<div class="edit-icon">✏️</div>
 			</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
@@ -268,6 +264,7 @@ export default class ProfileEditComponent extends HTMLElement {
 				}
 			);
 			const data = await response.json();
+			console.log(data);
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
