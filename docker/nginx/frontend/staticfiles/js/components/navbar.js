@@ -6,10 +6,6 @@ export default class NavbarComponent extends HTMLElement {
 
         const shadow = this.attachShadow({ mode: 'open' });
 
-		// if (window.location.pathname == '/')
-		// 	return;
-		// NECESITAMOS QUE NO APAREZCA EN LANDING
-
 		const style = document.createElement('style');
         style.textContent = `
 			.nav_bar{
@@ -21,6 +17,7 @@ export default class NavbarComponent extends HTMLElement {
 				top: 50%;
 				transform: translateY(-50%);
 				left: 0px;
+				z-index: 1;
 			}
 			.fa {
 				padding: 5px;
@@ -91,15 +88,37 @@ export default class NavbarComponent extends HTMLElement {
             navigateTo('/home');
         });
 		this.logout = this.shadowRoot.getElementById('logout');
-        this.logout.addEventListener('click', () => {
-            this.logout();
+        this.logout.addEventListener('click', async () => {
+				try {
+					
+					const response = await fetch('/api/logout', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+						}
+					});
+					
+					if (response.ok) {
+						localStorage.clear();
+						navigateTo('/login');
+					} else {
+						const err_msg = await response.json()
+							.catch( () => new Error( "Login was not succesful." ) );
+
+						throw Error(err_msg);
+					}
+				}
+				catch (err) {
+					console.log(err);
+				}
         });
 	}
 
-	async logout(){
-		let resp = fetch('api/logout', {method: 'GET'});
-		console.log(resp);
-	}
+	// async logout(){
+	// 	let resp = fetch('api/logout', {method: 'GET'});
+	// 	console.log(resp);
+	// }
 	
 	disconnectedCallback() {
         this.profile.removeEventListener('click', this);

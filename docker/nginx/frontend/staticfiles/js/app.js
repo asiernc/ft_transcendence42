@@ -21,7 +21,7 @@ import { TournamentComponentView } from './views/TournamentView.js';
 // que se llame get cookies y nos la guardamos como variable en
 // el frontent, pero no en el local
 
-let ws;
+let ws = null;
 
 function connectWebSocket(username) {
 	ws = new WebSocket(`wss://localhost:3042/ws/friends/${username}/`);
@@ -112,7 +112,8 @@ function handleRoute() {
 
 	if (path == '/home') {
 		const username = localStorage.getItem('username');
-		connectWebSocket(username);
+		if (!ws)
+			connectWebSocket(username);
 	}
 }
 

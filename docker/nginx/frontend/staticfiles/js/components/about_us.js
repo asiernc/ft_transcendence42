@@ -25,19 +25,6 @@ export default class AboutUsComponent extends HTMLElement {
                 }
             }
 
-            .sidebar {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 0;
-                width: 5vw;
-                height: 40vh;
-                z-index: 1;
-                background-color: #D9D9D9;
-                border: 3px solid#31353C ;
-                border-left: 0;
-            }
-
             #team-container {
                 height: fit-content;
                 width: 100vw;

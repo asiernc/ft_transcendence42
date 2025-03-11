@@ -256,7 +256,7 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		
 				if (!response.ok)
 				{
-					const err_mmsg = await response.json()
+					const err_msg = await response.json()
 						.catch( () => new Error( "The match could not be stored correctly." ) );
 				  	
 					throw Error(err_msg);
