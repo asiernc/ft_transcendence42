@@ -5,6 +5,9 @@ let	g_round = 0;
 export default class TournamentComponent extends HTMLElement {
 	constructor() {
 		super();
+		const MatchList = this.randomizeMatches();
+		if (MatchList === false);
+		//throw Error o como se haga en web
 		const style = document.createElement('style');
         style.textContent = `
 			.bg {
@@ -224,73 +227,73 @@ export default class TournamentComponent extends HTMLElement {
 					</svg>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 20%;"> <!-- Box left-up -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m1-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m1-p1">${MatchList[0].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m1-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m1-p2">${MatchList[0].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 70%;"> <!-- Box left-bottom -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m2-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m2-p1">${MatchList[1].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m2-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m2-p2">${MatchList[1].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 22%;"> <!-- Box left-center -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m5-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m5-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m5-p1"> WINNER 1 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m5-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m5-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m5-p2"> WINNER 2 </p>
 					</div>
 				</div>
 				<div class="finalists-grid"> <!-- Box finalists(center) -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m7-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m7-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m7-p1"> FINALIST 1 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m7-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m7-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m7-p2"> FINALIST 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 22%;"> <!-- Box right-center -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m6-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m6-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m6-p1"> WINNER 3 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m6-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m6-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m6-p2"> WINNER 4 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 20%;"> <!-- Box right-up -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m3-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m3-p1">${MatchList[2].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m3-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m3-p2">${MatchList[2].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 70%;"> <!-- Box right-bottom -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m4-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m4-p1">${MatchList[3].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m4-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m4-p2">${MatchList[3].player2.alias}</p>
 					</div>
 				</div>
 			</div>
@@ -301,19 +304,15 @@ export default class TournamentComponent extends HTMLElement {
 		this.appendChild(style);
         div.className = 'bg';
 		this.appendChild(div);
-
-		const MatchList = this.randomizeMatches();
-		if (MatchList === false);
-		//throw Error o como se haga en web
 		this.attachListeners(MatchList);
-		document.getElementById("m1-p1").textContent = MatchList[0].player1.alias;
-		document.getElementById("m1-p2").textContent = MatchList[0].player2.alias;
-		document.getElementById("m2-p1").textContent = MatchList[1].player1.alias;
-		document.getElementById("m2-p2").textContent = MatchList[1].player2.alias;
-		document.getElementById("m3-p1").textContent = MatchList[2].player1.alias;
-		document.getElementById("m3-p2").textContent = MatchList[2].player2.alias;
-		document.getElementById("m4-p1").textContent = MatchList[3].player1.alias;
-		document.getElementById("m4-p2").textContent = MatchList[3].player2.alias;
+		const gameResultItem = localStorage.getItem("gameResult");
+		if (gameResultItem) {
+			this.setBoxResult(MatchList, JSON.parse(gameResultItem));
+			localStorage.removeItem("gameResult");
+		}
+		else
+			console.log('not gameResult found');
+		console.log(g_round + 1);
 	}
 	addParticipant(user_info, playerID) {
 		const user_name = user_info['player' + playerID].username;
@@ -331,6 +330,7 @@ export default class TournamentComponent extends HTMLElement {
 	randomizeMatches() {
 		const LocalStorageItem = localStorage.getItem('user_info');
 		if (LocalStorageItem) {
+			console.log(JSON.parse(LocalStorageItem));
 			const MatchList = [];
 			const user_info = JSON.parse(LocalStorageItem);
 			let playerID = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -359,6 +359,24 @@ export default class TournamentComponent extends HTMLElement {
 		}
 		return false;
 	}
+
+	setBoxResult(MatchList, gameResult) {
+		const divp1_id = "pb-m" + g_round + "-p1";
+		const divp2_id = "pb-m" + g_round + "-p2";
+		if (gameResult.score_p1 > gameResult.score_p2) {
+			document.getElementById(divp1_id).style.backgroundColor = "#24831e";
+			document.getElementById(divp2_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp2_id).style.textDecoration = "line-through"
+			document.getElementById(divp2_id).style.textDecorationThickness = "0.2rem"
+			//MatchList[g_round - 1].;
+		} else {
+			document.getElementById(divp1_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp1_id).style.textDecoration = "line-through"
+			document.getElementById(divp1_id).style.textDecorationThickness = "0.2rem"
+			document.getElementById(divp2_id).style.backgroundColor = "#24831e";
+		}
+	}
+
 	attachListeners(MatchList) {
         this.nextmatch = document.getElementById("next-match-button");
 		this.nextmatch.addEventListener("click", async function ()
@@ -399,7 +417,9 @@ export default class TournamentComponent extends HTMLElement {
 				let path = '/game?players=2';
 				path += "&player1AI=" + MatchList[g_round].player1.IA;
 				path += "&player2AI=" + MatchList[g_round].player2.IA;
-				path += "&player3AI=false&player4AI=false";
+				path += "&player3AI=false&player4AI=false&tournament_id=" + Date.now() + Math.floor(Math.random() * 100);
+				path += "&p1username=" + MatchList[g_round].player1.username;
+				path += "&p2username=" + MatchList[g_round].player2.username;
 				g_round++;
 				navigateTo(path);
 			});
