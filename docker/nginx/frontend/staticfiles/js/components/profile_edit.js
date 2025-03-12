@@ -108,7 +108,8 @@ export default class ProfileEditComponent extends HTMLElement {
 		.alert {
 			position: fixed;
 			padding: 40px;
-			background-color:rgb(54, 244, 63);
+			background-color: #97ED93;
+            border: 5px solid #1E6C1A;
 			top: 40%;
 			display: none;
 			font-size: larger;
@@ -179,7 +180,7 @@ export default class ProfileEditComponent extends HTMLElement {
         this.submit.addEventListener('click', async () => { //UPDATE USER
 			
 			const form = this.shadowRoot.getElementById("editProfileForm");
-			if (form.checkValidity() && 1==2)
+			if (form.checkValidity())
 			{
 				const username = localStorage.getItem('username');
 				const token = localStorage.getItem("access_token");
@@ -203,7 +204,8 @@ export default class ProfileEditComponent extends HTMLElement {
 						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
 					}else{
 						resultAlert.style.display = 'block';
-						resultAlert.style.backgroundColor = 'red';
+						resultAlert.style.backgroundColor = '#EE7C7C';
+						resultAlert.style.border = '5px solid #701717';
 						resultAlert.style.color = 'white';
 						resultAlert.innerText = 'Error updating profile :(';
 						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
@@ -223,7 +225,6 @@ export default class ProfileEditComponent extends HTMLElement {
 				console.warn("No file selected.");
 				return;
 			}
-			console.log("holiwiiiiii");
 			try{
 				const token = localStorage.getItem("access_token");
 				const response = await fetch(`/api/avatar`, {

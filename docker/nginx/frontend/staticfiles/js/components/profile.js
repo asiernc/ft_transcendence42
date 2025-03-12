@@ -135,18 +135,19 @@ export default class ProfileComponent extends HTMLElement {
 		console.log(userData);
 		let match_history = "";
 		userData['matches'].forEach(match => {
-			const winner =  match['p1score'] > match['p2score'];
+			if (userData['user']['avatar_42_url']) {userData['user']['avatar_field'] = userData['user']['avatar_42_url'];}
+			if (!userData['user']['avatar_field']) {userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 			match_history += `
 				<tr class="history_scores">
-					<td>${match['p1score']}</td>
-					<td><img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" width="80px" style="box-shadow: 3px 3px 8px 0 ${winner ? 'green':'red'};"></td>
+					<td>${match['score_player1']}</td>
+					<td><img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
 					<td>vs</td>
-					<td><img src="https://play-lh.googleusercontent.com/2zorpA9peRFcwZM5SLSAx80gLCA3YrknRXQwPW-Hz2AJyBcvBJiO9vuP6DvlX3FRZXMv=w526-h296-rw" width="80px" style="box-shadow: 3px 3px 8px 0 ${!winner ? 'green':'red'};"></td>
-					<td>${match['p2score']}</td>
+					<td><img src="https://play-lh.googleusercontent.com/2zorpA9peRFcwZM5SLSAx80gLCA3YrknRXQwPW-Hz2AJyBcvBJiO9vuP6DvlX3FRZXMv=w526-h296-rw" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
+					<td>${match['score_player2']}</td>
 				</tr>
 				<tr class="history_dates">
 					<td colspan="2" style="text-align: left; padding-left: 50px;">${match['duration']}</td>
-					<td colspan="3"  style="text-align: right; padding-right: 50px;">${match['date']}</td>
+					<td colspan="3"  style="text-align: right; padding-right: 50px;">${match['played_at'].split('T')[0]}</td>
 				</tr>
 			`;
 		});
@@ -156,10 +157,12 @@ export default class ProfileComponent extends HTMLElement {
 
 		let friends = "";
 		userData['friends'].forEach(friend => {
+			if (friend['avatar_42_url']) {friend['avatar_field'] = friend['avatar_42_url'];}
+			if (!friend['avatar_field']) {friend['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 			friends += `
 			<div class="friend">
-				<img src="https://play-lh.googleusercontent.com/2zorpA9peRFcwZM5SLSAx80gLCA3YrknRXQwPW-Hz2AJyBcvBJiO9vuP6DvlX3FRZXMv=w526-h296-rw" width="60px">
-				<h2 style="margin-left: 3%;" onclick="alert('to profile')">${friend['name']}</h2>
+				<img src="${friend['avatar_field']}" width="60px">
+				<h2 style="margin-left: 3%;" onclick="alert('to profile')">${friend['username']}</h2>
 				<div style="margin-left: auto;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">
 					<img src="	https://cdn-icons-png.flaticon.com/512/8184/8184225.png" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend" onclick="alert('unfriended')">

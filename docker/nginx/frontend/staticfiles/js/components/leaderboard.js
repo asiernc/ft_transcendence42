@@ -131,45 +131,22 @@ export default class LeaderboardComponent extends HTMLElement {
 		let i = 1;
 		users['friends'].forEach(user => {
 			friends_table += `
-			<tr>
+			<tr style="${this.generateColors()}">
 				<td>#${i}</td>
 				<td><img src="${user['avatar_field']}" width="70px"></td>
 				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
 				<td>${user['matches']}</td>
 				<td>${user['stats']}</td>
 				<td>
-					<img class="clickable-img" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
-					<img class="clickable-img" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png" onclick="alert('add friend')">
+					<img class="clickable-img match-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					<img class="clickable-img friend-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">
 				</td>
 			</tr>
 			`;
 			++i;
 		});
 		if (friends_table == ""){
-			friends_table = `
-			<table style="width: 90%; margin-left: auto; margin-right: auto;" id="friends_leaderboard">
-			<tr>
-				<td>YOU DONT HAVE FRIENDS :( SO SAD</td>
-			</tr>
-			</table>
-			`
-		}else{
-			friends_table =`
-			<table style="width: 90%; margin-left: auto; margin-right: auto;" id="friends_leaderboard">
-				<thead>
-				<tr style="border-bottom: 1px solid black;">
-					<th style="width: 50px;"></th>
-					<th style="width: 100px;"></th>
-					<th>Name </th>
-					<th>Matches</th>
-					<th>Stats</th>
-					<th style="width: 50px;"></th>
-				</tr>
-				</thead>
-				<tbody>
-					${friends_table}
-				</tbody>
-			</table>`;
+			friends_table = `<tr><td></td><td colspan=5>YOU HAVE NO FRIENDS :( SO SAD</td></tr>`;
 		}
 
 		let global_table = "";
@@ -177,38 +154,21 @@ export default class LeaderboardComponent extends HTMLElement {
 		globalUsers.forEach(user => {
 			if (user['avatar_42_url']) {user['avatar_field'] = user['avatar_42_url'];}
 			if (!user['avatar_field']) {user['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
-			const color = this.generateColors();
 			global_table += `
-			<tr style="${color}">
+			<tr style="${this.generateColors()}" class="global">
 				<td>#${i}</td>
 				<td><img src="${user['avatar_field']}" width="70px"></td>
 				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
 				<td>${user['matches']}</td>
 				<td>${user['stats']}</td>
 				<td>
-					<img class="clickable-img" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
-					<img class="clickable-img" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png" onclick="alert('add friend')">
+					<img class="clickable-img match-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					<img class="clickable-img friend-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">
 				</td>
 			</tr>
 			`;
 			++i;
 		});
-		global_table =`
-			<table style="width: 90%; margin-left: auto; margin-right: auto;" id="global_leaderboard">
-				<thead>
-				<tr style="border-bottom: 1px solid black;">
-					<th style="width: 50px;"></th>
-					<th style="width: 100px;"></th>
-					<th>Name </th>
-					<th>Matches</th>
-					<th>Stats</th>
-					<th style="width: 50px;"></th>
-				</tr>
-				</thead>
-				<tbody>
-					${global_table}
-				</tbody>
-			</table>`;
 
 		if (users['user']['avatar_42_url']) {users['user']['avatar_field'] = users['user']['avatar_42_url'];}
 		if (!users['user']['avatar_field']) {users['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
@@ -238,8 +198,8 @@ export default class LeaderboardComponent extends HTMLElement {
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
-			${global_table}
-			${friends_table}
+			${this.generateTable(global_table, "global_leaderboard")}
+			${this.generateTable(friends_table, "friends_leaderboard")}
 			<div class="screw-container">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -270,6 +230,26 @@ export default class LeaderboardComponent extends HTMLElement {
             this.shadowRoot.getElementById('friends_leaderboard').style.display = 'table';
 			this.shadowRoot.getElementById('global_leaderboard').style.display = 'none';
         });
+
+		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
+			button.addEventListener("click", async function () {
+				const userId = this.dataset.username;
+				const token = localStorage.getItem("access_token");
+				try {
+					const response = await fetch("/api/add-friend", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							'Authorization': `Bearer ${token}`,
+						},
+						body: JSON.stringify({ friend_username: userId }),
+					});
+					const data = await response.json();
+				} catch (error) {
+					console.error("Request failed", error);
+				}
+		    });
+		});
 	}
 
 	disconnectedCallback() {
@@ -282,8 +262,26 @@ export default class LeaderboardComponent extends HTMLElement {
 		const BRcolors = ["701717", "163977", "1E6C1A", "60560E"];
 
 		const i = Math.floor(Math.random() * BGcolors.length);
-		return "border-bottom: 1px solid black;";
+		// return "border-bottom: 1px solid black;";
 		return `background-color: #${BGcolors[i]}; color: #${BRcolors[i]}; border-bottom: 2px solid #${BRcolors[i]};`;
+	}
+
+	generateTable(table, id){
+		return `<table style="width: 90%; margin-left: auto; margin-right: auto;" id="${id}">
+				<thead>
+				<tr style="border-bottom: 1px solid black;">
+					<th style="width: 50px;"></th>
+					<th style="width: 100px;"></th>
+					<th>Name </th>
+					<th>Matches</th>
+					<th>Stats</th>
+					<th style="width: 50px;"></th>
+				</tr>
+				</thead>
+				<tbody>
+					${table}
+				</tbody>
+			</table>`;
 	}
 
 	async getUsers(){
