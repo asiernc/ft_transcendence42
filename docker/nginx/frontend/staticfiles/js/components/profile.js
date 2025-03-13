@@ -127,6 +127,28 @@ export default class ProfileComponent extends HTMLElement {
 		.pixel-font {
             font-family: "Press Start 2P", Arial;
 		}
+
+		.pfp-container {
+			display: inline-block;
+			position: relative;
+			width: 60px;
+			height: 60px;
+			overflow: hidden;
+		}
+		.pfp-container img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+		.online-status{
+			position: absolute;
+			bottom: 1px;
+			right: 1px;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background-color: green;
+		}
         `;
 
 
@@ -161,7 +183,10 @@ export default class ProfileComponent extends HTMLElement {
 			if (!friend['avatar_field']) {friend['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 			friends += `
 			<div class="friend">
-				<img src="${friend['avatar_field']}" width="60px">
+				<label class="pfp-container">
+					<img src="${friend['avatar_field']}" width="60px">
+					<div class="online-status"></div>
+				</label>
 				<h2 style="margin-left: 3%;" onclick="alert('to profile')">${friend['username']}</h2>
 				<div style="margin-left: auto;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">

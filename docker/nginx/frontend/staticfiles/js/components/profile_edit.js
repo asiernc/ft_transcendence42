@@ -80,10 +80,8 @@ export default class ProfileEditComponent extends HTMLElement {
 			width: 250px;
 			height: 250px;
 			overflow: hidden;
-			cursor: pointer; /* Makes it clear it's clickable */
 			display: inline-block;
 		}
-		/* Profile Image */
 		.profile-pic-container img {
 			width: 100%;
 			height: 100%;
@@ -122,7 +120,7 @@ export default class ProfileEditComponent extends HTMLElement {
 		if (!user['user']['avatar_field']) {user['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
 
         const div = document.createElement('div');
-        div.innerHTML = /*html*/`
+        div.innerHTML = /*ht ml*/`
 		<div class="container">
 		<div class="screw-container">
 			<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -130,11 +128,11 @@ export default class ProfileEditComponent extends HTMLElement {
 		</div>
 		<form id="editProfileForm" enctype="multipart/form-data" style="padding: 20px;">
 			<div style="display: flex; flex-direction: row; gap: 2%;">
-			<label class="profile-pic-container">
-				<input type="file" id="profile-upload" accept="image/*" hidden>
-				<img id="profile-image" src="${user['user']['avatar_field']}" alt="Profile Picture">
-				<div class="edit-icon">✏️</div>
-			</label>
+				<label class="profile-pic-container">
+					<input type="file" id="profile-upload" accept="image/*" hidden>
+					<img id="profile-image" src="${user['user']['avatar_field']}" alt="Profile Picture">
+					<div class="edit-icon">✏️</div>
+				</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
 					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user['user']['name']}" class="input"></input>
 					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user['user']['username']}" class="input"></input>
