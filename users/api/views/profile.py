@@ -20,6 +20,11 @@ def getProfile(request, username):
 		user_serializer = UserSerializer(user)
 		friends_serializer = UserSerializer([friend.user if friend.user != user else friend.friend for friend in friends], many=True)
 		matches_serializer = MatchSerializer(matches, many=True)
+		for match in matches_serializer.data:
+			user1 = UserSerializer(User.objects.get(username=match['player1_username_read'])).data
+			user2 = UserSerializer(User.objects.get(username=match['player2_username_read'])).data
+			match['player1_avatar'] = user1['avatar_42_url'] or user1['avatar_field']
+			match['player2_avatar'] = user2['avatar_42_url'] or user2['avatar_field']
 
 		return Response({
 			'user': user_serializer.data,

@@ -134,7 +134,7 @@ export default class ProfileEditComponent extends HTMLElement {
 					<div class="edit-icon">✏️</div>
 				</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
-					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user['user']['name']}" class="input"></input>
+					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user['user']['first_name']}" class="input"></input>
 					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user['user']['username']}" class="input"></input>
 					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user['user']['email']}" class="input"></input>
 				</div>

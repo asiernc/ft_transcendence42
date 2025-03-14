@@ -265,6 +265,7 @@ export default class LeaderboardComponent extends HTMLElement {
 						resultAlert.style.display = 'block';
 						resultAlert.className = resultAlert.className.replace(" bad", "");
 						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+						button.style.display = 'none';
 					}else{
 						throw new Error("Error adding friend :(");
 					}

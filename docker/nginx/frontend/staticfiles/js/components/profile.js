@@ -9,6 +9,10 @@ export default class ProfileComponent extends HTMLElement {
 	}
 
 	async render(){
+		while (this.shadowRoot.firstChild) {
+			this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+		}
+
 		const style = document.createElement('style');
         style.textContent = `
 		.bg {
@@ -149,19 +153,35 @@ export default class ProfileComponent extends HTMLElement {
 			border-radius: 50%;
 			background-color: green;
 		}
+		.clickable-img{
+			cursor: pointer;
+			width: 30px;
+		}
+			.clickable-img:hover{
+				transform: translateY(-2px);
+			}
+		.alert {
+			position: fixed;
+			padding: 40px;
+			background-color: #97ED93;
+            border: 5px solid #1E6C1A;
+			top: 40%;
+			display: none;
+			font-size: larger;
+			z-index = 22;
+		}
         `;
 
 		const userData = await this.getUserInfo();
 		console.log(userData);
 		let match_history = "";
 		userData['matches'].forEach(match => {
-			match['avatar_field'] = this.cleanProfilePictures(match['avatar_42_url'], match['avatar_field']);
 			match_history += `
 				<tr class="history_scores">
 					<td>${match['score_player1']}</td>
-					<td><img src="${this.cleanProfilePictures(undefined, undefined)}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
+					<td><img src="${this.cleanProfilePictures(undefined, match['player1_avatar'])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
 					<td>vs</td>
-					<td><img src="${this.cleanProfilePictures(undefined, undefined)}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
+					<td><img src="${this.cleanProfilePictures(undefined, match['player2_avatar'])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
 					<td>${match['score_player2']}</td>
 				</tr>
 				<tr class="history_dates">
@@ -174,19 +194,19 @@ export default class ProfileComponent extends HTMLElement {
 			match_history = "No matches played";
 		}
 
-		let friends = "";
+		let friends="";
 		userData['friends'].forEach(friend => {
 			friend['avatar_field'] = this.cleanProfilePictures(friend['avatar_42_url'], friend['avatar_field']);
 			friends += `
-			<div class="friend">
+			<div class="friend" id="friend${friend['username']}">
 				<label class="pfp-container">
 					<img src="${friend['avatar_field']}" width="60px">
-					<div class="online-status"></div>
+					<div class="online-status" style="background-color: ${friend['online_status'] ? 'green' : 'orange'}"></div>
 				</label>
 				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend['username']}">${friend['username']}</h2>
 				<div style="margin-left: auto;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">
-					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend" onclick="alert('unfriended')">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend['username']}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
 				</div>
 			</div>
 			`;
@@ -209,8 +229,8 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="${userData['user']['avatar_field']}" class="pfp" id="usr_img">
 			</div>
 			<div class="name">
-				<h1 class="pixel-font" style="font-size: 40px">${userData['user']['username']}</h1>
-				<h3 class="pixel-font" style="font-size: larger;">${userData['user']['bio']}</h3>
+				<h1 class="pixel-font" style="font-size: 40px">${userData['user']['first_name']}</h1>
+				<h3 class="pixel-font" style="font-size: larger;">${userData['user']['username']}</h3>
 			</div>
 		</div>
 		${editButton}
@@ -239,7 +259,10 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
-			<h1 class="pixel-font">FRIENDS</h1>
+			<div style="display:flex; justify-content: space-around; align-items: center;">
+				<h1 class="pixel-font" style="margin-left: 120px;">FRIENDS</h1>
+				<img class="clickable-img" id="reloadFriends" src="https://www.freeiconspng.com/thumbs/reload-icon/arrow-refresh-reload-icon-29.png">
+			</div>
 				${friends}
 			<div class="screw-container">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -247,6 +270,9 @@ export default class ProfileComponent extends HTMLElement {
 			</div>
 		</div>
 	</div>
+	<div class="alert" id="successAlert">
+		Profile updated correctly!!
+	</div> 
         `;
 		this.shadowRoot.appendChild(style);
         div.className = 'bg';
@@ -260,14 +286,49 @@ export default class ProfileComponent extends HTMLElement {
         this.editProfile.addEventListener('click', () => {
             navigateTo("/profile_edit");
         });
+		this.reload = this.shadowRoot.getElementById('reloadFriends');
+        this.reload.addEventListener('click', () => {
+            this.render();
+        });
 
 		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
 		friendNames.forEach(button => {
 			button.addEventListener("click", () => {
 				const userId = button.dataset.username;
-				console.log(userId);
 				navigateTo('/profile/'+userId);
 			});
+		});
+		let unfriend = this.shadowRoot.querySelectorAll(".unfriend");
+		unfriend.forEach(button => {
+			button.addEventListener("click", async () => {
+				const userId = button.dataset.username;
+				const token = localStorage.getItem("access_token");
+				try {
+					const response = await fetch("/api/delete-friend", {
+						method: "DELETE",
+						headers: {
+							"Content-Type": "application/json",
+							'Authorization': `Bearer ${token}`,
+						},
+						body: JSON.stringify({ friend_username: userId }),
+					});
+					const resultAlert = this.shadowRoot.getElementById('successAlert');
+					if (response.ok){
+						resultAlert.style.display = 'block';
+						resultAlert.className = resultAlert.className.replace(" bad", "");
+						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+						this.shadowRoot.getElementById("friend"+userId).style.display = 'none';
+					}else{
+						throw new Error("Error removing friend :(");
+					}
+				} catch (error) {
+					const resultAlert = this.shadowRoot.getElementById('successAlert');
+					resultAlert.innerText = error.message;
+					resultAlert.className += ' bad';
+					resultAlert.style.display = 'block';
+					setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+				}
+		    });
 		});
 	}
 
