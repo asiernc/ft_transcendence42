@@ -248,7 +248,8 @@ export default class LeaderboardComponent extends HTMLElement {
 
 		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
 			button.addEventListener("click", async () => {
-				const userId = this.dataset.username;
+				const userId = button.dataset.username;
+				console.log(userId);
 				const token = localStorage.getItem("access_token");
 				try {
 					const response = await fetch("/api/add-friend", {

@@ -192,6 +192,7 @@ export default class ProfileEditComponent extends HTMLElement {
 						body: JSON.stringify({
 							'username': this.shadowRoot.getElementById("id_username").value,
 							'email': this.shadowRoot.getElementById("id_email").value,
+							'first_name': this.shadowRoot.getElementById("id_name").value,
 						})
 					});
 					const data = await response.json();

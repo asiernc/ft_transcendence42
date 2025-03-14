@@ -80,7 +80,7 @@ const routes = {
 	'/tournament' : TournamentComponentView,
 	'/callback': handleCallback,
     '/profile': ProfileView,
-    '/profile/edit': ProfileEditView,
+    '/profile_edit': ProfileEditView,
     '/leaderboard': LeaderboardView,
 	'/about_us': AboutUsView,
 };
@@ -106,8 +106,11 @@ function handleRoute() {
 			return ;
 		}
 	}
-
-    const view = routes[path] || (() => '<h1>404 Not Found</h1>');
+	if (path.startsWith('/profile/')){
+		document.getElementById('app').innerHTML = ProfileView();
+		return ;
+	}
+    const view = routes[path] || (() => '<navbar-component></navbar-component><h1>404 Not Found</h1>');
     document.getElementById('app').innerHTML = view();
 
 	if (path == '/home') {

@@ -151,20 +151,17 @@ export default class ProfileComponent extends HTMLElement {
 		}
         `;
 
-
-
 		const userData = await this.getUserInfo();
 		console.log(userData);
 		let match_history = "";
 		userData['matches'].forEach(match => {
-			if (userData['user']['avatar_42_url']) {userData['user']['avatar_field'] = userData['user']['avatar_42_url'];}
-			if (!userData['user']['avatar_field']) {userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+			match['avatar_field'] = this.cleanProfilePictures(match['avatar_42_url'], match['avatar_field']);
 			match_history += `
 				<tr class="history_scores">
 					<td>${match['score_player1']}</td>
-					<td><img src="https://i.pinimg.com/236x/f4/b5/af/f4b5af3da6f9e4b90bb11d0afcf0470d.jpg" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
+					<td><img src="${this.cleanProfilePictures(undefined, undefined)}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
 					<td>vs</td>
-					<td><img src="https://play-lh.googleusercontent.com/2zorpA9peRFcwZM5SLSAx80gLCA3YrknRXQwPW-Hz2AJyBcvBJiO9vuP6DvlX3FRZXMv=w526-h296-rw" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
+					<td><img src="${this.cleanProfilePictures(undefined, undefined)}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
 					<td>${match['score_player2']}</td>
 				</tr>
 				<tr class="history_dates">
@@ -179,26 +176,30 @@ export default class ProfileComponent extends HTMLElement {
 
 		let friends = "";
 		userData['friends'].forEach(friend => {
-			if (friend['avatar_42_url']) {friend['avatar_field'] = friend['avatar_42_url'];}
-			if (!friend['avatar_field']) {friend['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+			friend['avatar_field'] = this.cleanProfilePictures(friend['avatar_42_url'], friend['avatar_field']);
 			friends += `
 			<div class="friend">
 				<label class="pfp-container">
 					<img src="${friend['avatar_field']}" width="60px">
 					<div class="online-status"></div>
 				</label>
-				<h2 style="margin-left: 3%;" onclick="alert('to profile')">${friend['username']}</h2>
+				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend['username']}">${friend['username']}</h2>
 				<div style="margin-left: auto;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">
-					<img src="	https://cdn-icons-png.flaticon.com/512/8184/8184225.png" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend" onclick="alert('unfriended')">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend" onclick="alert('unfriended')">
 				</div>
 			</div>
 			`;
 		});
 		if (friends === ""){friends = "No friends :("; }
 
-		if (userData['user']['avatar_42_url']) {userData['user']['avatar_field'] = userData['user']['avatar_42_url'];}
-		if (!userData['user']['avatar_field']) {userData['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+		userData['user']['avatar_field'] = this.cleanProfilePictures(userData['user']['avatar_42_url'], userData['user']['avatar_field'])  
+		let editButton = "";
+		if (localStorage.getItem("username") === userData['user']['username']){
+			editButton = `<div style="display:flex; align-items: flex-start">
+					<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
+				</div>`;
+		}
 
         const div = document.createElement('div');
         div.innerHTML = `
@@ -212,9 +213,7 @@ export default class ProfileComponent extends HTMLElement {
 				<h3 class="pixel-font" style="font-size: larger;">${userData['user']['bio']}</h3>
 			</div>
 		</div>
-		<div style="display:flex; align-items: flex-start">
-			<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
-			</div>
+		${editButton}
 	</div>
 	<div class="box stats">
 		<span class="pixel-font" style="font-size: larger;" title="Wins/Losses">W/L: ${userData['user']['wins']}/${userData['user']['losses']}</span>
@@ -223,28 +222,28 @@ export default class ProfileComponent extends HTMLElement {
 	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
 		<div class="box history">
 			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 			<h1 class="pixel-font">MATCH HISTORY</h1>
 			<table style="width: 90%; margin: auto;" id="match_history">
 				${match_history}
 			</table>
 			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 		</div>
 		<div class="box friends">
 			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 			<h1 class="pixel-font">FRIENDS</h1>
 				${friends}
 			<div class="screw-container">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
-				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 		</div>
 	</div>
@@ -259,25 +258,39 @@ export default class ProfileComponent extends HTMLElement {
     attachListeners() {
 		this.editProfile = this.shadowRoot.getElementById('editProfile');
         this.editProfile.addEventListener('click', () => {
-            navigateTo("/profile/edit");
+            navigateTo("/profile_edit");
         });
+
+		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
+		friendNames.forEach(button => {
+			button.addEventListener("click", () => {
+				const userId = button.dataset.username;
+				console.log(userId);
+				navigateTo('/profile/'+userId);
+			});
+		});
 	}
 
 	disconnectedCallback() {
         this.editProfile.removeEventListener('click', this);
 	}
 
+	cleanProfilePictures(avatar_42, avatar){
+		if (avatar_42) {
+			return avatar_42;}
+		if (!avatar) {
+			return "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+		return avatar;
+	}
+
 	async getUserInfo() {
 		const username = localStorage.getItem('username');
-		if (!username){
-			//haz algoooo!
-		}
-
 		const refreshToken = localStorage.getItem('refresh_token');
-		if (!refreshToken){
-			console.error('no refresh token, gonna log out');
+		if (!refreshToken || !username){
+			console.error('no refresh token or username, gonna log out');
 			//navigateTo('logout');
 		}
+
 		await fetch('/api/refresh-tokens', {
 			method: 'POST',
 			headers: {
@@ -291,12 +304,14 @@ export default class ProfileComponent extends HTMLElement {
 				localStorage.setItem('access_token', data.access_token);
 			} else {
 				console.error('Refresh token invalid, user must log in again.');
+				//navigateTo('logout');
 			}
 		});
 
+		let usr = window.location.pathname.substring(9);
 		const token = localStorage.getItem("access_token");
 		try{
-			const response = await fetch(`/api/profile/${username}`, {
+			const response = await fetch(`/api/profile/${usr}`, {
 					method: 'GET',
 					headers: {
 						'Authorization': `Bearer ${token}`,
@@ -305,6 +320,9 @@ export default class ProfileComponent extends HTMLElement {
 				}
 			);
 			const data = await response.json();
+			// if (data['error']){
+			// 	navigateTo('/notfound');
+			// }
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
