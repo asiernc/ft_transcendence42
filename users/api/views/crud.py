@@ -33,7 +33,7 @@ def getUser(request, pk):
 #create user
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def register_user(request):
+def registerUser(request):
 	serializer = UserSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
@@ -45,7 +45,7 @@ def register_user(request):
 #post image
 @api_view(['POST', 'PUT'])
 @permission_classes([IsAuthenticated])
-def handle_avatar(request):
+def handleAvatar(request):
 	if 'avatar' not in request.FILES:
 		return Response({'error': 'No file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -134,7 +134,7 @@ def deleteUser(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def add_friend(request):
+def addFriend(request):
 	user_username = request.user.username
 	friend_username = request.data.get('friend_username')
 
@@ -149,8 +149,7 @@ def add_friend(request):
 	except User.DoesNotExist:
 		return Response({'detail': 'User or friend not found.'}, status=status.HTTP_404_NOT_FOUND)
 	
-	if (Friends.objects.filter(user=user, friend=friend).exists() or
-	 	Friends.objects.filter(user=friend, friend=user).exists()):
+	if (Friends.objects.filter(user=user, friend=friend).exists() or Friends.objects.filter(user=friend, friend=user).exists()):
 		return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
 	friendship = Friends(user=user, friend=friend)
@@ -158,27 +157,30 @@ def add_friend(request):
 
 	return Response({'detail': 'Friend added succesfully.'}, status=status.HTTP_201_CREATED)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteFriend(request):
+	user_username = request.user.username
+	friend_username = request.data.get("friend_username")
+	
+	if not friend_username:
+		return Response({'detail': 'Friend username is required.'}, status=status.HTTP_404_NOT_FOUND)
+	
+	try:
+		user = User.objects.get(username=user_username)
+		friend = User.objects.get(username=friend_username)
+		
+		if (user == friend):
+			return Response({'detail': 'User and friend must be differents.'}, status=status.HTTP_404_NOT_FOUND)
+	
+	except User.DoesNotExist:
+		return Response({'detail': 'User or friend not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+	friendship = Friends.objects.filter(user=user, friend=friend)
+	if not friendship.exists():
+		return Response({'detail': 'Friendship not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+	friendship.delete()
+	
+	return Response({'detail': 'Friend deleted succesfully.'}, status=status.HTTP_204_NO_CONTENT)
 
-
-
-
-
-
-
-
-
-
-# if Friendship.objects.filter(user1=current_user, user2=friend_user).exists() or \
-# 		Friendship.objects.filter(user1=friend_user, user2=current_user).exists():
-# 		return Response({'error': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-# 	data = {
-# 		'user1': current_user.username,
-# 		'user2': friend_user.username
-# 	}
-# 	serializer = FriendshipSerializer(data=data)
-# 	if serializer.is_valid():
-# 		serializer.save()
-# 		return Response(seriali
