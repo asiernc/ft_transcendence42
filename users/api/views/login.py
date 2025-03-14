@@ -56,7 +56,7 @@ class UserLoginView(generics.GenericAPIView):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def verify_otp(request):
+def verifyOtp(request):
 	username = request.data.get('username')
 	otp_code = request.data.get('otp_code')
 	
@@ -91,7 +91,7 @@ def verify_otp(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def verify_credentials(request):
+def verifyCredentials(request):
 	username = request.data.get('username')
 	password = request.data.get('password')
 
