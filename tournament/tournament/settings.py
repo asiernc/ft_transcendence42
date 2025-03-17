@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--(c!j8#-nz46b_4p5@u&ni1n=%e(nmi8e$_l77y_j#@d!20ezx'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", 'django-insecure-^23e-v^g9+j69lw0l&1w#2+eg4$4jjo%t3kd)fvbw9b5o7&pk=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://localhost:3042']
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -34,6 +35,25 @@ CORS_ALLOWED_ORIGINS = [
 	"http://127.0.0.1:3042",
 ]
 
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "OPTIONS",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "dnt",
+    'token',
+    "origin",
+    "user-agent",
+]
+
+SIMPLE_JWT = {
+	'ACCESS_TOKEN_LIFETIME' : timedelta(hours=12),
+	'REFRESH_TOKEN_LIFETIME' : timedelta(days=7),
+}
 
 # Application definition
 
@@ -54,12 +74,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tournament.urls'
