@@ -291,8 +291,8 @@ export default class OptionsAlias extends HTMLElement {
                 if (response.ok)
                 {
                     console.log(data);
-                    tournamentPath = '/tournament?id=' + data.id;
-                    navigateTo(tournamentPath);
+					localStorage.setItem('tournament_id', data.id);
+                    navigateTo('/tournament');
                 }
                 else
                     throw Error(data.error);
