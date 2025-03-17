@@ -275,7 +275,7 @@ export default class OptionsAlias extends HTMLElement {
             try
             {
                 const token = localStorage.getItem("access_token");
-                const response = await fetch('/api-tournament/create-tournament', {
+                const response = await fetch('/api-tournament/handle-tournament', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import createTournament
+from .views import handleTournament, getTournament
 
 urlpatterns = [
-	path('create-tournament', createTournament),
-	
+	path('handle-tournament', handleTournament),
+	path('tournament/<id:pk>', getTournament),
 ]
