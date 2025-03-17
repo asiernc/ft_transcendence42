@@ -60,7 +60,6 @@ INSTALLED_APPS = [
 	'api',
 ]
 
-
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -236,10 +235,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3042",
-    "http://127.0.0.1:3042",
-]
 
 CORS_ALLOW_METHODS = [
     "GET",

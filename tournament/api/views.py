@@ -7,8 +7,8 @@ from api.serializer import MatchSerializer, TournamentSerializer
 from django.conf import settings
 import os
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
+@api_view(['POST', 'PUT'])
+@permission_classes([IsAuthenticated])
 def createTournament(request):
 	serializer = TournamentSerializer(data=request.data)
 	if serializer.is_valid():

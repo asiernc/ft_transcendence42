@@ -101,6 +101,9 @@ function handleRoute() {
 			return ;
 		}
 	} else {
+		const username = localStorage.getItem('username');
+		if (!ws && username)
+			connectWebSocket(username);
 		if (path === '/login' || path === '/register') {
 			navigateTo('/home');
 			return ;
@@ -109,12 +112,6 @@ function handleRoute() {
 
     const view = routes[path] || (() => '<h1>404 Not Found</h1>');
     document.getElementById('app').innerHTML = view();
-
-	if (path == '/home') {
-		const username = localStorage.getItem('username');
-		if (!ws)
-			connectWebSocket(username);
-	}
 }
 
 function navigateTo(path) {
