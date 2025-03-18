@@ -236,8 +236,8 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		// petition to server 4 match
 		try {
 		
-			const response = await fetch('/api-tournament/handle-tournament', {
-				method: 'PUT',
+			const response = await fetch('/api/create-match', {
+				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -268,8 +268,8 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		if (tournament_id != null)
 		{
 			try {
-				const response = await fetch('/api/create-match', {
-					method: 'POST',
+				const response = await fetch('/api-tournament/handle-tournament', {
+					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
