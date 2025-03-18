@@ -4,18 +4,16 @@ export default class LeaderboardComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        this.attachShadow({ mode: 'open' });
+		this.attachShadow({ mode: "open" });
 
 		this.render();
 
-        // this.attachListeners();
+		// this.attachListeners();
 	}
 
-	async render(){
-		const users = await this.getUsers();
-
-		const style = document.createElement('style');
-        style.textContent = `
+	async render() {
+		const style = document.createElement("style");
+		style.textContent = `
 		.bg {
             display: flex;
 			flex-direction: column;
@@ -48,7 +46,6 @@ export default class LeaderboardComponent extends HTMLElement {
 	}
 	td{
 		overflow: hidden;
-		background-color: rgba(217, 217, 217, 0.548);
 		padding: 5px;
 		padding-left: 15px;
 	}
@@ -60,7 +57,6 @@ export default class LeaderboardComponent extends HTMLElement {
 		color: white;
 	}
 	tr{
-		border-bottom: 1px solid black;
 		font-family: "Press Start 2P", Arial;
 	}
 
@@ -93,40 +89,243 @@ export default class LeaderboardComponent extends HTMLElement {
 		.clickable-img:hover{
 			transform: translateY(-2px);
 		}
-	.tbname:hover{
+		.tbname:hover{
 			text-decoration: underline;
 			cursor: pointer;
 		}
+	.pane{
+		color: white;
+		padding: 2%;
+		cursor: pointer;
+		margin-bottom: 0;
+	}
+	.selected{
+		background-color: #97ED93;
+		border: 5px solid #1E6C1A;
+		border-bottom: 0;
+		color: #1E6C1A;
+		fill: #1E6C1A;
+	}
+	.screw-container {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-content: center;
+		height: 30px;
+	}
+	.box{
+		background-color: rgba(217, 217, 217, 0.548);
+		border-radius: 3px;
+		border: 4px solid #31353C;
+		padding: 1%;
+		width: 70%;
+	}
+	.alert {
+		position: fixed;
+		padding: 40px;
+		background-color: #97ED93;
+		border: 5px solid #1E6C1A;
+		top: 40%;
+		display: none;
+		font-size: larger;
+		z-index = 22;
+	}
+	.bad{
+		background-color: #EE7C7C;
+		border: 5px solid #701717;
+		color: 'white';
+	}
         `;
 
-		let users_table = "";
+		const users = await this.getUsers();
+		const globalUsers = await this.getUsersGlobal();
+
+		let friends_table = "";
 		let i = 1;
-		users['friends'].forEach(user => {
-			users_table += `
-			<tr class="history_scores">
+		users["friends"].forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(
+				user["avatar_42_url"],
+				user["avatar_field"],
+			);
+			friends_table += `
+			<tr style="${this.generateColors()}">
 				<td>#${i}</td>
-				<td><img src="${user['avatar_field']}" width="70px"></td>
-				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
-				<td>${user['matches']}</td>
-				<td>${user['stats']}</td>
-				<td><img class="clickable-img" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')"></td>
+				<td><img src="${user["avatar_field"]}" width="70px"></td>
+				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
+				<td>${user["matches"]}</td>
+				<td>${user["stats"]}</td>
+				<td>
+					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+				</td>
 			</tr>
 			`;
 			++i;
 		});
-		if (users_table == ""){
-			users_table = `
-			<table>
-			<tr>
-				<td>YOU DONT HAVE FRIENDS :(</td>
+		if (friends_table == "") {
+			friends_table = `<tr><td></td><td colspan=5>YOU HAVE NO FRIENDS :( SO SAD</td></tr>`;
+		}
+
+		let global_table = "";
+		i = 1;
+		globalUsers.forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(
+				user["avatar_42_url"],
+				user["avatar_field"],
+			);
+			if (
+				user["username"] == "localhost" ||
+				user["username"] == "IA" ||
+				user["username"] == "ia"
+			) {
+				return;
+			}
+			global_table += `
+			<tr style="${this.generateColors()}" class="global">
+				<td>#${i}</td>
+				<td><img src="${user["avatar_field"]}" width="70px"></td>
+				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
+				<td>${user["matches"]}</td>
+				<td>${user["stats"]}</td>
+				<td>
+					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
+				</td>
 			</tr>
+			`;
+			++i;
+		});
+
+		users["user"]["avatar_field"] = this.cleanProfilePictures(
+			users["user"]["avatar_42_url"],
+			users["user"]["avatar_field"],
+		);
+		const div = document.createElement("div");
+		div.innerHTML = /*ht ml*/ `
+			<table style="width: 50%; margin-left: auto; margin-right: auto;" id="user">
+				<tbody>
+				<tr style="border: none; background-color: rgba(217, 217, 217, 0.548);">
+					<td><img src="${users["user"]["avatar_field"]}" width="70px"></td>
+					<td>${users["user"]["username"]}</td>
+					<td>${users["user"]["matches"]}</td>
+					<td>${users["user"]["stats"]}</td>
+				</tr>
+				</tbody>
 			</table>
-			`
-		}else{
-			users_table =`
-				<table style="width: 60%; margin-left: auto; margin-right: auto;" id="leaderboard">
+			<div style="display: flex; flex-direction:column; gap: 0; width: 100vw;">
+				<div style="display: flex; justify-content: center; gap: 5rem;">
+					<h1 class="pixel-font pane" id="globallb">Global</h1>
+					<h1 class="pixel-font pane" id="friendslb">Friends</h1>
+					<!-- <input type="text" id="search" size="50" placeholder="Search..." /> -->
+				</div>
+				<hr style="margin-top: 0; width: 90%; border: 2px solid #1E6C1A;">
+			</div>
+			<div class="box">
+			<div class="screw-container">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+			</div>
+			${this.generateTable(global_table, "global_leaderboard")}
+			${this.generateTable(friends_table, "friends_leaderboard")}
+			<div class="screw-container">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+			</div>
+			</div>
+			<div class="alert" id="successAlert">
+				Friend added successfully!!
+			</div>
+        `;
+		this.shadowRoot.appendChild(style);
+		div.className = "bg";
+		this.shadowRoot.appendChild(div);
+		this.attachListeners();
+		// Get the element with id="defaultOpen" and click on it
+		this.shadowRoot.getElementById("globallb").click();
+	}
+
+	attachListeners() {
+		this.globallb = this.shadowRoot.getElementById("globallb");
+		this.friendslb = this.shadowRoot.getElementById("friendslb");
+		this.globallb.addEventListener("click", () => {
+			this.globallb.className += " selected";
+			this.friendslb.className = this.friendslb.className.replace(
+				" selected",
+				"",
+			);
+			this.shadowRoot.getElementById("friends_leaderboard").style.display =
+				"none";
+			this.shadowRoot.getElementById("global_leaderboard").style.display =
+				"table";
+		});
+		this.friendslb.addEventListener("click", () => {
+			this.friendslb.className += " selected";
+			this.globallb.className = this.globallb.className.replace(
+				" selected",
+				"",
+			);
+			this.shadowRoot.getElementById("friends_leaderboard").style.display =
+				"table";
+			this.shadowRoot.getElementById("global_leaderboard").style.display =
+				"none";
+		});
+
+		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
+			button.addEventListener("click", async () => {
+				const userId = button.dataset.username;
+				console.log(userId);
+				const token = localStorage.getItem("access_token");
+				try {
+					const response = await fetch("/api/add-friend", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({ friend_username: userId }),
+					});
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
+					if (response.ok) {
+						resultAlert.style.display = "block";
+						resultAlert.className = resultAlert.className.replace(" bad", "");
+						setTimeout(() => {
+							resultAlert.style.display = "none";
+						}, 2000);
+						button.style.display = "none";
+					} else {
+						throw new Error("Error adding friend :(");
+					}
+				} catch (error) {
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
+					resultAlert.innerText = error.message;
+					resultAlert.className += " bad";
+					resultAlert.style.display = "block";
+					setTimeout(() => {
+						resultAlert.style.display = "none";
+					}, 2000);
+				}
+			});
+		});
+	}
+
+	disconnectedCallback() {
+		this.friendslb.removeEventListener("click", this);
+		this.globallb.removeEventListener("click", this);
+	}
+
+	generateColors() {
+		const BGcolors = ["EE7C7C", "7AA3EA", "97ED93", "D6CA73"];
+		const BRcolors = ["701717", "163977", "1E6C1A", "60560E"];
+
+		const i = Math.floor(Math.random() * BGcolors.length);
+		// return "border-bottom: 1px solid black;";
+		return `background-color: #${BGcolors[i]}; color: #${BRcolors[i]}; border-bottom: 2px solid #${BRcolors[i]};`;
+	}
+
+	generateTable(table, id) {
+		return `<table style="width: 90%; margin-left: auto; margin-right: auto;" id="${id}">
 				<thead>
-				<tr>
+				<tr style="border-bottom: 1px solid black;">
 					<th style="width: 50px;"></th>
 					<th style="width: 100px;"></th>
 					<th>Name </th>
@@ -136,71 +335,71 @@ export default class LeaderboardComponent extends HTMLElement {
 				</tr>
 				</thead>
 				<tbody>
-					${users_table}
+					${table}
 				</tbody>
-				</table>`;
-		}
-
-        const div = document.createElement('div');
-        div.innerHTML = `
-		<div style="width: 80%; margin-left: auto; margin-bottom: 40px;">
-			<h1 class="pixel-font" style="color: white;">Leaderboard</h1>
-			<!-- <input type="text" id="search" size="50" placeholder="Search..." /> -->
-		</div>
-		<table style="width: 50%; margin-left: auto; margin-right: auto; margin-bottom: 60px;" id="user">
-			<tbody>
-				<td>#${i}</td>
-				<td><img src="${users['user']['avatar_field']}" width="70px"></td>
-				<td>${users['user']['username']}</td>
-				<td>${users['user']['matches']}</td>
-				<td>${users['user']['stats']}</td>
-			</tbody>
-		</table>
-		${users_table}
-        `;
-		this.shadowRoot.appendChild(style);
-        div.className = 'bg';
-		this.shadowRoot.appendChild(div);
+			</table>`;
 	}
 
-    // attachListeners() {
-	// 	this.versus = this.shadowRoot.getElementById('versus');
-    //     this.versus.addEventListener('click', () => {
-    //         navigateTo('/options_game');
-    //     });
-    //     this.tournament = this.shadowRoot.getElementById('tournament');
-    //     this.tournament.addEventListener('click', () => {
-    //         console.log("TOURNAMENT");
-    //     });
-	// }
+	checkAlreadyFriend(friends, name) {
+		return (
+			name === localStorage.getItem("username") ||
+			friends.some((friend) => friend["username"] === name)
+		);
+	}
 
-	// disconnectedCallback() {
-    //     this.versus.removeEventListener('click', this);
-    //     this.tournament.removeEventListener('click', this);
-	// }
+	cleanProfilePictures(avatar_42, avatar) {
+		if (avatar_42) {
+			return avatar_42;
+		}
+		if (!avatar) {
+			return "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";
+		}
+		return avatar;
+	}
 
-	async getUsers(){
-		const username = localStorage.getItem('username');
-		if (!username){
+	async getUsers() {
+		const username = localStorage.getItem("username");
+		if (!username) {
 			//haz algoooo!
 		}
 		const token = localStorage.getItem("access_token");
-		try{
+		try {
 			const response = await fetch(`/api/profile/${username}`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					},
-				}
-			);
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const data = await response.json();
 			console.log(data);
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
-		} 
+		}
+	}
+
+	async getUsersGlobal() {
+		const username = localStorage.getItem("username");
+		if (!username) {
+			//haz algoooo!
+		}
+		const token = localStorage.getItem("access_token");
+		try {
+			const response = await fetch(`/api/get`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
+			const data = await response.json();
+			console.log(data);
+			return data;
+		} catch (err) {
+			console.error("Error: Problem sending the petition");
+		}
 	}
 }
 
-window.customElements.define('leaderboard-component', LeaderboardComponent);
+window.customElements.define("leaderboard-component", LeaderboardComponent);
