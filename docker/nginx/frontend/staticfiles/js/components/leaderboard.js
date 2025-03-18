@@ -4,17 +4,16 @@ export default class LeaderboardComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        this.attachShadow({ mode: 'open' });
+		this.attachShadow({ mode: "open" });
 
 		this.render();
 
-        // this.attachListeners();
+		// this.attachListeners();
 	}
 
-	async render(){
-
-		const style = document.createElement('style');
-        style.textContent = `
+	async render() {
+		const style = document.createElement("style");
+		style.textContent = `
 		.bg {
             display: flex;
 			flex-direction: column;
@@ -144,56 +143,72 @@ export default class LeaderboardComponent extends HTMLElement {
 
 		let friends_table = "";
 		let i = 1;
-		users['friends'].forEach(user => {
-			user['avatar_field'] = this.cleanProfilePictures(user['avatar_42_url'], user['avatar_field']);
+		users["friends"].forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(
+				user["avatar_42_url"],
+				user["avatar_field"],
+			);
 			friends_table += `
 			<tr style="${this.generateColors()}">
 				<td>#${i}</td>
-				<td><img src="${user['avatar_field']}" width="70px"></td>
-				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
-				<td>${user['matches']}</td>
-				<td>${user['stats']}</td>
+				<td><img src="${user["avatar_field"]}" width="70px"></td>
+				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
+				<td>${user["matches"]}</td>
+				<td>${user["stats"]}</td>
 				<td>
-					<img class="clickable-img match-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
 				</td>
 			</tr>
 			`;
 			++i;
 		});
-		if (friends_table == ""){
+		if (friends_table == "") {
 			friends_table = `<tr><td></td><td colspan=5>YOU HAVE NO FRIENDS :( SO SAD</td></tr>`;
 		}
 
 		let global_table = "";
 		i = 1;
-		globalUsers.forEach(user => {
-			user['avatar_field'] = this.cleanProfilePictures(user['avatar_42_url'], user['avatar_field']);
+		globalUsers.forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(
+				user["avatar_42_url"],
+				user["avatar_field"],
+			);
+			if (
+				user["username"] == "localhost" ||
+				user["username"] == "IA" ||
+				user["username"] == "ia"
+			) {
+				return;
+			}
 			global_table += `
 			<tr style="${this.generateColors()}" class="global">
 				<td>#${i}</td>
-				<td><img src="${user['avatar_field']}" width="70px"></td>
-				<td onclick="alert('to profile')" class="tbname">${user['username']}</td>
-				<td>${user['matches']}</td>
-				<td>${user['stats']}</td>
+				<td><img src="${user["avatar_field"]}" width="70px"></td>
+				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
+				<td>${user["matches"]}</td>
+				<td>${user["stats"]}</td>
 				<td>
-					<img class="clickable-img match-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
-					${this.checkAlreadyFriend(users['friends'], user['username']) ? '': `<img class="clickable-img friend-btn" data-username="${user['username']}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
+					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
 				</td>
 			</tr>
 			`;
 			++i;
 		});
 
-		users['user']['avatar_field'] = this.cleanProfilePictures(users['user']['avatar_42_url'], users['user']['avatar_field'])      
-		const div = document.createElement('div');
-        div.innerHTML = /*ht ml*/`
+		users["user"]["avatar_field"] = this.cleanProfilePictures(
+			users["user"]["avatar_42_url"],
+			users["user"]["avatar_field"],
+		);
+		const div = document.createElement("div");
+		div.innerHTML = /*ht ml*/ `
 			<table style="width: 50%; margin-left: auto; margin-right: auto;" id="user">
 				<tbody>
 				<tr style="border: none; background-color: rgba(217, 217, 217, 0.548);">
-					<td><img src="${users['user']['avatar_field']}" width="70px"></td>
-					<td>${users['user']['username']}</td>
-					<td>${users['user']['matches']}</td>
-					<td>${users['user']['stats']}</td>
+					<td><img src="${users["user"]["avatar_field"]}" width="70px"></td>
+					<td>${users["user"]["username"]}</td>
+					<td>${users["user"]["matches"]}</td>
+					<td>${users["user"]["stats"]}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -222,29 +237,38 @@ export default class LeaderboardComponent extends HTMLElement {
 			</div>
         `;
 		this.shadowRoot.appendChild(style);
-        div.className = 'bg';
+		div.className = "bg";
 		this.shadowRoot.appendChild(div);
 		this.attachListeners();
 		// Get the element with id="defaultOpen" and click on it
 		this.shadowRoot.getElementById("globallb").click();
 	}
 
-    attachListeners() {
-		this.globallb = this.shadowRoot.getElementById('globallb');
-		this.friendslb = this.shadowRoot.getElementById('friendslb');
-		this.globallb.addEventListener('click', () => {
+	attachListeners() {
+		this.globallb = this.shadowRoot.getElementById("globallb");
+		this.friendslb = this.shadowRoot.getElementById("friendslb");
+		this.globallb.addEventListener("click", () => {
 			this.globallb.className += " selected";
-			this.friendslb.className = this.friendslb.className.replace(" selected", "");
-            this.shadowRoot.getElementById('friends_leaderboard').style.display = 'none';
-			this.shadowRoot.getElementById('global_leaderboard').style.display = 'table';
-
-        });
-		this.friendslb.addEventListener('click', () => {
+			this.friendslb.className = this.friendslb.className.replace(
+				" selected",
+				"",
+			);
+			this.shadowRoot.getElementById("friends_leaderboard").style.display =
+				"none";
+			this.shadowRoot.getElementById("global_leaderboard").style.display =
+				"table";
+		});
+		this.friendslb.addEventListener("click", () => {
 			this.friendslb.className += " selected";
-			this.globallb.className = this.globallb.className.replace(" selected", "");
-            this.shadowRoot.getElementById('friends_leaderboard').style.display = 'table';
-			this.shadowRoot.getElementById('global_leaderboard').style.display = 'none';
-        });
+			this.globallb.className = this.globallb.className.replace(
+				" selected",
+				"",
+			);
+			this.shadowRoot.getElementById("friends_leaderboard").style.display =
+				"table";
+			this.shadowRoot.getElementById("global_leaderboard").style.display =
+				"none";
+		});
 
 		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
 			button.addEventListener("click", async () => {
@@ -256,36 +280,40 @@ export default class LeaderboardComponent extends HTMLElement {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							'Authorization': `Bearer ${token}`,
+							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({ friend_username: userId }),
 					});
-					const resultAlert = this.shadowRoot.getElementById('successAlert');
-					if (response.ok){
-						resultAlert.style.display = 'block';
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
+					if (response.ok) {
+						resultAlert.style.display = "block";
 						resultAlert.className = resultAlert.className.replace(" bad", "");
-						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
-						button.style.display = 'none';
-					}else{
+						setTimeout(() => {
+							resultAlert.style.display = "none";
+						}, 2000);
+						button.style.display = "none";
+					} else {
 						throw new Error("Error adding friend :(");
 					}
 				} catch (error) {
-					const resultAlert = this.shadowRoot.getElementById('successAlert');
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
 					resultAlert.innerText = error.message;
-					resultAlert.className += ' bad';
-					resultAlert.style.display = 'block';
-					setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+					resultAlert.className += " bad";
+					resultAlert.style.display = "block";
+					setTimeout(() => {
+						resultAlert.style.display = "none";
+					}, 2000);
 				}
-		    });
+			});
 		});
 	}
 
 	disconnectedCallback() {
-        this.friendslb.removeEventListener('click', this);
-        this.globallb.removeEventListener('click', this);
+		this.friendslb.removeEventListener("click", this);
+		this.globallb.removeEventListener("click", this);
 	}
 
-	generateColors(){
+	generateColors() {
 		const BGcolors = ["EE7C7C", "7AA3EA", "97ED93", "D6CA73"];
 		const BRcolors = ["701717", "163977", "1E6C1A", "60560E"];
 
@@ -294,7 +322,7 @@ export default class LeaderboardComponent extends HTMLElement {
 		return `background-color: #${BGcolors[i]}; color: #${BRcolors[i]}; border-bottom: 2px solid #${BRcolors[i]};`;
 	}
 
-	generateTable(table, id){
+	generateTable(table, id) {
 		return `<table style="width: 90%; margin-left: auto; margin-right: auto;" id="${id}">
 				<thead>
 				<tr style="border-bottom: 1px solid black;">
@@ -312,63 +340,66 @@ export default class LeaderboardComponent extends HTMLElement {
 			</table>`;
 	}
 
-	checkAlreadyFriend(friends, name){
-		return name === localStorage.getItem("username") || friends.some(friend => friend['username'] === name);
+	checkAlreadyFriend(friends, name) {
+		return (
+			name === localStorage.getItem("username") ||
+			friends.some((friend) => friend["username"] === name)
+		);
 	}
 
-	cleanProfilePictures(avatar_42, avatar){
+	cleanProfilePictures(avatar_42, avatar) {
 		if (avatar_42) {
-			return avatar_42;}
+			return avatar_42;
+		}
 		if (!avatar) {
-			return "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+			return "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";
+		}
 		return avatar;
 	}
 
-	async getUsers(){
-		const username = localStorage.getItem('username');
-		if (!username){
+	async getUsers() {
+		const username = localStorage.getItem("username");
+		if (!username) {
 			//haz algoooo!
 		}
 		const token = localStorage.getItem("access_token");
-		try{
+		try {
 			const response = await fetch(`/api/profile/${username}`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					},
-				}
-			);
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const data = await response.json();
 			console.log(data);
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
-		} 
+		}
 	}
 
-	async getUsersGlobal(){
-		const username = localStorage.getItem('username');
-		if (!username){
+	async getUsersGlobal() {
+		const username = localStorage.getItem("username");
+		if (!username) {
 			//haz algoooo!
 		}
 		const token = localStorage.getItem("access_token");
-		try{
+		try {
 			const response = await fetch(`/api/get`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					},
-				}
-			);
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const data = await response.json();
 			console.log(data);
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
-		} 
+		}
 	}
 }
 
-window.customElements.define('leaderboard-component', LeaderboardComponent);
+window.customElements.define("leaderboard-component", LeaderboardComponent);

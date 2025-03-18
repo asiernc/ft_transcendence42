@@ -4,17 +4,17 @@ export default class ProfileComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        this.attachShadow({ mode: 'open' });
+		this.attachShadow({ mode: "open" });
 		this.render();
 	}
 
-	async render(){
+	async render() {
 		while (this.shadowRoot.firstChild) {
 			this.shadowRoot.removeChild(this.shadowRoot.firstChild);
 		}
 
-		const style = document.createElement('style');
-        style.textContent = `
+		const style = document.createElement("style");
+		style.textContent = `
 		.bg {
             display: flex;
 			flex-direction: column;
@@ -66,7 +66,7 @@ export default class ProfileComponent extends HTMLElement {
 			font-weight: 700;
 			border-top: 2px solid black;
             font-family: "Press Start 2P", Arial;
-			
+
 		}
 		.history_dates{
 			font-size: 30px;
@@ -175,68 +175,80 @@ export default class ProfileComponent extends HTMLElement {
 		const userData = await this.getUserInfo();
 		console.log(userData);
 		let match_history = "";
-		userData['matches'].forEach(match => {
+		let matchCount = 0;
+		//let userStats = this.calculateStats();
+		userData["matches"].forEach((match) => {
 			match_history += `
 				<tr class="history_scores">
-					<td>${match['score_player1']}</td>
-					<td><img src="${this.cleanProfilePictures(undefined, match['player1_avatar'])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player1_username_read'] ? 'green':'red'};"></td>
+					<td>${match["score_player1"]}</td>
+					<td><img src="${this.cleanProfilePictures(undefined, match["player1_avatar"])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player1_username_read"] ? "green" : "red"};"></td>
 					<td>vs</td>
-					<td><img src="${this.cleanProfilePictures(undefined, match['player2_avatar'])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match['winner_username_read']==match['player2_username_read'] ? 'green':'red'};"></td>
-					<td>${match['score_player2']}</td>
+					<td><img src="${this.cleanProfilePictures(undefined, match["player2_avatar"])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player2_username_read"] ? "green" : "red"};"></td>
+					<td>${match["score_player2"]}</td>
 				</tr>
 				<tr class="history_dates">
-					<td colspan="2" style="text-align: left; padding-left: 50px;">${match['duration']}</td>
-					<td colspan="3"  style="text-align: right; padding-right: 50px;">${match['played_at'].split('T')[0]}</td>
+					<td colspan="5"  style="text-align: center;">${match["played_at"].split("T")[0]}</td>
 				</tr>
 			`;
+			if (++matchCount > 5) {
+				return; //no funcionara
+			}
 		});
-		if (match_history === ""){
+		if (match_history === "") {
 			match_history = "No matches played";
 		}
 
-		let friends="";
-		userData['friends'].forEach(friend => {
-			friend['avatar_field'] = this.cleanProfilePictures(friend['avatar_42_url'], friend['avatar_field']);
+		let friends = "";
+		userData["friends"].forEach((friend) => {
+			friend["avatar_field"] = this.cleanProfilePictures(
+				friend["avatar_42_url"],
+				friend["avatar_field"],
+			);
 			friends += `
-			<div class="friend" id="friend${friend['username']}">
+			<div class="friend" id="friend${friend["username"]}">
 				<label class="pfp-container">
-					<img src="${friend['avatar_field']}" width="60px">
-					<div class="online-status" style="background-color: ${friend['online_status'] ? 'green' : 'orange'}"></div>
+					<img src="${friend["avatar_field"]}" width="60px">
+					<div class="online-status" style="background-color: ${friend["online_status"] ? "green" : "orange"}"></div>
 				</label>
-				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend['username']}">${friend['username']}</h2>
+				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
 				<div style="margin-left: auto;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">
-					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend['username']}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
 				</div>
 			</div>
 			`;
 		});
-		if (friends === ""){friends = "No friends :("; }
+		if (friends === "") {
+			friends = "No friends :(";
+		}
 
-		userData['user']['avatar_field'] = this.cleanProfilePictures(userData['user']['avatar_42_url'], userData['user']['avatar_field'])  
+		userData["user"]["avatar_field"] = this.cleanProfilePictures(
+			userData["user"]["avatar_42_url"],
+			userData["user"]["avatar_field"],
+		);
 		let editButton = "";
-		if (localStorage.getItem("username") === userData['user']['username']){
+		if (localStorage.getItem("username") === userData["user"]["username"]) {
 			editButton = `<div style="display:flex; align-items: flex-start">
 					<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
 				</div>`;
 		}
 
-        const div = document.createElement('div');
-        div.innerHTML = `
+		const div = document.createElement("div");
+		div.innerHTML = `
 	<div style="width: 80%; display: flex; justify-content: space-between">
 		<div style="display:flex;">
 			<div style="margin-right: 20px;">
-				<img src="${userData['user']['avatar_field']}" class="pfp" id="usr_img">
+				<img src="${userData["user"]["avatar_field"]}" class="pfp" id="usr_img">
 			</div>
 			<div class="name">
-				<h1 class="pixel-font" style="font-size: 40px">${userData['user']['first_name']}</h1>
-				<h3 class="pixel-font" style="font-size: larger;">${userData['user']['username']}</h3>
+				<h1 class="pixel-font" style="font-size: 40px">${userData["user"]["first_name"]}</h1>
+				<h3 class="pixel-font" style="font-size: larger;">${userData["user"]["username"]}</h3>
 			</div>
 		</div>
 		${editButton}
 	</div>
 	<div class="box stats">
-		<span class="pixel-font" style="font-size: larger;" title="Wins/Losses">W/L: ${userData['user']['wins']}/${userData['user']['losses']}</span>
+		<span class="pixel-font" style="font-size: larger;" title="Wins/Losses">W/L: ${userData["user"]["wins"]}/${userData["user"]["losses"]}</span>
 		<span class="pixel-font" style="font-size: larger;" title="Score Ratio">Ratio: 37.0</span>
 	</div>
 	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
@@ -272,34 +284,34 @@ export default class ProfileComponent extends HTMLElement {
 	</div>
 	<div class="alert" id="successAlert">
 		Profile updated correctly!!
-	</div> 
+	</div>
         `;
 		this.shadowRoot.appendChild(style);
-        div.className = 'bg';
+		div.className = "bg";
 		this.shadowRoot.appendChild(div);
 
-        this.attachListeners();
+		this.attachListeners();
 	}
 
-    attachListeners() {
-		this.editProfile = this.shadowRoot.getElementById('editProfile');
-        this.editProfile.addEventListener('click', () => {
-            navigateTo("/profile_edit");
-        });
-		this.reload = this.shadowRoot.getElementById('reloadFriends');
-        this.reload.addEventListener('click', () => {
-            this.render();
-        });
+	attachListeners() {
+		this.editProfile = this.shadowRoot.getElementById("editProfile");
+		this.editProfile.addEventListener("click", () => {
+			navigateTo("/profile_edit");
+		});
+		this.reload = this.shadowRoot.getElementById("reloadFriends");
+		this.reload.addEventListener("click", () => {
+			this.render();
+		});
 
 		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
-		friendNames.forEach(button => {
+		friendNames.forEach((button) => {
 			button.addEventListener("click", () => {
 				const userId = button.dataset.username;
-				navigateTo('/profile/'+userId);
+				navigateTo("/profile/" + userId);
 			});
 		});
 		let unfriend = this.shadowRoot.querySelectorAll(".unfriend");
-		unfriend.forEach(button => {
+		unfriend.forEach((button) => {
 			button.addEventListener("click", async () => {
 				const userId = button.dataset.username;
 				const token = localStorage.getItem("access_token");
@@ -308,78 +320,84 @@ export default class ProfileComponent extends HTMLElement {
 						method: "DELETE",
 						headers: {
 							"Content-Type": "application/json",
-							'Authorization': `Bearer ${token}`,
+							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({ friend_username: userId }),
 					});
-					const resultAlert = this.shadowRoot.getElementById('successAlert');
-					if (response.ok){
-						resultAlert.style.display = 'block';
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
+					if (response.ok) {
+						resultAlert.style.display = "block";
 						resultAlert.className = resultAlert.className.replace(" bad", "");
-						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
-						this.shadowRoot.getElementById("friend"+userId).style.display = 'none';
-					}else{
+						setTimeout(() => {
+							resultAlert.style.display = "none";
+						}, 2000);
+						this.shadowRoot.getElementById("friend" + userId).style.display =
+							"none";
+					} else {
 						throw new Error("Error removing friend :(");
 					}
 				} catch (error) {
-					const resultAlert = this.shadowRoot.getElementById('successAlert');
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
 					resultAlert.innerText = error.message;
-					resultAlert.className += ' bad';
-					resultAlert.style.display = 'block';
-					setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+					resultAlert.className += " bad";
+					resultAlert.style.display = "block";
+					setTimeout(() => {
+						resultAlert.style.display = "none";
+					}, 2000);
 				}
-		    });
+			});
 		});
 	}
 
 	disconnectedCallback() {
-        this.editProfile.removeEventListener('click', this);
+		this.editProfile.removeEventListener("click", this);
 	}
 
-	cleanProfilePictures(avatar_42, avatar){
+	cleanProfilePictures(avatar_42, avatar) {
 		if (avatar_42) {
-			return avatar_42;}
+			return avatar_42;
+		}
 		if (!avatar) {
-			return "https://res.cloudinary.com/teepublic/image/private/s--lJJYqwRw--/c_crop,x_10,y_10/c_fit,w_1109/c_crop,g_north_west,h_1260,w_1260,x_-76,y_-135/co_rgb:ffffff,e_colorize,u_Misc:One%20Pixel%20Gray/c_scale,g_north_west,h_1260,w_1260/fl_layer_apply,g_north_west,x_-76,y_-135/bo_0px_solid_white/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1606803363/production/designs/16724317_0.jpg";}
+			return "https://res.cloudinary.com/teepublic/image/private/s--lJJYqwRw--/c_crop,x_10,y_10/c_fit,w_1109/c_crop,g_north_west,h_1260,w_1260,x_-76,y_-135/co_rgb:ffffff,e_colorize,u_Misc:One%20Pixel%20Gray/c_scale,g_north_west,h_1260,w_1260/fl_layer_apply,g_north_west,x_-76,y_-135/bo_0px_solid_white/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1606803363/production/designs/16724317_0.jpg";
+		}
 		return avatar;
 	}
 
 	async getUserInfo() {
-		const username = localStorage.getItem('username');
-		const refreshToken = localStorage.getItem('refresh_token');
-		if (!refreshToken || !username){
-			console.error('no refresh token or username, gonna log out');
+		const username = localStorage.getItem("username");
+		const refreshToken = localStorage.getItem("refresh_token");
+		if (!refreshToken || !username) {
+			console.error("no refresh token or username, gonna log out");
 			//navigateTo('logout');
 		}
 
-		await fetch('/api/refresh-tokens', {
-			method: 'POST',
+		await fetch("/api/refresh-tokens", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ refresh_token: refreshToken })
+			body: JSON.stringify({ refresh_token: refreshToken }),
 		})
-		.then(response => response.json())
-		.then(data => {
-			if (data.access_token) {
-				localStorage.setItem('access_token', data.access_token);
-			} else {
-				console.error('Refresh token invalid, user must log in again.');
-				//navigateTo('logout');
-			}
-		});
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.access_token) {
+					localStorage.setItem("access_token", data.access_token);
+				} else {
+					console.error("Refresh token invalid, user must log in again.");
+					//navigateTo('logout');
+				}
+			});
 
 		let usr = window.location.pathname.substring(9);
 		const token = localStorage.getItem("access_token");
-		try{
+		try {
 			const response = await fetch(`/api/profile/${usr}`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					},
-				}
-			);
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const data = await response.json();
 			// if (data['error']){
 			// 	navigateTo('/notfound');
@@ -387,8 +405,8 @@ export default class ProfileComponent extends HTMLElement {
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
-		} 
+		}
 	}
 }
 
-window.customElements.define('profile-component', ProfileComponent);
+window.customElements.define("profile-component", ProfileComponent);

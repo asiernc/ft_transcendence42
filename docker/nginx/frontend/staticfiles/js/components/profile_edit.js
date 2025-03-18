@@ -4,13 +4,13 @@ export default class ProfileEditComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        this.attachShadow({ mode: 'open' });
+		this.attachShadow({ mode: "open" });
 		this.render();
 	}
 
-	async render(){
-		const style = document.createElement('style');
-        style.textContent = `
+	async render() {
+		const style = document.createElement("style");
+		style.textContent = `
 		.bg {
             display: flex;
 			flex-direction:column;
@@ -116,11 +116,16 @@ export default class ProfileEditComponent extends HTMLElement {
         `;
 
 		const user = await this.getUserInfo();
-		if (user['user']['avatar_42_url']) {user['user']['avatar_field'] = user['user']['avatar_42_url'];}
-		if (!user['user']['avatar_field']) {user['user']['avatar_field'] = "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";}
+		if (user["user"]["avatar_42_url"]) {
+			user["user"]["avatar_field"] = user["user"]["avatar_42_url"];
+		}
+		if (!user["user"]["avatar_field"]) {
+			user["user"]["avatar_field"] =
+				"https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";
+		}
 
-        const div = document.createElement('div');
-        div.innerHTML = /*ht ml*/`
+		const div = document.createElement("div");
+		div.innerHTML = /*ht ml*/ `
 		<div class="container">
 		<div class="screw-container">
 			<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -130,17 +135,16 @@ export default class ProfileEditComponent extends HTMLElement {
 			<div style="display: flex; flex-direction: row; gap: 2%;">
 				<label class="profile-pic-container">
 					<input type="file" id="profile-upload" accept="image/*" hidden>
-					<img id="profile-image" src="${user['user']['avatar_field']}" alt="Profile Picture">
+					<img id="profile-image" src="${user["user"]["avatar_field"]}" alt="Profile Picture">
 					<div class="edit-icon">✏️</div>
 				</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
-					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user['user']['first_name']}" class="input"></input>
-					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user['user']['username']}" class="input"></input>
-					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user['user']['email']}" class="input"></input>
+					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user["user"]["first_name"]}" class="input"></input>
+					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user["user"]["username"]}" class="input"></input>
+					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user["user"]["email"]}" class="input"></input>
 				</div>
 			</div>
 			<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 30px">
-				<textarea id="id_body" name="body" required="" placeholder="Bio" cols="15" rows="5" class="input" style="width: 70%">${user['user']['bio']}</textarea>
 				<input id="submitBtn" value="Submit" class="submit-btn">
 			</div>
 		</form>
@@ -151,16 +155,16 @@ export default class ProfileEditComponent extends HTMLElement {
 		</div>
 		<div class="alert" id="successAlert">
 			Profile updated correctly!!
-		</div> 
+		</div>
         `;
 		this.shadowRoot.appendChild(style);
-        div.className = 'bg';
+		div.className = "bg";
 		this.shadowRoot.appendChild(div);
 
-        this.attachListeners();
+		this.attachListeners();
 	}
 
-    attachListeners() {
+	attachListeners() {
 		this.pfpupload = this.shadowRoot.getElementById("profile-upload");
 		this.pfpupload.addEventListener("change", (event) => {
 			const file = event.target.files[0];
@@ -174,47 +178,50 @@ export default class ProfileEditComponent extends HTMLElement {
 			}
 		});
 
-		this.submit = this.shadowRoot.getElementById('submitBtn');
-        this.submit.addEventListener('click', async () => { //UPDATE USER
-			
+		this.submit = this.shadowRoot.getElementById("submitBtn");
+		this.submit.addEventListener("click", async () => {
+			//UPDATE USER
+
 			const form = this.shadowRoot.getElementById("editProfileForm");
-			if (form.checkValidity())
-			{
-				const username = localStorage.getItem('username');
+			if (form.checkValidity()) {
+				const username = localStorage.getItem("username");
 				const token = localStorage.getItem("access_token");
-				try{
+				try {
 					const response = await fetch(`/api/update/${username}`, {
-						method: 'PUT',
+						method: "PUT",
 						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}`,
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({
-							'username': this.shadowRoot.getElementById("id_username").value,
-							'email': this.shadowRoot.getElementById("id_email").value,
-							'first_name': this.shadowRoot.getElementById("id_name").value,
-						})
+							username: this.shadowRoot.getElementById("id_username").value,
+							email: this.shadowRoot.getElementById("id_email").value,
+							first_name: this.shadowRoot.getElementById("id_name").value,
+						}),
 					});
 					const data = await response.json();
-					const resultAlert = this.shadowRoot.getElementById('successAlert');
-					if (!data['error']){
-						localStorage.setItem("username", data['username']);
-						resultAlert.style.display = 'block';
-						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
-					}else{
-						resultAlert.style.display = 'block';
-						resultAlert.style.backgroundColor = '#EE7C7C';
-						resultAlert.style.border = '5px solid #701717';
-						resultAlert.style.color = 'white';
-						resultAlert.innerText = 'Error updating profile :(';
-						setTimeout(() => { resultAlert.style.display = "none"; }, 2000);
+					const resultAlert = this.shadowRoot.getElementById("successAlert");
+					if (!data["error"]) {
+						localStorage.setItem("username", data["username"]);
+						resultAlert.style.display = "block";
+						setTimeout(() => {
+							resultAlert.style.display = "none";
+						}, 2000);
+					} else {
+						resultAlert.style.display = "block";
+						resultAlert.style.backgroundColor = "#EE7C7C";
+						resultAlert.style.border = "5px solid #701717";
+						resultAlert.style.color = "white";
+						resultAlert.innerText = "Error updating profile :(";
+						setTimeout(() => {
+							resultAlert.style.display = "none";
+						}, 2000);
 					}
-				}catch (err) {
+				} catch (err) {
 					console.error("Error: Problem sending the petition");
 				}
 			}
 
-		
 			const formData = new FormData();
 			const fileInput = this.shadowRoot.getElementById("profile-upload");
 
@@ -224,14 +231,14 @@ export default class ProfileEditComponent extends HTMLElement {
 				console.warn("No file selected.");
 				return;
 			}
-			try{
+			try {
 				const token = localStorage.getItem("access_token");
 				const response = await fetch(`/api/avatar`, {
-					method: 'POST',
+					method: "POST",
 					headers: {
-						'Authorization': `Bearer ${token}`,
+						Authorization: `Bearer ${token}`,
 					},
-					body: formData
+					body: formData,
 				});
 				const data = await response.json();
 				console.log(data);
@@ -239,37 +246,36 @@ export default class ProfileEditComponent extends HTMLElement {
 				console.error("Error: Problem changing profile picture");
 				console.error(err);
 			}
-        });
+		});
 	}
 
 	disconnectedCallback() {
-        this.pfpupload.removeEventListener('change', this);
-		this.submit.removeEventListener('click', this);
+		this.pfpupload.removeEventListener("change", this);
+		this.submit.removeEventListener("click", this);
 	}
 
 	async getUserInfo() {
-		const username = localStorage.getItem('username');
-		if (!username){
+		const username = localStorage.getItem("username");
+		if (!username) {
 			//haz algoooo!
 		}
 
 		const token = localStorage.getItem("access_token");
-		try{
+		try {
 			const response = await fetch(`/api/profile/${username}`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					},
-				}
-			);
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const data = await response.json();
 			console.log(data);
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");
-		} 
+		}
 	}
 }
 
-window.customElements.define('profile_edit-component', ProfileEditComponent);
+window.customElements.define("profile_edit-component", ProfileEditComponent);
