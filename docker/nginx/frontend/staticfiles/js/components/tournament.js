@@ -5,6 +5,9 @@ let	g_round = 0;
 export default class TournamentComponent extends HTMLElement {
 	constructor() {
 		super();
+		const MatchList = this.randomizeMatches();
+		if (MatchList === false);
+		//throw Error o como se haga en web
 		const style = document.createElement('style');
         style.textContent = `
 			.bg {
@@ -117,6 +120,87 @@ export default class TournamentComponent extends HTMLElement {
 				font-family: "Press Start 2P";
 				font-size: 1vw;
 			}
+
+			.modal-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            opacity: 0;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            transition: opacity 0.3s ease;
+            }
+
+            .modal-container.show {
+            display: flex;
+            pointer-events: auto;
+            opacity: 1;
+            }
+
+            .modal-content {
+			position: absolute;
+            background-color: #D9D9D9;
+            border: 2px solid#31353C ;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 30px 50px;
+            width: 45%;
+            max-width: 100%;
+            text-align: center;
+            }
+			.screw-container {
+                width: 100%;				
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-content: center;
+            }
+			#a2 {
+				width: 30%;
+                height: 10%;
+                font-size: 15px;
+				color: #c900a7;
+				border-style: solid;
+				text-decoration: none;
+            }
+            #a2:hover {
+                border: 1px solid transparent;
+                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
+                transition-delay: 0.8s;
+                background-size: 180px;
+                animation: animate var(--speed-fast) steps(8) forwards;
+                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
+				cursor: pointer;
+            }
+			#a1 {
+				width: 30%;
+                height: 10%;
+                font-size: 15px;
+				color: red;
+				border-style: solid;
+				text-decoration: none;
+            }
+            #a1:hover {
+                border: 1px solid transparent;
+                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
+                transition-delay: 0.8s;
+                background-size: 180px;
+                animation: animate var(--speed-fast) steps(8) forwards;
+                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
+				cursor: pointer;
+            }
+			.options-container {
+				width: 100%;
+				heigth: 100%;			
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-content: center;
+			}
     		`;
 
 		const div = document.createElement('div');
@@ -143,100 +227,99 @@ export default class TournamentComponent extends HTMLElement {
 					</svg>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 20%;"> <!-- Box left-up -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m1-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m1-p1">${MatchList[0].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m1-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m1-p2">${MatchList[0].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 70%;"> <!-- Box left-bottom -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m2-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m2-p1">${MatchList[1].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m2-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m2-p2">${MatchList[1].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 22%;"> <!-- Box left-center -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m5-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m5-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m5-p1"> WINNER 1 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m5-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m5-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m5-p2"> WINNER 2 </p>
 					</div>
 				</div>
 				<div class="finalists-grid"> <!-- Box finalists(center) -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m7-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m7-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m7-p1"> FINALIST 1 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m7-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m7-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m7-p2"> FINALIST 2 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 22%;"> <!-- Box right-center -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m6-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m6-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m6-p1"> WINNER 3 </p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m6-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m6-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m6-p2"> WINNER 4 </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 20%;"> <!-- Box right-up -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m3-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m3-p1">${MatchList[2].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m3-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m3-p2">${MatchList[2].player2.alias}</p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 70%;"> <!-- Box right-bottom -->
-					<div class="player-box">
+					<div class="player-box" id="pb-m4-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p1"> PLAYER 1 </p>
+						<p class="players-text" id="m4-p1">${MatchList[3].player1.alias}</p>
 					</div>
-					<div class="player-box">
+					<div class="player-box" id="pb-m4-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p2"> PLAYER 2 </p>
+						<p class="players-text" id="m4-p2">${MatchList[3].player2.alias}</p>
 					</div>
 				</div>
 			</div>
+			<div class="modal-container" id="modal_container">
+				<div id="modal-content" class="modal-content"></div>
+			</div>
 			`;
-
 		this.appendChild(style);
         div.className = 'bg';
 		this.appendChild(div);
+		this.checkTournament();
 
-		this.attachListeners();
-		const MatchList = this.randomizeMatches();
-		if (MatchList === false);
-				//throw Error o como se haga en web
-		console.log(MatchList); //to delete
-		document.getElementById("m1-p1").textContent = MatchList[0].player1.alias;
-		document.getElementById("m1-p2").textContent = MatchList[0].player2.alias;
-		document.getElementById("m2-p1").textContent = MatchList[1].player1.alias;
-		document.getElementById("m2-p2").textContent = MatchList[1].player2.alias;
-		document.getElementById("m3-p1").textContent = MatchList[2].player1.alias;
-		document.getElementById("m3-p2").textContent = MatchList[2].player2.alias;
-		document.getElementById("m4-p1").textContent = MatchList[3].player1.alias;
-		document.getElementById("m4-p2").textContent = MatchList[3].player2.alias;
+		this.attachListeners(MatchList);
+		const gameResultItem = localStorage.getItem("gameResult");
+		if (gameResultItem) {
+			this.setBoxResult(MatchList, JSON.parse(gameResultItem));
+			localStorage.removeItem("gameResult");
+		}
+		else
+			console.log('not gameResult found');
+		console.log(g_round + 1);
 	}
 	addParticipant(user_info, playerID) {
 		const user_name = user_info['player' + playerID].username;
 		const user_alias = user_info['player' + playerID].alias;
-		const isIA = (user_name === "IA");
+		const isIA = (user_name === "AI");
 		
 		const newPlayer = {
 			username: user_name,
@@ -246,9 +329,35 @@ export default class TournamentComponent extends HTMLElement {
 
 		return newPlayer;
 	}
+	async checkTournament() {
+		// check if tournament exists if not go to options_tournament
+		try
+		{
+			const token = localStorage.getItem("access_token");
+			const tournament_id = localStorage.getItem('tournament_id')
+			const response = await fetch(`/api-tournament/tournament/${tournament_id}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (response.ok)
+			{
+				console.log(data);
+			}
+			else
+				throw Error(data.error);
+		} catch (err) {
+			console.log(err);
+			navigateTo('/options_tournament')
+		}
+	}
 	randomizeMatches() {
 		const LocalStorageItem = localStorage.getItem('user_info');
 		if (LocalStorageItem) {
+			console.log(JSON.parse(LocalStorageItem));
 			const MatchList = [];
 			const user_info = JSON.parse(LocalStorageItem);
 			let playerID = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -277,16 +386,78 @@ export default class TournamentComponent extends HTMLElement {
 		}
 		return false;
 	}
-	attachListeners() {
-        document.getElementById("next-match-button").addEventListener("click", async function ()
+
+	setBoxResult(MatchList, gameResult) {
+		const divp1_id = "pb-m" + g_round + "-p1";
+		const divp2_id = "pb-m" + g_round + "-p2";
+		if (gameResult.score_p1 > gameResult.score_p2) {
+			document.getElementById(divp1_id).style.backgroundColor = "#24831e";
+			document.getElementById(divp2_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp2_id).style.textDecoration = "line-through"
+			document.getElementById(divp2_id).style.textDecorationThickness = "0.2rem"
+			//MatchList[g_round - 1].;
+		} else {
+			document.getElementById(divp1_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp1_id).style.textDecoration = "line-through"
+			document.getElementById(divp1_id).style.textDecorationThickness = "0.2rem"
+			document.getElementById(divp2_id).style.backgroundColor = "#24831e";
+		}
+	}
+
+	attachListeners(MatchList) {
+        this.nextmatch = document.getElementById("next-match-button");
+		this.nextmatch.addEventListener("click", async function ()
         {
-			navigateTo('/game');
-            
+			document.getElementById("modal_container").classList.add("show");
+            document.getElementById("modal-content").innerHTML = `
+                    <div class="screw-container" style="top: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right: 0; width:5%; height: 5%;">
+                    </div>
+					<div class="d-flex justify-content-center align-items-center">
+                        <h1 class="button-text">MATCH Nº${g_round + 1}</h1>
+                    </div>
+					&nbsp
+					<div class="d-flex justify-content-center align-items-center">
+                        <p class="button-text">${MatchList[g_round].player1.alias}<br>VS<br>${MatchList[g_round].player1.alias}</p>
+					</div>
+					&nbsp
+					<div class="options-container">
+						<div class="d-flex justify-content-center align-items-center">
+						<a id="a2" href="javascript:void(0);" class="button-text">GO!</a>
+						</div>
+						<div class="d-flex justify-content-center align-items-center">
+						<a id="a1" href="javascript:void(0);" class="button-text">Not Yet!</a>
+						</div>
+					</div>
+					<div class="screw-container" style="bottom: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right:0; width:5%; height: 5%;">
+                    </div>
+                `;
+			this.a1button = document.getElementById('a1'); // not yet
+			this.a1button.addEventListener('click', async function() {
+				document.getElementById("modal_container").classList.remove("show");
+			});
+			this.a2button = document.getElementById('a2');
+			this.a2button.addEventListener('click', async function() {
+				let path = '/game?players=2';
+				path += "&player1AI=" + MatchList[g_round].player1.IA;
+				path += "&player2AI=" + MatchList[g_round].player2.IA;
+				path += "&player3AI=false&player4AI=false&tournament_id=" + Date.now() + Math.floor(Math.random() * 100);
+				path += "&p1username=" + MatchList[g_round].player1.username;
+				path += "&p2username=" + MatchList[g_round].player2.username;
+				g_round++;
+				navigateTo(path);
+			});
+    
         });
 	}
 
 	disconnectedCallback() {
-        this.querySelector("next-match-button").removeEventListener('click', this);
+       this.nextmatch.removeEventListener('click', this);
+	   this.a1button.removeEventListener('click', this);
+	   this.a2button.removeEventListener('click', this);
 	}
 }
 

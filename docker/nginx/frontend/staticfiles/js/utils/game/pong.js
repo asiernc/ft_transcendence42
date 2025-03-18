@@ -5,7 +5,7 @@ import Paddle from './paddle.js';
 import Scoreboard from './scoreboard.js';
 import { navigateTo } from '../../app.js';
 
-export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4AI)
+export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2AI, p3AI, p4AI)
 {
 	// set scene
 	const scene = new Scene();
@@ -123,7 +123,7 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 			{
 				const results = {};
 				if (scoreboard.p1Score >= winScore )
-					results.winner = localStorage.getItem("username");
+					results.winner = p1username;
 				else
 					results.winner = versus;
 
@@ -155,8 +155,8 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		<span>AND THE WINNER</span><span>${numPlayers == 2 ? " IS" : "S ARE"}</span>
 		</h1>
 		<h1 class="pixel-font winnerText">
-		<span style="color: ${results.winner == username ? "#0000FF" : "#FF0000"};">${results.winner == username ? username : (versus == "localhost" ? "player_2" : versus)}</span>
-		<span class="${numPlayers == 2 ? "d-none" : "d-block"}"><span> & </span><span style="color: ${results.winner == username ? "#00FF00" : "#FF00FF"};">${results.winner == username ? "player_3" : "player_4"}</span>
+		<span style="color: ${results.winner == p1username ? "#0000FF" : "#FF0000"};">${results.winner == p1username ? p1username : (versus == "localhost" ? "player_2" : versus)}</span>
+		<span class="${numPlayers == 2 ? "d-none" : "d-block"}"><span> & </span><span style="color: ${results.winner == p1username ? "#00FF00" : "#FF00FF"};">${results.winner == p1username ? "player_3" : "player_4"}</span>
 		</span>
 		</h1>
 			</div>
@@ -230,35 +230,71 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 		document.getElementById("modal_container").addEventListener("click", function activate() {
 			document.getElementById("modal_container").classList.remove("show");
 			document.getElementById("modal_container").removeEventListener('click', activate);
-			navigateTo('/home');
+			if (tournament_id) {
+				localStorage.setItem("gameResult", JSON.stringify({winner : results.winner,
+					score_p1 : results.score_player1, score_p2 : results.score_player2
+				}))
+				navigateTo('/tournament');
+			}
+			else
+				navigateTo('/home');
 		});
 		
-		// petition to server
-		if (username)
+		// petition to server 4 match
+		try {
+		
+			const response = await fetch('/api/create-match', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+				},
+				body: JSON.stringify({
+					"player1_username": p1username,
+					"player2_username": versus,
+					"winner_username": results.winner,
+					"score_player1": results.score_player1,
+					"score_player2": results.score_player2,
+					"tournament_id": tournament_id,
+				}),
+			});
+
+			if (!response.ok)
+			{
+				const err_msg = await response.json()
+					.catch( () => new Error( "The match could not be stored correctly." ) );
+			  	
+				throw Error(err_msg);
+			}
+		}
+		catch (err) {
+			console.log(err);
+		}
+
+		// petition to server 4 tournament
+		if (tournament_id != null)
 		{
 			try {
-		
-				const response = await fetch('/api/create-match', {
-					method: 'POST',
+				const response = await fetch('/api-tournament/handle-tournament', {
+					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
 					},
 					body: JSON.stringify({
-						"player1_username": username,
-						"player2_username": versus,
-						"winner_username": results.winner,
-						"score_player1": results.score_player1,
-						"score_player2": results.score_player2,
 						"tournament_id": tournament_id,
+						"new_match": {
+							'player1': p1username,
+							'player2': versus,
+						},
 					}),
 				});
-		
+
 				if (!response.ok)
 				{
 					const err_msg = await response.json()
 						.catch( () => new Error( "The match could not be stored correctly." ) );
-				  	
+					
 					throw Error(err_msg);
 				}
 			}
@@ -267,6 +303,5 @@ export function pongGame(numPlayers, versus, tournament_id, p1AI, p2AI, p3AI, p4
 			}
 		}
 	}
-		
 	return (0);
 }

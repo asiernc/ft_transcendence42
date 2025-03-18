@@ -3,7 +3,7 @@ import { navigateTo } from '../app.js';
 export default class OptionsAlias extends HTMLElement {
 	constructor() {
         super();
-        
+        this.matchInfo = {};
         this.userInfo = JSON.parse(localStorage.getItem("user_info"));
 		const style = document.createElement('style');
         style.textContent = `
@@ -239,15 +239,11 @@ export default class OptionsAlias extends HTMLElement {
 
 	attachListeners()
     {
-        
-        document.getElementById("a1").addEventListener('click', () => {
-
+        document.getElementById("a1").addEventListener('click', async () => {
             let badForm = false;
             document.querySelectorAll("form").forEach((e, i) => {
-                
                 if (badForm)
                     return;
-
                 if (!e.checkValidity())
                 {
                     e.reportValidity();
@@ -258,12 +254,53 @@ export default class OptionsAlias extends HTMLElement {
             });
             if (badForm)
                 return;
-
-            localStorage.setItem('user_info', JSON.stringify(this.userInfo));
-			navigateTo('/tournament');
-            // NAVIGATE TO TOURNAMENT
+            for (let i = 0, j = 0; i < 7; i++, j+=2)
+            {
+                if (i < 4)
+                {
+                    this.matchInfo["match" + (i + 1)] = {
+                        'player1': this.userInfo["player" + (j + 1)].username,
+                        'player2': this.userInfo["player" + (j + 2)].username,
+                    };
+                }
+                else
+                {
+                    this.matchInfo["match" + (i + 1)] = {
+                        'player1': "PLAYER 1",
+                        'player2': "PLAYER 2",
+                    };
+                }
+            }
+            // POST CREATE_TORUNAMENT
+            try
+            {
+                const token = localStorage.getItem("access_token");
+                const response = await fetch('/api-tournament/handle-tournament', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        'name': this.userInfo['player1'].username + '_tournament',
+                        'matches_json': this.matchInfo,
+                        'players_alias': this.userInfo,
+                    })
+                });
+                const data = await response.json();
+                if (response.ok)
+                {
+                    console.log(data);
+					localStorage.setItem('tournament_id', data.id);
+                    navigateTo('/tournament');
+                }
+                else
+                    throw Error(data.error);
+            } catch (err) {
+                console.log(err);
+            }
         });
-	}
+    }
 
 	disconnectedCallback() {
 		this.querySelector("form").removeEventListener('submit', this);

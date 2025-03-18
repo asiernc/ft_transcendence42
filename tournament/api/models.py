@@ -11,6 +11,8 @@ class User(AbstractUser):
 	avatar_42_url = models.URLField(null=True, blank=True)
 	online_status = models.BooleanField(default=False)
 	intra_user = models.BooleanField(default=False)
+	class Meta:
+		db_table = 'user_users'
 
 class Friends(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
@@ -21,10 +23,13 @@ class Friends(models.Model):
 
 class Tournament(models.Model):
 	name = models.CharField(max_length=55, null=False)
-	#description = models.TextField(null=True, blank=True)
 	start_date = models.DateTimeField(auto_now_add=True)
 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='tournament_wins', null=True, blank=True)
-	players = models.ManyToManyField(User, related_name='players')
+	match = models.IntegerField(default=0)
+	matches_json = models.JSONField(default=dict)
+	players_alias = models.JSONField(default=dict)
+	class Meta:
+		db_table = 'tournament_users'
 
 class Match(models.Model):
 	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='matches_as_player1')
@@ -33,4 +38,6 @@ class Match(models.Model):
 	score_player1 = models.IntegerField()
 	score_player2 = models.IntegerField()
 	played_at = models.DateTimeField(auto_now_add=True)
-	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='matches', null=True, blank=True)
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='match_set', null=True, blank=True)
+	class Meta:
+		db_table = 'match_users'
