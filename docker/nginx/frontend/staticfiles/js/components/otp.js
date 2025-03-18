@@ -179,9 +179,8 @@ export default class OTPComponent extends HTMLElement {
 	}
 
 	attachListeners() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key == 'Enter')
-                e.preventDefault();
+        document.addEventListener('submit', (e) => {
+            e.preventDefault();
         });
 
         document.getElementById("a1").addEventListener("click", async function (e)
