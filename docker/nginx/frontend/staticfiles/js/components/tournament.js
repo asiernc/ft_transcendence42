@@ -219,6 +219,7 @@ export default class TournamentComponent extends HTMLElement {
         div.className = 'bg';
 		this.appendChild(div);
 
+		this.checkTournament();
 		this.attachListeners();
 		const MatchList = this.randomizeMatches();
 		if (MatchList === false);
@@ -245,6 +246,31 @@ export default class TournamentComponent extends HTMLElement {
 		};
 
 		return newPlayer;
+	}
+	async checkTournament() {
+		// check if tournament exists if not go to options_tournament
+		try
+		{
+			const token = localStorage.getItem("access_token");
+			const tournament_id = localStorage.getItem('tournament_id')
+			const response = await fetch(`/api-tournament/tournament/${tournament_id}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (response.ok)
+			{
+				console.log(data);
+			}
+			else
+				throw Error(data.error);
+		} catch (err) {
+			console.log(err);
+			navigateTo('/options_tournament')
+		}
 	}
 	randomizeMatches() {
 		const LocalStorageItem = localStorage.getItem('user_info');
@@ -281,7 +307,6 @@ export default class TournamentComponent extends HTMLElement {
         document.getElementById("next-match-button").addEventListener("click", async function ()
         {
 			navigateTo('/game');
-            
         });
 	}
 
