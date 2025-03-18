@@ -165,9 +165,16 @@ export default class GameComponent extends HTMLElement {
 	startGame() {
         const urlParams = new URLSearchParams(window.location.search);
         const players = urlParams.get('players');
-        const versus = urlParams.get('vs') == null ? ( urlParams.get('player2AI') == 'true' ? "ia" : "localhost"): urlParams.get('vs');
-        // check if user exists maybe
+		let versus, p1_username;
         const tournament_id = urlParams.get('tournament_id');
+		if (tournament_id) {
+			p1_username = urlParams.get('p1username');
+			versus = urlParams.get('p2username');
+		}
+		else {
+			p1_username = localStorage.getItem("username");
+			versus = urlParams.get('vs') == null ? ( urlParams.get('player2AI') == 'true' ? "ia" : "localhost"): urlParams.get('vs');
+		}
         // check if tournament exists maybe
         const player1AI = urlParams.get('player1AI');
         const player2AI = urlParams.get('player2AI');
@@ -179,9 +186,9 @@ export default class GameComponent extends HTMLElement {
 
         const numPlayers = Number(players);
         if (numPlayers > 2)
-            pongGame(numPlayers, versus, null, (player1AI === 'true'), (player2AI === 'true'), (player3AI === 'true'), (player4AI === 'true'));
+            pongGame(numPlayers, p1_username, versus, null, (player1AI === 'true'), (player2AI === 'true'), (player3AI === 'true'), (player4AI === 'true'));
         else
-            pongGame(numPlayers, versus, tournament_id, (player1AI === 'true'), (player2AI === 'true'));
+            pongGame(numPlayers, p1_username, versus, tournament_id, (player1AI === 'true'), (player2AI === 'true'));
     }
 
 	disconnectedCallback() {
