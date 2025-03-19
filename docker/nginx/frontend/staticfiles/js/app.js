@@ -116,12 +116,6 @@ function handleRoute() {
 		}
 	}
 
-		if (path === "/login" || path === "/register") {
-			navigateTo("/home");
-			return;
-		}
-	}
-
 	if (path == "/profile" || path == "/profile/") {
 		navigateTo("/profile/" + localStorage.getItem("username"));
 		return;

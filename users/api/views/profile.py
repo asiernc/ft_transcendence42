@@ -35,3 +35,32 @@ def getProfile(request, username):
 		return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 	except Exception as e:
 		return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+	
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getLeaderboard(request):
+	user_username = request.user.username
+	try:
+		users = User.objects.all()
+		user = User.objects.get(username=user_username)
+		friends = Friends.objects.filter(Q(user=user) | Q(friend=user))
+
+		all_serializer = UserSerializer(users, many=True)
+		for usr in all_serializer.data:
+			user_instance = User.objects.get(username=usr['username'])
+			mat = MatchSerializer(Match.objects.filter(Q(player1=user_instance) | Q(player2=user_instance)), many=True)
+			usr['wins'] = sum(int(m['winner_username_read'] == usr['username']) for m in mat.data)
+			usr['losses'] = sum(int(m['winner_username_read'] != usr['username']) for m in mat.data)
+		user_serializer = UserSerializer(user)
+		friends_serializer = UserSerializer([friend.user if friend.user != user else friend.friend for friend in friends], many=True)
+
+		return Response({
+				'all_users': all_serializer.data,
+				'user': user_serializer.data,
+				'friends': friends_serializer.data
+		}, status=status.HTTP_200_OK)
+	except User.DoesNotExist:
+		return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+	except Exception as e:
+		return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

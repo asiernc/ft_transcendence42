@@ -86,6 +86,11 @@ export default class ProfileComponent extends HTMLElement {
 			width: 170px;
 			height: 170px;
 		}
+			.pfp img{
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 
 		.name{
 			white-space: nowrap;
@@ -174,25 +179,31 @@ export default class ProfileComponent extends HTMLElement {
 
 		const userData = await this.getUserInfo();
 		console.log(userData);
+		this.calculateStats(userData);
 		let match_history = "";
 		let matchCount = 0;
-		//let userStats = this.calculateStats();
 		userData["matches"].forEach((match) => {
+			if (++matchCount > 5) {
+				return;
+			}
 			match_history += `
 				<tr class="history_scores">
 					<td>${match["score_player1"]}</td>
-					<td><img src="${this.cleanProfilePictures(undefined, match["player1_avatar"])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player1_username_read"] ? "green" : "red"};"></td>
+					<td> <div class="pfp-container" style="width: 80px; height: 80px; box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player1_username_read"] ? "green" : "red"};">
+						<img src="${this.cleanProfilePictures(undefined, match["player1_avatar"])}" title="${match["player1_username_read"]}">
+						</div>
+					</td>
 					<td>vs</td>
-					<td><img src="${this.cleanProfilePictures(undefined, match["player2_avatar"])}" width="80px" style="box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player2_username_read"] ? "green" : "red"};"></td>
+					<td> <div class="pfp-container" style="width: 80px; height: 80px; box-shadow: 3px 3px 8px 0 ${match["winner_username_read"] == match["player2_username_read"] ? "green" : "red"};">
+						<img src="${this.cleanProfilePictures(undefined, match["player2_avatar"])}" title="${match["player2_username_read"]}">
+						</div>
+					</td>
 					<td>${match["score_player2"]}</td>
 				</tr>
 				<tr class="history_dates">
 					<td colspan="5"  style="text-align: center;">${match["played_at"].split("T")[0]}</td>
 				</tr>
 			`;
-			if (++matchCount > 5) {
-				return; //no funcionara
-			}
 		});
 		if (match_history === "") {
 			match_history = "No matches played";
@@ -204,6 +215,14 @@ export default class ProfileComponent extends HTMLElement {
 				friend["avatar_42_url"],
 				friend["avatar_field"],
 			);
+			let friendBtns = '<div style="margin-left: auto;"></div>';
+			if (localStorage.getItem("username") === userData["user"]["username"]) {
+				friendBtns = `
+				<div style="margin-left: auto;">
+					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Match">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
+				</div>`;
+			}
 			friends += `
 			<div class="friend" id="friend${friend["username"]}">
 				<label class="pfp-container">
@@ -211,10 +230,7 @@ export default class ProfileComponent extends HTMLElement {
 					<div class="online-status" style="background-color: ${friend["online_status"] ? "green" : "orange"}"></div>
 				</label>
 				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
-				<div style="margin-left: auto;">
-					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" style="width: 40px; height: 40px; cursor: pointer;" title="Match" onclick="alert('retado a match')">
-					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
-				</div>
+				${friendBtns}
 			</div>
 			`;
 		});
@@ -237,8 +253,8 @@ export default class ProfileComponent extends HTMLElement {
 		div.innerHTML = `
 	<div style="width: 80%; display: flex; justify-content: space-between">
 		<div style="display:flex;">
-			<div style="margin-right: 20px;">
-				<img src="${userData["user"]["avatar_field"]}" class="pfp" id="usr_img">
+			<div class="pfp" style="margin-right: 20px;">
+				<img src="${userData["user"]["avatar_field"]}" id="usr_img">
 			</div>
 			<div class="name">
 				<h1 class="pixel-font" style="font-size: 40px">${userData["user"]["first_name"]}</h1>
@@ -249,7 +265,7 @@ export default class ProfileComponent extends HTMLElement {
 	</div>
 	<div class="box stats">
 		<span class="pixel-font" style="font-size: larger;" title="Wins/Losses">W/L: ${userData["user"]["wins"]}/${userData["user"]["losses"]}</span>
-		<span class="pixel-font" style="font-size: larger;" title="Score Ratio">Ratio: 37.0</span>
+		<span class="pixel-font" style="font-size: larger;">Win Rate: ${userData["user"]["ratio"]}</span>
 	</div>
 	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
 		<div class="box history">
@@ -272,7 +288,7 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 			<div style="display:flex; justify-content: space-around; align-items: center;">
-				<h1 class="pixel-font" style="margin-left: 120px;">FRIENDS</h1>
+				<h1 class="pixel-font" style="margin-left: 20%;">FRIENDS</h1>
 				<img class="clickable-img" id="reloadFriends" src="https://www.freeiconspng.com/thumbs/reload-icon/arrow-refresh-reload-icon-29.png">
 			</div>
 				${friends}
@@ -295,9 +311,11 @@ export default class ProfileComponent extends HTMLElement {
 
 	attachListeners() {
 		this.editProfile = this.shadowRoot.getElementById("editProfile");
-		this.editProfile.addEventListener("click", () => {
-			navigateTo("/profile_edit");
-		});
+		if (this.editProfile){
+			this.editProfile.addEventListener("click", () => {
+				navigateTo("/profile_edit");
+			});
+		}
 		this.reload = this.shadowRoot.getElementById("reloadFriends");
 		this.reload.addEventListener("click", () => {
 			this.render();
@@ -310,6 +328,16 @@ export default class ProfileComponent extends HTMLElement {
 				navigateTo("/profile/" + userId);
 			});
 		});
+		this.shadowRoot.querySelectorAll(".versus").forEach((button) => {
+			button.addEventListener("click", function (){
+				const userId = button.dataset.username;
+				let path = '/game?players=2';
+				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
+				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
+				console.log(path);
+				navigateTo(path);
+			});
+        });
 		let unfriend = this.shadowRoot.querySelectorAll(".unfriend");
 		unfriend.forEach((button) => {
 			button.addEventListener("click", async () => {
@@ -361,6 +389,20 @@ export default class ProfileComponent extends HTMLElement {
 			return "https://res.cloudinary.com/teepublic/image/private/s--lJJYqwRw--/c_crop,x_10,y_10/c_fit,w_1109/c_crop,g_north_west,h_1260,w_1260,x_-76,y_-135/co_rgb:ffffff,e_colorize,u_Misc:One%20Pixel%20Gray/c_scale,g_north_west,h_1260,w_1260/fl_layer_apply,g_north_west,x_-76,y_-135/bo_0px_solid_white/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1606803363/production/designs/16724317_0.jpg";
 		}
 		return avatar;
+	}
+
+	calculateStats(user){
+		let wins = 0;
+		let losses = 0;
+		user['matches'].reverse();
+		for (let match of user['matches']){
+			wins += match['winner_username_read'] == user['user']['username'];
+			losses += match['winner_username_read'] != user['user']['username'];
+		}
+		user['user']['wins'] = wins;
+		user['user']['losses'] = losses;
+		user['user']['matches'] = wins+losses;
+		user['user']['ratio'] = (wins / (wins+losses) * 100).toFixed(1) + "%";
 	}
 
 	async getUserInfo() {

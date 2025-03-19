@@ -136,86 +136,78 @@ export default class LeaderboardComponent extends HTMLElement {
 		border: 5px solid #701717;
 		color: 'white';
 	}
+	.pfp-container {
+		width: 70px;
+		height: 70px;
+		overflow: hidden;
+	}
+	.pfp-container img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
         `;
 
-		const users = await this.getUsers();
-		const globalUsers = await this.getUsersGlobal();
+		const users = await this.getUsersGlobal();
+		this.assignStats(users);
 
 		let friends_table = "";
-		let i = 1;
-		users["friends"].forEach((user) => {
-			user["avatar_field"] = this.cleanProfilePictures(
-				user["avatar_42_url"],
-				user["avatar_field"],
-			);
-			friends_table += `
-			<tr style="${this.generateColors()}">
-				<td>#${i}</td>
-				<td><img src="${user["avatar_field"]}" width="70px"></td>
-				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
-				<td>${user["matches"]}</td>
-				<td>${user["stats"]}</td>
+		let global_table = "";
+		let fi = 1;
+		let gi = 1;
+
+		users['all_users'].forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(user["avatar_42_url"],user["avatar_field"]);
+			// if (user["username"] == "localhost" || user["username"] == "IA" || user["username"] == "ia") {
+			// 	return;}
+			let temp_table = `
+			<tr style="${this.generateColors()}" class="global" id="tb${user["username"]}">
+				<td>#${gi}</td>
 				<td>
-					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
+					<div class="pfp-container">
+						<img src="${user["avatar_field"]}">
+					</div>
+				</td>
+				<td class="tbname" data-username="${user["username"]}">${user["username"]}</td>
+				<td>${user['matches']}</td>
+				<td>${user['ratio']}</td>
+				<td>
+					<img class="clickable-img match-btn versus" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png">
+					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
 				</td>
 			</tr>
 			`;
-			++i;
+			global_table += temp_table;
+			if (this.checkAlreadyFriend(users["friends"], user["username"])){
+				friends_table += temp_table;
+			}
+			++gi;
 		});
 		if (friends_table == "") {
 			friends_table = `<tr><td></td><td colspan=5>YOU HAVE NO FRIENDS :( SO SAD</td></tr>`;
 		}
 
-		let global_table = "";
-		i = 1;
-		globalUsers.forEach((user) => {
-			user["avatar_field"] = this.cleanProfilePictures(
-				user["avatar_42_url"],
-				user["avatar_field"],
-			);
-			if (
-				user["username"] == "localhost" ||
-				user["username"] == "IA" ||
-				user["username"] == "ia"
-			) {
-				return;
-			}
-			global_table += `
-			<tr style="${this.generateColors()}" class="global">
-				<td>#${i}</td>
-				<td><img src="${user["avatar_field"]}" width="70px"></td>
-				<td onclick="alert('to profile')" class="tbname">${user["username"]}</td>
-				<td>${user["matches"]}</td>
-				<td>${user["stats"]}</td>
-				<td>
-					<img class="clickable-img match-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png" onclick="alert('Retado a Match')">
-					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
-				</td>
-			</tr>
-			`;
-			++i;
-		});
-
-		users["user"]["avatar_field"] = this.cleanProfilePictures(
-			users["user"]["avatar_42_url"],
-			users["user"]["avatar_field"],
-		);
+		users["user"]["avatar_field"] = this.cleanProfilePictures(users["user"]["avatar_42_url"],users["user"]["avatar_field"]);
 		const div = document.createElement("div");
 		div.innerHTML = /*ht ml*/ `
 			<table style="width: 50%; margin-left: auto; margin-right: auto;" id="user">
 				<tbody>
 				<tr style="border: none; background-color: rgba(217, 217, 217, 0.548);">
-					<td><img src="${users["user"]["avatar_field"]}" width="70px"></td>
+					<td>
+						<div class="pfp-container">
+							<img src="${users["user"]["avatar_field"]}">
+						</div>
+					</td>
 					<td>${users["user"]["username"]}</td>
 					<td>${users["user"]["matches"]}</td>
-					<td>${users["user"]["stats"]}</td>
+					<td>${users["user"]["ratio"]}</td>
 				</tr>
 				</tbody>
 			</table>
 			<div style="display: flex; flex-direction:column; gap: 0; width: 100vw;">
 				<div style="display: flex; justify-content: center; gap: 5rem;">
 					<h1 class="pixel-font pane" id="globallb">Global</h1>
-					<h1 class="pixel-font pane" id="friendslb">Friends</h1>
+					<h1 class="pixel-font pane selected" id="friendslb">Friends</h1>
 					<!-- <input type="text" id="search" size="50" placeholder="Search..." /> -->
 				</div>
 				<hr style="margin-top: 0; width: 90%; border: 2px solid #1E6C1A;">
@@ -240,7 +232,7 @@ export default class LeaderboardComponent extends HTMLElement {
 		div.className = "bg";
 		this.shadowRoot.appendChild(div);
 		this.attachListeners();
-		// Get the element with id="defaultOpen" and click on it
+
 		this.shadowRoot.getElementById("globallb").click();
 	}
 
@@ -248,28 +240,39 @@ export default class LeaderboardComponent extends HTMLElement {
 		this.globallb = this.shadowRoot.getElementById("globallb");
 		this.friendslb = this.shadowRoot.getElementById("friendslb");
 		this.globallb.addEventListener("click", () => {
-			this.globallb.className += " selected";
-			this.friendslb.className = this.friendslb.className.replace(
-				" selected",
-				"",
-			);
-			this.shadowRoot.getElementById("friends_leaderboard").style.display =
-				"none";
-			this.shadowRoot.getElementById("global_leaderboard").style.display =
-				"table";
+			if (this.globallb.classList.contains("selected")){
+				return;
+			}
+			this.globallb.classList.toggle("selected");
+			this.friendslb.classList.toggle("selected");
+			this.shadowRoot.getElementById("friends_leaderboard").style.display ="none";
+			this.shadowRoot.getElementById("global_leaderboard").style.display ="table";
 		});
 		this.friendslb.addEventListener("click", () => {
-			this.friendslb.className += " selected";
-			this.globallb.className = this.globallb.className.replace(
-				" selected",
-				"",
-			);
-			this.shadowRoot.getElementById("friends_leaderboard").style.display =
-				"table";
-			this.shadowRoot.getElementById("global_leaderboard").style.display =
-				"none";
+			if (this.friendslb.classList.contains("selected")){
+				return;
+			}
+			this.globallb.classList.toggle("selected");
+			this.friendslb.classList.toggle("selected");
+			this.shadowRoot.getElementById("friends_leaderboard").style.display = "table";
+			this.shadowRoot.getElementById("global_leaderboard").style.display = "none";
 		});
-
+		this.shadowRoot.querySelectorAll(".tbname").forEach((button) => {
+			button.addEventListener("click", () => {
+				const userId = button.dataset.username;
+				navigateTo("/profile/" + userId);
+			});
+		});
+		this.shadowRoot.querySelectorAll(".versus").forEach((button) => {
+			button.addEventListener("click", function (){
+				const userId = button.dataset.username;
+				let path = '/game?players=2';
+				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
+				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
+				console.log(path);
+				navigateTo(path);
+			});
+        });
 		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
 			button.addEventListener("click", async () => {
 				const userId = button.dataset.username;
@@ -313,6 +316,41 @@ export default class LeaderboardComponent extends HTMLElement {
 		this.globallb.removeEventListener("click", this);
 	}
 
+	assignStats(users){
+		function compare(u1, u2){
+			if (u1['ratio'] < u2['ratio']){
+				return 1;
+			}
+			if (u1['ratio'] > u2['ratio']){
+				return -1;
+			}
+			if (u1['matches'] < u2['matches']){
+				return 1;
+			}
+			if (u1['matches'] > u2['matches']){
+				return -1;
+			}
+			return 0;
+		}
+
+		for (let user of users['all_users']){
+			user['matches'] = user['wins'] + user['losses'];
+			if (user['matches'] != 0){
+				user['ratio'] = user['wins'] / (user['wins'] + user['losses']) * 100;
+			}else{
+				user['ratio'] = 0;
+			}
+			if (user['username'] === localStorage.getItem("username")){
+				users["user"]["matches"] = user["matches"];
+				users["user"]["ratio"] = user["ratio"] + "%";
+			}
+		}
+		users['all_users'].sort(compare);
+		for (let user of users['all_users']){
+			user['ratio'] = user['ratio'].toFixed(1) + "%";
+		}
+	}
+
 	generateColors() {
 		const BGcolors = ["EE7C7C", "7AA3EA", "97ED93", "D6CA73"];
 		const BRcolors = ["701717", "163977", "1E6C1A", "60560E"];
@@ -330,7 +368,7 @@ export default class LeaderboardComponent extends HTMLElement {
 					<th style="width: 100px;"></th>
 					<th>Name </th>
 					<th>Matches</th>
-					<th>Stats</th>
+					<th>Win Rate</th>
 					<th style="width: 50px;"></th>
 				</tr>
 				</thead>
@@ -352,31 +390,9 @@ export default class LeaderboardComponent extends HTMLElement {
 			return avatar_42;
 		}
 		if (!avatar) {
-			return "https://cdn.pixabay.com/photo/2016/10/09/17/28/confidential-1726367_1280.jpg";
+			return "https://res.cloudinary.com/teepublic/image/private/s--lJJYqwRw--/c_crop,x_10,y_10/c_fit,w_1109/c_crop,g_north_west,h_1260,w_1260,x_-76,y_-135/co_rgb:ffffff,e_colorize,u_Misc:One%20Pixel%20Gray/c_scale,g_north_west,h_1260,w_1260/fl_layer_apply,g_north_west,x_-76,y_-135/bo_0px_solid_white/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1606803363/production/designs/16724317_0.jpg";
 		}
 		return avatar;
-	}
-
-	async getUsers() {
-		const username = localStorage.getItem("username");
-		if (!username) {
-			//haz algoooo!
-		}
-		const token = localStorage.getItem("access_token");
-		try {
-			const response = await fetch(`/api/profile/${username}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
-				},
-			});
-			const data = await response.json();
-			console.log(data);
-			return data;
-		} catch (err) {
-			console.error("Error: Problem sending the petition");
-		}
 	}
 
 	async getUsersGlobal() {
@@ -386,7 +402,7 @@ export default class LeaderboardComponent extends HTMLElement {
 		}
 		const token = localStorage.getItem("access_token");
 		try {
-			const response = await fetch(`/api/get`, {
+			const response = await fetch(`/api/leaderboard`, {
 				method: "GET",
 				headers: {
 					Authorization: `Bearer ${token}`,

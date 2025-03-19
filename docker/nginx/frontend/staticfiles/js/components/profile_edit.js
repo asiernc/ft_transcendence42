@@ -5,6 +5,7 @@ export default class ProfileEditComponent extends HTMLElement {
 		super();
 
 		this.attachShadow({ mode: "open" });
+		this.imageChanged = false;
 		this.render();
 	}
 
@@ -144,9 +145,7 @@ export default class ProfileEditComponent extends HTMLElement {
 					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user["user"]["email"]}" class="input"></input>
 				</div>
 			</div>
-			<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 30px">
-				<input id="submitBtn" value="Submit" class="submit-btn">
-			</div>
+			<input id="submitBtn" value="Submit" class="submit-btn" style="margin-top: 30px; text-align: center;">
 		</form>
 		<div class="screw-container">
 			<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -175,13 +174,12 @@ export default class ProfileEditComponent extends HTMLElement {
 					// this.shadowRoot.getElementById("image-data").value = e.target.result;
 				};
 				reader.readAsDataURL(file);
+				this.imageChanged = true;
 			}
 		});
 
 		this.submit = this.shadowRoot.getElementById("submitBtn");
 		this.submit.addEventListener("click", async () => {
-			//UPDATE USER
-
 			const form = this.shadowRoot.getElementById("editProfileForm");
 			if (form.checkValidity()) {
 				const username = localStorage.getItem("username");
@@ -222,10 +220,11 @@ export default class ProfileEditComponent extends HTMLElement {
 				}
 			}
 
+
 			const formData = new FormData();
 			const fileInput = this.shadowRoot.getElementById("profile-upload");
 
-			if (fileInput.files.length > 0) {
+			if (fileInput.files.length > 0 || this.imageChanged) {
 				formData.append("avatar", fileInput.files[0]); // Attach actual file
 			} else {
 				console.warn("No file selected.");
