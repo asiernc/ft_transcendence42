@@ -319,12 +319,12 @@ export default class TournamentComponent extends HTMLElement {
 	addParticipant(user_info, playerID) {
 		const user_name = user_info['player' + playerID].username;
 		const user_alias = user_info['player' + playerID].alias;
-		const isIA = (user_name === "AI");
+		const isAI = (user_name === "AI");
 		
 		const newPlayer = {
 			username: user_name,
 			alias: user_alias,
-			IA: isIA
+			AI: isAI
 		};
 
 		return newPlayer;
@@ -442,8 +442,8 @@ export default class TournamentComponent extends HTMLElement {
 			this.a2button = document.getElementById('a2');
 			this.a2button.addEventListener('click', async function() {
 				let path = '/game?players=2';
-				path += "&player1AI=" + MatchList[g_round].player1.IA;
-				path += "&player2AI=" + MatchList[g_round].player2.IA;
+				path += "&player1AI=" + MatchList[g_round].player1.AI;
+				path += "&player2AI=" + MatchList[g_round].player2.AI;
 				path += "&player3AI=false&player4AI=false&tournament_id=" + Date.now() + Math.floor(Math.random() * 100);
 				path += "&p1username=" + MatchList[g_round].player1.username;
 				path += "&p2username=" + MatchList[g_round].player2.username;
