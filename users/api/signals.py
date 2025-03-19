@@ -6,7 +6,7 @@ from .models import User
 def create_default_users(sender, **kwargs):
 	User.objects.get_or_create(
 		username='local',
-		defaults={'password': 'localhost_password', 'email': 'localhost@gmail.com'}
+		defaults={'password': 'local_password', 'email': 'local@gmail.com'}
 		)
 	
 	User.objects.get_or_create(

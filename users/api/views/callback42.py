@@ -55,12 +55,10 @@ def callback42(request):
 		except requests.exceptions.RequestException as e:
 			return Response({'error': f'Failed to obtain user information: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
 
-		# verifico si el usuario ya existe en la db
-		# hacerlo con username o con email?
 		try:
-			user, created = User.objects.get_or_create(username=user_info_json['login'])
+			USERNAME_INTRA_PREFIX = "_"
+			user, created = User.objects.get_or_create(username=USERNAME_INTRA_PREFIX + user_info_json['login'])
 			if created:
-				user.username = "_" + user_info_json['login']
 				user.email = user_info_json['email']
 				user.first_name = user_info_json['first_name']
 				user.last_name = user_info_json['last_name']
@@ -68,8 +66,6 @@ def callback42(request):
 				user.avatar_42_url = user_info_json['image']['link']
 				user.save()
 			else:
-				#actualizar datos del usuario
-				user.username = "_" + user_info_json['login']
 				user.email = user_info_json['email']
 				user.first_name = user_info_json['first_name']
 				user.last_name = user_info_json['last_name']
