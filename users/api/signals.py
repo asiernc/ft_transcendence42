@@ -5,13 +5,13 @@ from .models import User
 @receiver(post_migrate)
 def create_default_users(sender, **kwargs):
 	User.objects.get_or_create(
-		username='localhost',
+		username='local',
 		defaults={'password': 'localhost_password', 'email': 'localhost@gmail.com'}
 		)
 	
 	User.objects.get_or_create(
-		username='ia',
-		defaults={'password': 'ia_password', 'email': 'ia@gmail.com'}
+		username='AI',
+		defaults={'password': 'ai_password', 'email': 'ai@gmail.com'}
 		)
 	
 	

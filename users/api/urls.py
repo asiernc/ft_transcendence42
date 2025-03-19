@@ -38,5 +38,5 @@ urlpatterns = [
 	path('get-matchs/<str:username>', getMatchesByUsername),
 	path('logout', logout), #/api/logout
 	path('delete/<int:pk>', deleteUser),
-	path('profile/<str:username>', getProfile)
+	path('profile/<str:username>', getProfile),
 ]

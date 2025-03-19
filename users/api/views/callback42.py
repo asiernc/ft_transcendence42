@@ -60,7 +60,7 @@ def callback42(request):
 		try:
 			user, created = User.objects.get_or_create(username=user_info_json['login'])
 			if created:
-				user.username = user_info_json['login']
+				user.username = "_" + user_info_json['login']
 				user.email = user_info_json['email']
 				user.first_name = user_info_json['first_name']
 				user.last_name = user_info_json['last_name']
@@ -69,7 +69,7 @@ def callback42(request):
 				user.save()
 			else:
 				#actualizar datos del usuario
-				user.username = user_info_json['login']
+				user.username = "_" + user_info_json['login']
 				user.email = user_info_json['email']
 				user.first_name = user_info_json['first_name']
 				user.last_name = user_info_json['last_name']
