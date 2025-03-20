@@ -132,7 +132,7 @@ export default class TournamentComponent extends HTMLElement {
 			for (let j = 0; j < 2; j++) {
 				player_id = this.tournamentObject.matches_json["match" + (i + 1)]["player" + (j + 1) + "_id"];
 				div_id = "pb-m" + (i + 1) + "-p" + (j + 1);
-				document.getElementById(div_id).textContent = this.tournamentObject.players_alias["player" + player_id].alias;
+				document.getElementById("m" + (i + 1) + "-p" + (j + 1)).textContent = this.tournamentObject.players_alias["player" + player_id].alias;
 				if (this.tournamentObject.matches_json["match" + (i + 1)].winner == (j + 1)) {
 					document.getElementById(div_id).style.backgroundColor = "#24831e";
 					this.setWinner("match" + (i + 1), j + 1, player_id);
@@ -154,16 +154,16 @@ export default class TournamentComponent extends HTMLElement {
 		const winner = this.tournamentObject.players_alias["player" + player_id].alias;	
 		switch (match_id) {
 			case "match1":
-							div_id = "pb-m5-p1";
+							div_id = "m5-p1";
 							break;
 			case "match2":
-							div_id = "pb-m5-p2";
+							div_id = "m5-p2";
 							break;
 			case "match3":
-							div_id = "pb-m6-p1";
+							div_id = "m6-p1";
 							break;
 			case "match4":
-							div_id = "pb-m6-p2";
+							div_id = "m6-p2";
 							break ;
 		}
 		document.getElementById(div_id).textContent = winner;
