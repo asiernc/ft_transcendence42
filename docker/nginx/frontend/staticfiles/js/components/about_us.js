@@ -305,8 +305,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         Always developing random things.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="https://github.com/albertcaballero"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="https://www.linkedin.com/in/albert-caballero-coll/"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/albertcaballero" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/albert-caballero-coll/" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
@@ -324,8 +324,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         Charizard is on fire.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#">https://github.com/asiernc<i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#">https://www.linkedin.com/in/asierncara/<i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/asiernc" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/asierncara/" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
@@ -343,8 +343,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
@@ -364,8 +364,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         Hinge Enjoyer de los buenos.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="#" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
@@ -384,8 +384,8 @@ export default class AboutUsComponent extends HTMLElement {
                                         In constant learning.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="https://github.com/MartiVallhonrat"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="https://www.linkedin.com/in/martí-vallhonrat-rafart"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/MartiVallhonrat" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/martí-vallhonrat-rafart" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">

@@ -17,7 +17,7 @@ from .views.matchs import (createMatch,
     getMatches,
     getMatchesByUsername,
     )
-from .views.profile import getProfile
+from .views.profile import (getProfile, getLeaderboard)
 
 urlpatterns = [
 	path('get/<int:pk>', getUser), #/api/get/<str:pk>
@@ -39,4 +39,5 @@ urlpatterns = [
 	path('logout', logout), #/api/logout
 	path('delete/<int:pk>', deleteUser),
 	path('profile/<str:username>', getProfile),
+	path('leaderboard', getLeaderboard),
 ]
