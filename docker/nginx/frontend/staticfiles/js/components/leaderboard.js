@@ -158,8 +158,8 @@ export default class LeaderboardComponent extends HTMLElement {
 
 		users['all_users'].forEach((user) => {
 			user["avatar_field"] = this.cleanProfilePictures(user["avatar_42_url"],user["avatar_field"]);
-			// if (user["username"] == "localhost" || user["username"] == "IA" || user["username"] == "ia") {
-			// 	return;}
+			if (user["username"] == "local" || user["username"] == "IA" || user["username"] == "ia") {
+				return;}
 			let temp_table = `
 			<tr style="${this.generateColors()}" class="global" id="tb${user["username"]}">
 				<td>#${gi}</td>
@@ -287,14 +287,9 @@ export default class LeaderboardComponent extends HTMLElement {
 						},
 						body: JSON.stringify({ friend_username: userId }),
 					});
-					const resultAlert = this.shadowRoot.getElementById("successAlert");
 					if (response.ok) {
-						resultAlert.style.display = "block";
-						resultAlert.className = resultAlert.className.replace(" bad", "");
-						setTimeout(() => {
-							resultAlert.style.display = "none";
-						}, 2000);
 						button.style.display = "none";
+						this.friendAdd(userId);
 					} else {
 						throw new Error("Error adding friend :(");
 					}
@@ -309,6 +304,21 @@ export default class LeaderboardComponent extends HTMLElement {
 				}
 			});
 		});
+	}
+
+	friendAdd(username){
+		const resultAlert = this.shadowRoot.getElementById("successAlert");
+		resultAlert.style.display = "block";
+		resultAlert.innerText = "Friend added successfully!!";
+		resultAlert.className = resultAlert.className.replace(" bad", "");
+		setTimeout(() => {
+			resultAlert.style.display = "none";
+		}, 2000);
+		const row = this.shadowRoot.getElementById("tb"+username);
+		if (!row){return;}
+		const cpy = row.cloneNode(true);
+		const friendsTable = this.shadowRoot.getElementById("friends_leaderboard");
+		friendsTable.appendChild(cpy);
 	}
 
 	disconnectedCallback() {

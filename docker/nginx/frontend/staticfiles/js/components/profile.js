@@ -116,12 +116,11 @@ export default class ProfileComponent extends HTMLElement {
 			padding: 10px;
 			border-top: 1px solid black;
 			justify-content: space-between;
-			margin-top: 10px;
 			align-items: center;
-			height: 70px;
+			height: 75px;
 			font-family: "Press Start 2P", Arial;
 		}
-			.friend:hover h2{
+			.friend h2:hover{
 				text-decoration: underline;
 				cursor: pointer;
 			}
@@ -175,6 +174,11 @@ export default class ProfileComponent extends HTMLElement {
 			font-size: larger;
 			z-index = 22;
 		}
+		.bad{
+			background-color: #EE7C7C;
+			border: 5px solid #701717;
+			color: 'white';
+		}
         `;
 
 		const userData = await this.getUserInfo();
@@ -218,18 +222,18 @@ export default class ProfileComponent extends HTMLElement {
 			let friendBtns = '<div style="margin-left: auto;"></div>';
 			if (localStorage.getItem("username") === userData["user"]["username"]) {
 				friendBtns = `
-				<div style="margin-left: auto;">
+				<div style="margin-left: auto; flex-shrink: 0;">
 					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Match">
 					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
 				</div>`;
 			}
 			friends += `
 			<div class="friend" id="friend${friend["username"]}">
-				<label class="pfp-container">
+				<label class="pfp-container" style="flex-shrink: 0;">
 					<img src="${friend["avatar_field"]}" width="60px">
 					<div class="online-status" style="background-color: ${friend["online_status"] ? "green" : "orange"}"></div>
 				</label>
-				<h2 style="margin-left: 3%;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
+				<h2 style="padding-left: 3%; overflow: hidden; flex-shrink: 1;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
 				${friendBtns}
 			</div>
 			`;
