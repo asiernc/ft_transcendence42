@@ -5,11 +5,173 @@ let	g_round = 0;
 export default class TournamentComponent extends HTMLElement {
 	constructor() {
 		super();
-		const MatchList = this.randomizeMatches();
-		if (MatchList === false);
-		//throw Error o como se haga en web
+		const MatchList = []; //
+		const tournament_id = localStorage.getItem('tournament_id');
+		this.tournamentObject = null;
+		this.init(tournament_id);
+		//const tournamentObject = this.loadTournamentData(tournament_id);
+	
+		/*const gameResultItem = localStorage.getItem("gameResult");
+		if (gameResultItem) {
+			this.setBoxResult(MatchList, JSON.parse(gameResultItem));
+			localStorage.removeItem("gameResult");
+		}
+		else
+			console.log('not gameResult found');*/
+	}
+
+	async loadTournament() {
+		// check if tournament exists if not go to options_tournament
+		try
+		{
+			const token = localStorage.getItem("access_token");
+			const tournament_id = localStorage.getItem('tournament_id')
+			const response = await fetch(`/api-tournament/tournament/${tournament_id}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`,
+				},
+			});
+			const data = await response.json();
+			if (response.ok)
+			{
+				console.log(data);
+				return data;
+			}
+			else
+				throw Error(data.error);
+		} catch (err) {
+			console.log(err);
+			navigateTo('/options_tournament')
+		}
+	}
+
+	setBoxResult(MatchList, gameResult) {
+		const divp1_id = "pb-m" + g_round + "-p1";
+		const divp2_id = "pb-m" + g_round + "-p2";
+		if (gameResult.score_p1 > gameResult.score_p2) {
+			document.getElementById(divp1_id).style.backgroundColor = "#24831e";
+			document.getElementById(divp2_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp2_id).style.textDecoration = "line-through"
+			document.getElementById(divp2_id).style.textDecorationThickness = "0.2rem"
+			//MatchList[g_round - 1].;
+		} else {
+			document.getElementById(divp1_id).style.backgroundColor = "#cf1206";
+			document.getElementById(divp1_id).style.textDecoration = "line-through"
+			document.getElementById(divp1_id).style.textDecorationThickness = "0.2rem"
+			document.getElementById(divp2_id).style.backgroundColor = "#24831e";
+		}
+	}
+	async init(tournament_id) {
+		this.tournamentObject = null;
+		this.tournamentObject = await this.loadTournament(tournament_id);
+		console.log("Data is loaded!!!!");
+		this.render();
+		this.setPlayersBox();
+		this.attachListeners(this.tournamentObject);
+	}
+	attachListeners(tournamentObject) {
+        this.nextmatch = document.getElementById("next-match-button");
+		this.nextmatch.addEventListener("click", async function ()
+        {
+			document.getElementById("modal_container").classList.add("show");
+            document.getElementById("modal-content").innerHTML = `
+                    <div class="screw-container" style="top: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right: 0; width:5%; height: 5%;">
+                    </div>
+					<div class="d-flex justify-content-center align-items-center">
+                        <h1 class="button-text">MATCH Nº${tournamentObject.match + 1}</h1>
+                    </div>
+					&nbsp
+					<div class="d-flex justify-content-center align-items-center">
+                        <p class="button-text">${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].alias}<br>VS<br>${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].alias}</p>
+					</div>
+					&nbsp
+					<div class="options-container">
+						<div class="d-flex justify-content-center align-items-center">
+						<a id="a2" href="javascript:void(0);" class="button-text">GO!</a>
+						</div>
+						<div class="d-flex justify-content-center align-items-center">
+						<a id="a1" href="javascript:void(0);" class="button-text">Not Yet!</a>
+						</div>
+					</div>
+					<div class="screw-container" style="bottom: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right:0; width:5%; height: 5%;">
+                    </div>
+                `;
+			this.a1button = document.getElementById('a1'); // not yet
+			this.a1button.addEventListener('click', async function() {
+				document.getElementById("modal_container").classList.remove("show");
+			});
+			this.a2button = document.getElementById('a2');
+			this.a2button.addEventListener('click', async function() {
+				let path = '/game?players=2';
+				path += "&player1AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].isAI;
+				path += "&player2AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI;
+				path += "&player3AI=false&player4AI=false&tournament_id=" + localStorage.getItem("tournament_id");
+				path += "&p1username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
+				path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
+				g_round++;
+				navigateTo(path);
+			});
+    
+        });
+	}
+
+	disconnectedCallback() {
+       //this.nextmatch.removeEventListener('click', this);
+	   //this.a1button.removeEventListener('click', this);
+	   //this.a2button.removeEventListener('click', this);
+	}
+	setPlayersBox() {
+		let	div_id, player_id;
+		for (let i = 0; i < 4; i++) {
+			for (let j = 0; j < 2; j++) {
+				player_id = this.tournamentObject.matches_json["match" + (i + 1)]["player" + (j + 1) + "_id"];
+				div_id = "pb-m" + (i + 1) + "-p" + (j + 1);
+				document.getElementById(div_id).textContent = this.tournamentObject.players_alias["player" + player_id].alias;
+				if (this.tournamentObject.matches_json["match" + (i + 1)].winner == (j + 1)) {
+					document.getElementById(div_id).style.backgroundColor = "#24831e";
+					this.setWinner("match" + (i + 1), j + 1, player_id);
+				}
+				else if (this.tournamentObject.matches_json["match" + (i + 1)].winner != 0) {
+					document.getElementById(div_id).style.backgroundColor = "#cf1206";
+					document.getElementById(div_id).style.textDecoration = "line-through"
+					document.getElementById(div_id).style.textDecorationThickness = "0.2rem"
+				}
+					
+				
+			}
+		}
+	}
+	setWinner(match_id, winner_id, player_id) {
+		if (!winner_id)
+				return ;
+		let	div_id;
+		const winner = this.tournamentObject.players_alias["player" + player_id].alias;	
+		switch (match_id) {
+			case "match1":
+							div_id = "pb-m5-p1";
+							break;
+			case "match2":
+							div_id = "pb-m5-p2";
+							break;
+			case "match3":
+							div_id = "pb-m6-p1";
+							break;
+			case "match4":
+							div_id = "pb-m6-p2";
+							break ;
+		}
+		document.getElementById(div_id).textContent = winner;
+	}
+	render() {
+		console.log("there it goes!");
 		const style = document.createElement('style');
-        style.textContent = `
+		style.textContent = `
 			.bg {
 				display: flex;
 				align-items: center;
@@ -229,21 +391,21 @@ export default class TournamentComponent extends HTMLElement {
 				<div class="players-grid" style="left: 6.5%; top: 20%;"> <!-- Box left-up -->
 					<div class="player-box" id="pb-m1-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p1">${MatchList[0].player1.alias}</p>
+						<p class="players-text" id="m1-p1"> temp </p>
 					</div>
 					<div class="player-box" id="pb-m1-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p2">${MatchList[0].player2.alias}</p>
+						<p class="players-text" id="m1-p2"> temp </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 70%;"> <!-- Box left-bottom -->
 					<div class="player-box" id="pb-m2-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p1">${MatchList[1].player1.alias}</p>
+						<p class="players-text" id="m2-p1"> temp </p>
 					</div>
 					<div class="player-box" id="pb-m2-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p2">${MatchList[1].player2.alias}</p>
+						<p class="players-text" id="m2-p2"> temp </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 22%;"> <!-- Box left-center -->
@@ -279,21 +441,21 @@ export default class TournamentComponent extends HTMLElement {
 				<div class="players-grid" style="right: 6.5%; top: 20%;"> <!-- Box right-up -->
 					<div class="player-box" id="pb-m3-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p1">${MatchList[2].player1.alias}</p>
+						<p class="players-text" id="m3-p1"> temp </p>
 					</div>
 					<div class="player-box" id="pb-m3-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p2">${MatchList[2].player2.alias}</p>
+						<p class="players-text" id="m3-p2"> temp </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 70%;"> <!-- Box right-bottom -->
 					<div class="player-box" id="pb-m4-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p1">${MatchList[3].player1.alias}</p>
+						<p class="players-text" id="m4-p1"> temp </p>
 					</div>
 					<div class="player-box" id="pb-m4-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p2">${MatchList[3].player2.alias}</p>
+						<p class="players-text" id="m4-p2"> temp </p>
 					</div>
 				</div>
 			</div>
@@ -303,161 +465,7 @@ export default class TournamentComponent extends HTMLElement {
 			`;
 		this.appendChild(style);
         div.className = 'bg';
-		this.appendChild(div);
-		this.checkTournament();
-
-		this.attachListeners(MatchList);
-		const gameResultItem = localStorage.getItem("gameResult");
-		if (gameResultItem) {
-			this.setBoxResult(MatchList, JSON.parse(gameResultItem));
-			localStorage.removeItem("gameResult");
-		}
-		else
-			console.log('not gameResult found');
-		console.log(g_round + 1);
-	}
-	addParticipant(user_info, playerID) {
-		const user_name = user_info['player' + playerID].username;
-		const user_alias = user_info['player' + playerID].alias;
-		const isIA = (user_name === "AI");
-		
-		const newPlayer = {
-			username: user_name,
-			alias: user_alias,
-			IA: isIA
-		};
-
-		return newPlayer;
-	}
-	async checkTournament() {
-		// check if tournament exists if not go to options_tournament
-		try
-		{
-			const token = localStorage.getItem("access_token");
-			const tournament_id = localStorage.getItem('tournament_id')
-			const response = await fetch(`/api-tournament/tournament/${tournament_id}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`,
-				},
-			});
-			const data = await response.json();
-			if (response.ok)
-			{
-				console.log(data);
-			}
-			else
-				throw Error(data.error);
-		} catch (err) {
-			console.log(err);
-			navigateTo('/options_tournament')
-		}
-	}
-	randomizeMatches() {
-		const LocalStorageItem = localStorage.getItem('user_info');
-		if (LocalStorageItem) {
-			console.log(JSON.parse(LocalStorageItem));
-			const MatchList = [];
-			const user_info = JSON.parse(LocalStorageItem);
-			let playerID = [1, 2, 3, 4, 5, 6, 7, 8];
-			let add_player1, add_player2;
-			let isPlayer1 = true;
-			while (playerID.length > 0)
-			{
-				
-				let num = Math.floor((Math.random() * playerID[playerID.length - 1]) + 1);
-				if (playerID.indexOf(num) != -1) {
-					if (isPlayer1 === false) {
-						add_player2 = this.addParticipant(user_info, num);
-						let MatchItem = {
-							player1 : add_player1,
-							player2 : add_player2
-						};
-						MatchList.push(MatchItem);
-					}
-					else
-						add_player1 = this.addParticipant(user_info, num);
-					isPlayer1 = !isPlayer1;
-					playerID.splice(playerID.indexOf(num), 1);
-				}
-			}
-			return MatchList;
-		}
-		return false;
-	}
-
-	setBoxResult(MatchList, gameResult) {
-		const divp1_id = "pb-m" + g_round + "-p1";
-		const divp2_id = "pb-m" + g_round + "-p2";
-		if (gameResult.score_p1 > gameResult.score_p2) {
-			document.getElementById(divp1_id).style.backgroundColor = "#24831e";
-			document.getElementById(divp2_id).style.backgroundColor = "#cf1206";
-			document.getElementById(divp2_id).style.textDecoration = "line-through"
-			document.getElementById(divp2_id).style.textDecorationThickness = "0.2rem"
-			//MatchList[g_round - 1].;
-		} else {
-			document.getElementById(divp1_id).style.backgroundColor = "#cf1206";
-			document.getElementById(divp1_id).style.textDecoration = "line-through"
-			document.getElementById(divp1_id).style.textDecorationThickness = "0.2rem"
-			document.getElementById(divp2_id).style.backgroundColor = "#24831e";
-		}
-	}
-
-	attachListeners(MatchList) {
-        this.nextmatch = document.getElementById("next-match-button");
-		this.nextmatch.addEventListener("click", async function ()
-        {
-			document.getElementById("modal_container").classList.add("show");
-            document.getElementById("modal-content").innerHTML = `
-                    <div class="screw-container" style="top: 0;">
-                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
-                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right: 0; width:5%; height: 5%;">
-                    </div>
-					<div class="d-flex justify-content-center align-items-center">
-                        <h1 class="button-text">MATCH Nº${g_round + 1}</h1>
-                    </div>
-					&nbsp
-					<div class="d-flex justify-content-center align-items-center">
-                        <p class="button-text">${MatchList[g_round].player1.alias}<br>VS<br>${MatchList[g_round].player1.alias}</p>
-					</div>
-					&nbsp
-					<div class="options-container">
-						<div class="d-flex justify-content-center align-items-center">
-						<a id="a2" href="javascript:void(0);" class="button-text">GO!</a>
-						</div>
-						<div class="d-flex justify-content-center align-items-center">
-						<a id="a1" href="javascript:void(0);" class="button-text">Not Yet!</a>
-						</div>
-					</div>
-					<div class="screw-container" style="bottom: 0;">
-                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
-                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right:0; width:5%; height: 5%;">
-                    </div>
-                `;
-			this.a1button = document.getElementById('a1'); // not yet
-			this.a1button.addEventListener('click', async function() {
-				document.getElementById("modal_container").classList.remove("show");
-			});
-			this.a2button = document.getElementById('a2');
-			this.a2button.addEventListener('click', async function() {
-				let path = '/game?players=2';
-				path += "&player1AI=" + MatchList[g_round].player1.IA;
-				path += "&player2AI=" + MatchList[g_round].player2.IA;
-				path += "&player3AI=false&player4AI=false&tournament_id=" + Date.now() + Math.floor(Math.random() * 100);
-				path += "&p1username=" + MatchList[g_round].player1.username;
-				path += "&p2username=" + MatchList[g_round].player2.username;
-				g_round++;
-				navigateTo(path);
-			});
-    
-        });
-	}
-
-	disconnectedCallback() {
-       this.nextmatch.removeEventListener('click', this);
-	   this.a1button.removeEventListener('click', this);
-	   this.a2button.removeEventListener('click', this);
+		this.appendChild(div);	
 	}
 }
 
