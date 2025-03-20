@@ -227,81 +227,84 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 		}
 		animateConfetti();
 		
-		document.getElementById("modal_container").addEventListener("click", function activate() {
-			document.getElementById("modal_container").classList.remove("show");
-			document.getElementById("modal_container").removeEventListener('click', activate);
-			if (tournament_id) {
-				localStorage.setItem("gameResult", JSON.stringify({winner : results.winner,
-					score_p1 : results.score_player1, score_p2 : results.score_player2
-				}))
-				navigateTo('/tournament');
+		document.getElementById("modal_container").addEventListener("click", async function activate(e) {
+			if (e.target.id === "a1") {
+				document.getElementById("modal_container").classList.remove("show");
+				document.getElementById("modal_container").removeEventListener('click', activate);
+				if (tournament_id) {
+					localStorage.setItem("gameResult", JSON.stringify({winner : results.winner,
+						score_p1 : results.score_player1, score_p2 : results.score_player2
+					}))
+					try {
+		
+						const response = await fetch('/api/create-match', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+							},
+							body: JSON.stringify({
+								"player1_username": p1username,
+								"player2_username": versus,
+								"winner_username": results.winner,
+								"score_player1": results.score_player1,
+								"score_player2": results.score_player2,
+								"tournament_id": tournament_id,
+							}),
+						});
+			
+						if (!response.ok)
+						{
+							const err_msg = await response.json()
+								.catch( () => new Error( "The match could not be stored correctly." ) );
+							  
+							throw Error(err_msg);
+						}
+					}
+					catch (err) {
+						console.log(err);
+					}
+					if (tournament_id != null)
+						{
+							console.log("This is pre handle-tournament PUT", localStorage.getItem('access_token'));
+							try {
+								const response = await fetch('/api-tournament/handle-tournament', {
+									method: 'PUT',
+									headers: {
+										'Content-Type': 'application/json',
+										'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+									},
+									body: JSON.stringify({
+										"tournament_id": tournament_id,
+										"winner": results.winner == p1username ? 1 : 2,
+										"new_match": {
+											'player1': p1username,
+											'player2': versus,
+										},
+									}),
+								});
+				
+								if (!response.ok)
+								{
+									const err_msg = await response.json()
+										.catch( () => new Error( "The match could not be stored correctly." ) );
+									
+									throw Error(err_msg);
+								}
+							}
+							catch (err) {
+								console.log(err);
+							}
+						}
+					navigateTo('/tournament');
+				}
+				else
+					navigateTo('/home');
 			}
-			else
-				navigateTo('/home');
 		});
 		
 		// petition to server 4 match
-		try {
-		
-			const response = await fetch('/api/create-match', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-				},
-				body: JSON.stringify({
-					"player1_username": p1username,
-					"player2_username": versus,
-					"winner_username": results.winner,
-					"score_player1": results.score_player1,
-					"score_player2": results.score_player2,
-					"tournament_id": tournament_id,
-				}),
-			});
-
-			if (!response.ok)
-			{
-				const err_msg = await response.json()
-					.catch( () => new Error( "The match could not be stored correctly." ) );
-			  	
-				throw Error(err_msg);
-			}
-		}
-		catch (err) {
-			console.log(err);
-		}
-
-		// petition to server 4 tournament
-		if (tournament_id != null)
-		{
-			try {
-				const response = await fetch('/api-tournament/handle-tournament', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-					},
-					body: JSON.stringify({
-						"tournament_id": tournament_id,
-						"new_match": {
-							'player1': p1username,
-							'player2': versus,
-						},
-					}),
-				});
-
-				if (!response.ok)
-				{
-					const err_msg = await response.json()
-						.catch( () => new Error( "The match could not be stored correctly." ) );
-					
-					throw Error(err_msg);
-				}
-			}
-			catch (err) {
-				console.log(err);
-			}
-		}
+	
 	}
 	return (0);
 }

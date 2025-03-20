@@ -33,9 +33,9 @@ def handleTournament(request):
 			tournament = Tournament.objects.get(id=tournament_id)
 		except Tournament.DoesNotExist:
 			return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
-
-		tournament.matches_json[f'match{tournament.match + 1}'] = request.new_match
-		tournament.match =+ 1
+		tournament.matches_json[f'match{tournament.match + 1}'].winner = request.winner
+		#tournament.matches_json[f'match{tournament.match + 1}'] = request.new_match
+		tournament.match += 1
 
 		serializer = TournamentSerializer(tournament, data=request.data, partial=True)
 
