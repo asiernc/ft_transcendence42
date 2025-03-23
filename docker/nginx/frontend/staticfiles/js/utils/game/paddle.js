@@ -1,4 +1,4 @@
-import { CapsuleGeometry, MeshBasicMaterial, Mesh } from 'three'; 
+import { CapsuleGeometry, ShaderMaterial, Mesh, Color } from 'three'; 
 
 export default class Paddle
 {
@@ -12,14 +12,35 @@ export default class Paddle
         this.radius = 0.3;
         this.targetZ = 0;
 		this.isAi = isAi;
+        this.hexColor = hexColor;
     
         // ball config
         this.geo = new CapsuleGeometry(this.radius, this.height, 8);
         this.geo.rotateX(Math.PI / 2);
-        this.material = new MeshBasicMaterial({
-            color: hexColor,
-            wireframe: true,
+
+        this.material = new ShaderMaterial({
+            vertexShader: `
+            void main() {
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+            `,
+            fragmentShader: `
+            uniform vec3 uColor;
+            uniform float uDistance;
+
+            void main() {
+                vec3 black = vec3(1.0 - uDistance);
+                vec3 color = mix(uColor, black, 0.5);
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+            `,
+            uniforms: {
+              uColor: { value: new Color(hexColor) },
+              uDistance: { value: 1 },
+            },
         });
+
         this.mesh = new Mesh(this.geo, this.material);
         this.mesh.position.x = xPos;
 		if (this.mesh.position.x < 0)
@@ -78,12 +99,14 @@ export default class Paddle
 
     update()
     {
-		if (Math.abs(this.mesh.position.z - this.targetZ) > 0.1)
+        this.material.uniforms.uDistance.value = this.ball?.mesh.position.distanceTo(this.mesh.position) / this.mapSizes.width;
+        
+        if (Math.abs(this.mesh.position.z - this.targetZ) > 0.1)
 		{
 			if (this.mesh.position.z < this.targetZ)
-				this.mesh.position.z += 0.1;
+				this.mesh.position.z += 0.2;
 			else if (this.mesh.position.z > this.targetZ)
-				this.mesh.position.z -= 0.1;
+				this.mesh.position.z -= 0.2;
 		}
 	}
 }

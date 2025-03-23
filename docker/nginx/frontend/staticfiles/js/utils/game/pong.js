@@ -56,12 +56,12 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	
 	// set plane (floor)
 	const planeGeo = new PlaneGeometry(mapSizes.width, mapSizes.height, mapSizes.width, mapSizes.height);
-	planeGeo.rotateX(Math.PI / 2);
+	planeGeo.rotateX(-Math.PI / 2);
 	const planeMaterial = new MeshBasicMaterial({
 		color: 0xffffff,
-		wireframe: true,
 	});
 	const plane = new Mesh(planeGeo, planeMaterial);
+	plane.position.y -= 1;
 	scene.add(plane);
 
 	// set movment functions
@@ -97,7 +97,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	});
 			
 	// set Scordeboard
-	const scoreboard = new Scoreboard(scene, 0xffffff, 4, 0.5);
+	const scoreboard = new Scoreboard(scene, 4, 0.5, paddle1, paddle2, paddle3, paddle4);
 			
 	// set sphere (ball)
 	let ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -195,6 +195,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				speedY: Math.random() * 5 + 2,
 				rotation: Math.random() * 360
 			};
+			ball.speed = 0;
 			confettis.push(confetti);
 		}
 		
