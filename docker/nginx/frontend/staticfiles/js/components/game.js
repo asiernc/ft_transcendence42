@@ -173,7 +173,7 @@ export default class GameComponent extends HTMLElement {
 		}
 		else {
 			p1_username = localStorage.getItem("username");
-			versus = urlParams.get('vs') == null ? ( urlParams.get('player2AI') == 'true' ? "ia" : "localhost"): urlParams.get('vs');
+			versus = urlParams.get('vs') == null ? ( urlParams.get('player2AI') == 'true' ? "AI" : "local"): urlParams.get('vs');
 		}
         // check if tournament exists maybe
         const player1AI = urlParams.get('player1AI');

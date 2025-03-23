@@ -168,7 +168,8 @@ export default class HomeComponent extends HTMLElement {
     attachListeners() {
 		this.profile = this.shadowRoot.getElementById('profile');
         this.profile.addEventListener('click', () => {
-            navigateTo("/profile");
+			const usrname = localStorage.getItem("username");
+            navigateTo("/profile/" + usrname);
         });
         this.play = this.shadowRoot.getElementById('play');
         this.play.addEventListener('click', () => {

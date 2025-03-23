@@ -249,12 +249,18 @@ export default class OptionsAlias extends HTMLElement {
                     e.reportValidity();
                     badForm = true;
                 }
-                else
+                else {
                     this.userInfo["player" + (i + 1)].alias =  e.querySelector("input").value;
+					if (this.userInfo["player" + (i + 1)].username == "AI")
+						this.userInfo["player" + (i + 1)].isAI = true;
+					else
+						this.userInfo["player" + (i + 1)].isAI = false;
+				}
             });
             if (badForm)
                 return;
-            for (let i = 0, j = 0; i < 7; i++, j+=2)
+			this.randomizeMatches();
+           /* for (let i = 0, j = 0; i < 7; i++, j+=2)
             {
                 if (i < 4)
                 {
@@ -270,7 +276,7 @@ export default class OptionsAlias extends HTMLElement {
                         'player2': "PLAYER 2",
                     };
                 }
-            }
+            }*/
             // POST CREATE_TORUNAMENT
             try
             {
@@ -306,6 +312,30 @@ export default class OptionsAlias extends HTMLElement {
 		this.querySelector("form").removeEventListener('submit', this);
         this.querySelector("a").removeEventListener('click', this);
         this.querySelector("input").removeEventListener('click', this);
+	}
+	randomizeMatches() {
+		let playerID = [1, 2, 3, 4, 5, 6, 7, 8];
+		let add_player1;
+		let isPlayer1 = true;
+		let match_number = 1;
+		while (playerID.length > 0)
+		{
+			let num = Math.floor((Math.random() * playerID[playerID.length - 1]) + 1);
+			if (playerID.indexOf(num) != -1) {
+				if (isPlayer1 === false) {
+					this.matchInfo["match" + match_number] = {
+						player1_id : add_player1,
+						player2_id : num,
+						winner : 0,
+					};
+					match_number++;
+				}
+				else
+					add_player1 = num;
+				isPlayer1 = !isPlayer1;
+				playerID.splice(playerID.indexOf(num), 1);
+			}
+		}
 	}
 }
 

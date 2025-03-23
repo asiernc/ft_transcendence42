@@ -159,7 +159,7 @@ export default class OTPComponent extends HTMLElement {
                     <form class="d-flex justify-content-center align-items-center">
                         <input type="number" class="form-control" style="text-align: center;" id="otp_code" name="otp_code" required max="999999">
                     </form>
-                    <div id="alert" style="display: none;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
+                    <div id="alert" style="display: none; height: 15px;" class="alert alert-danger mt-1 justify-content-center align-items-center" role="alert">
                         OTP code is incorrect. Please try again.
                     </div>
                     <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
@@ -179,10 +179,15 @@ export default class OTPComponent extends HTMLElement {
 	}
 
 	attachListeners() {
-        document.getElementById("a1").addEventListener("click", async function ()
-        {
-            const form = document.querySelector("form");
+        document.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
 
+        document.getElementById("a1").addEventListener("click", async function (e)
+        {
+            e.preventDefault();
+
+            const form = document.querySelector("form");
             const otp_code = document.getElementById("otp_code");
 
             if (form.checkValidity())
@@ -212,7 +217,7 @@ export default class OTPComponent extends HTMLElement {
                     else
                     {
                         console.log(data.error);
-                        document.getElementById("alert").style.display = "block";
+                        document.getElementById("alert").style.display = "flex";
                     }
                 } catch (err) {
                    console.log("Error: Problem sending the petition");

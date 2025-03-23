@@ -4,10 +4,10 @@ export default class NavbarComponent extends HTMLElement {
 	constructor() {
 		super();
 
-        const shadow = this.attachShadow({ mode: 'open' });
+		const shadow = this.attachShadow({ mode: "open" });
 
-		const style = document.createElement('style');
-        style.textContent = `
+		const style = document.createElement("style");
+		style.textContent = `
 			.nav_bar{
 				position: fixed;
 				display: grid;
@@ -38,10 +38,9 @@ export default class NavbarComponent extends HTMLElement {
 				transform: scale(1.2);
 			}
         `;
-		
 
-        const div = document.createElement('div');
-        div.innerHTML = `
+		const div = document.createElement("div");
+		div.innerHTML = `
 			<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="fa" id="home">
 				<title>Leaderboard</title>
 				<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M1 6V15H6V11C6 9.89543 6.89543 9 8 9C9.10457 9 10 9.89543 10 11V15H15V6L8 0L1 6Z" fill="#000000"></path> </g></svg>
@@ -65,68 +64,67 @@ export default class NavbarComponent extends HTMLElement {
 			</svg>
         `;
 		shadow.appendChild(style);
-        div.className = 'nav_bar';
+		div.className = "nav_bar";
 		shadow.appendChild(div);
-        this.attachListeners();
+		this.attachListeners();
 	}
 
-    attachListeners() {
-		this.profile = this.shadowRoot.getElementById('profile');
-        this.profile.addEventListener('click', () => {
-            navigateTo("/profile");
-        });
-        this.play = this.shadowRoot.getElementById('play');
-        this.play.addEventListener('click', () => {
-            navigateTo('/play');
-        });
-        this.leaderboard = this.shadowRoot.getElementById('leaderboard');
-        this.leaderboard.addEventListener('click', () => {
-            navigateTo("/leaderboard");
-        });
-        this.home = this.shadowRoot.getElementById('home');
-        this.home.addEventListener('click', () => {
-            navigateTo('/home');
-        });
-		this.logout = this.shadowRoot.getElementById('logout');
-        this.logout.addEventListener('click', async () => {
-				try {
-					
-					const response = await fetch('/api/logout', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-						}
-					});
-					
-					if (response.ok) {
-						localStorage.clear();
-						navigateTo('/login');
-					} else {
-						const err_msg = await response.json()
-							.catch( () => new Error( "Login was not succesful." ) );
+	attachListeners() {
+		this.profile = this.shadowRoot.getElementById("profile");
+		this.profile.addEventListener("click", () => {
+			navigateTo("/profile/" + localStorage.getItem("username"));
+		});
+		this.play = this.shadowRoot.getElementById("play");
+		this.play.addEventListener("click", () => {
+			navigateTo("/play");
+		});
+		this.leaderboard = this.shadowRoot.getElementById("leaderboard");
+		this.leaderboard.addEventListener("click", () => {
+			navigateTo("/leaderboard");
+		});
+		this.home = this.shadowRoot.getElementById("home");
+		this.home.addEventListener("click", () => {
+			navigateTo("/home");
+		});
+		this.logout = this.shadowRoot.getElementById("logout");
+		this.logout.addEventListener("click", async () => {
+			try {
+				const response = await fetch("/api/logout", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+					},
+				});
 
-						throw Error(err_msg);
-					}
+				if (response.ok) {
+					localStorage.clear();
+					navigateTo("/login");
+				} else {
+					const err_msg = await response
+						.json()
+						.catch(() => new Error("Login was not succesful."));
+
+					throw Error(err_msg);
 				}
-				catch (err) {
-					console.log(err);
-				}
-        });
+			} catch (err) {
+				console.log(err);
+			}
+		});
 	}
 
 	// async logout(){
 	// 	let resp = fetch('api/logout', {method: 'GET'});
 	// 	console.log(resp);
 	// }
-	
+
 	disconnectedCallback() {
-        this.profile.removeEventListener('click', this);
-        this.play.removeEventListener('click', this);
-        this.leaderboard.removeEventListener('click', this);
-        this.home.removeEventListener('click', this);
-        this.logout.removeEventListener('click', this);
+		this.profile.removeEventListener("click", this);
+		this.play.removeEventListener("click", this);
+		this.leaderboard.removeEventListener("click", this);
+		this.home.removeEventListener("click", this);
+		this.logout.removeEventListener("click", this);
 	}
 }
 
-window.customElements.define('navbar-component', NavbarComponent);
+window.customElements.define("navbar-component", NavbarComponent);
