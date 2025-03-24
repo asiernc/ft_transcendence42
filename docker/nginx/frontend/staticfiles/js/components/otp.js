@@ -163,6 +163,7 @@ export default class OTPComponent extends HTMLElement {
                         OTP code is incorrect. Please try again.
                     </div>
                     <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
+					<a id="resendBtn" href="javascript:void(0);" class="pixel-font mt-2">Resend OTP</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -226,6 +227,30 @@ export default class OTPComponent extends HTMLElement {
                 form.reportValidity();
             }
         });
+
+	document.getElementById("resendBtn").addEventListener("click", async function(e) {
+		e.preventDefault();
+		try {
+			const response = await fetch('/api/resend-otp', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					'username': localStorage.getItem("username")
+				})
+			});
+
+			const data = await response.json();
+			if (response.ok) {
+				console.log("OTP resend succesfully");
+			} else {
+				console.log("Error resending OTP: ", data.error);
+			}
+		} catch (err) {
+			console.log("Error: problem sending the request ", err);
+		}
+	});
 	}
 
 	disconnectedCallback() {

@@ -57,6 +57,7 @@ class UserSerializer(serializers.ModelSerializer):
 		return data
 
 	def create(self, validated_data):
+		validated_data.pop('password_check', None)
 		# se quita password del validated data, seguridad
 		password = validated_data.pop('password', None)
 		# se crea una instancia con los demas datos validades
