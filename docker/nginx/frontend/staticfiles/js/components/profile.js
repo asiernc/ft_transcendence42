@@ -1,4 +1,6 @@
 import { navigateTo } from "../app.js";
+import { displayAlert } from "../utils/alert.js";
+
 
 export default class ProfileComponent extends HTMLElement {
 	constructor() {
@@ -16,29 +18,23 @@ export default class ProfileComponent extends HTMLElement {
 		const style = document.createElement("style");
 		style.textContent = `
 		.bg {
-            display: flex;
+			display: flex;
 			flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            width: 100vw;
+			align-items: center;
+			min-height: 100vh;
+			width: 100vw;
 			padding: 3rem 0;
 			gap: 2rem;
-            background: linear-gradient(-45deg, #31353C, #000000, #31353C, #000000);
-                background-size: 400% 400%;
-                animation: gradient 10s ease infinite;
-            }
+			background: linear-gradient(-45deg, #31353C, #000000, #31353C, #000000);
+				background-size: 400% 400%;
+				animation: gradient 10s ease infinite;
+		}
 
-            @keyframes gradient {
-                0% {
-                    background-position: 0% 50%;
-                }
-                50% {
-                    background-position: 100% 50%;
-                }
-                100% {
-                    background-position: 0% 50%;
-                }
-            }
+			@keyframes gradient {
+				0% {background-position: 0% 50%;}
+				50% {background-position: 100% 50%;}
+				100% {background-position: 0% 50%;}
+			}
 		.box{
 			background-color: rgba(217, 217, 217, 0.548);
 			border-radius: 3px;
@@ -73,13 +69,13 @@ export default class ProfileComponent extends HTMLElement {
 			font-weight: 500;
 			color: rgb(97, 97, 97);
 		}
-		.title{
+		/*.title{ //A LA MIERDA ESTA
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			text-align: center;
 			margin-top: 3%;
-		}
+		}*/
 
 		.pfp{
 			margin-left: 3px;
@@ -98,9 +94,6 @@ export default class ProfileComponent extends HTMLElement {
 			padding-bottom: 18px;
 			color: white;
 		}
-		.history{
-			width: 55%;
-		}
 		.stats{
 			display: flex;
 			justify-content: space-around;
@@ -108,9 +101,6 @@ export default class ProfileComponent extends HTMLElement {
 			padding: 0.5%
 		}
 
-		.friends{
-			width: 35%;
-		}
 		.friend{
 			display: flex;
 			padding: 10px;
@@ -215,16 +205,13 @@ export default class ProfileComponent extends HTMLElement {
 
 		let friends = "";
 		userData["friends"].forEach((friend) => {
-			friend["avatar_field"] = this.cleanProfilePictures(
-				friend["avatar_42_url"],
-				friend["avatar_field"],
-			);
+			friend["avatar_field"] = this.cleanProfilePictures(friend["avatar_42_url"],friend["avatar_field"]);
 			let friendBtns = '<div style="margin-left: auto;"></div>';
 			if (localStorage.getItem("username") === userData["user"]["username"]) {
 				friendBtns = `
 				<div style="margin-left: auto; flex-shrink: 0;">
-					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Match">
-					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend" data-username="${friend["username"]}" style="width: 40px; height: 40px; cursor: pointer;" title="Unfriend">
+					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Match">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Unfriend">
 				</div>`;
 			}
 			friends += `
@@ -242,12 +229,9 @@ export default class ProfileComponent extends HTMLElement {
 			friends = "No friends :(";
 		}
 
-		userData["user"]["avatar_field"] = this.cleanProfilePictures(
-			userData["user"]["avatar_42_url"],
-			userData["user"]["avatar_field"],
-		);
+		userData["user"]["avatar_field"] = this.cleanProfilePictures(userData["user"]["avatar_42_url"],userData["user"]["avatar_field"]);
 		let editButton = "";
-		if (localStorage.getItem("username") === userData["user"]["username"]) {
+		if (localStorage.getItem("username") === userData["user"]["username"] && !userData['user']['intra_user']) {
 			editButton = `<div style="display:flex; align-items: flex-start">
 					<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
 				</div>`;
@@ -272,7 +256,7 @@ export default class ProfileComponent extends HTMLElement {
 		<span class="pixel-font" style="font-size: larger;">Win Rate: ${userData["user"]["ratio"]}</span>
 	</div>
 	<div style="width: 80%; text-align: center; display: flex; justify-content: space-between; align-items:flex-start;">
-		<div class="box history">
+		<div class="box" style="width: 55%;">
 			<div class="screw-container">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -286,14 +270,14 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 		</div>
-		<div class="box friends">
+		<div class="box" style="width: 35%;">
 			<div class="screw-container">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 			<div style="display:flex; justify-content: space-around; align-items: center;">
 				<h1 class="pixel-font" style="margin-left: 20%;">FRIENDS</h1>
-				<img class="clickable-img" id="reloadFriends" src="https://www.freeiconspng.com/thumbs/reload-icon/arrow-refresh-reload-icon-29.png">
+				<img class="clickable-img" id="reloadFriends" src="https://www.freeiconspng.com/thumbs/reload-icon/arrow-refresh-reload-icon-29.png" title="Reload status">
 			</div>
 				${friends}
 			<div class="screw-container">
@@ -301,9 +285,6 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 		</div>
-	</div>
-	<div class="alert" id="successAlert">
-		Profile updated correctly!!
 	</div>
         `;
 		this.shadowRoot.appendChild(style);
@@ -356,26 +337,14 @@ export default class ProfileComponent extends HTMLElement {
 						},
 						body: JSON.stringify({ friend_username: userId }),
 					});
-					const resultAlert = this.shadowRoot.getElementById("successAlert");
 					if (response.ok) {
-						resultAlert.style.display = "block";
-						resultAlert.className = resultAlert.className.replace(" bad", "");
-						setTimeout(() => {
-							resultAlert.style.display = "none";
-						}, 2000);
-						this.shadowRoot.getElementById("friend" + userId).style.display =
-							"none";
+						displayAlert("Profile updated correctly!!", "good");
+						this.shadowRoot.getElementById("friend" + userId).style.display = "none";
 					} else {
 						throw new Error("Error removing friend :(");
 					}
 				} catch (error) {
-					const resultAlert = this.shadowRoot.getElementById("successAlert");
-					resultAlert.innerText = error.message;
-					resultAlert.className += " bad";
-					resultAlert.style.display = "block";
-					setTimeout(() => {
-						resultAlert.style.display = "none";
-					}, 2000);
+					displayAlert("Couldn't remove friend :(", "bad");
 				}
 			});
 		});
