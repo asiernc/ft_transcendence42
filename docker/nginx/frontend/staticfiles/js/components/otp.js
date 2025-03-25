@@ -134,6 +134,18 @@ export default class OTPComponent extends HTMLElement {
                 animation: animate var(--speed-fast) steps(8) forwards;
             }
 
+			#a2 {
+				border: 1px solid var(--color-purple);
+			}
+			#a2:hover {
+				border: 1px solid transparent;
+				background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
+				transition-delay: 0.8s;
+				background-size: 180px;
+				animation: animate var(--speed-fast) steps(8) forwards;
+				background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
+			}
+
             @keyframes animate {
                 0% {
                 background-position-y: 0;
@@ -163,7 +175,7 @@ export default class OTPComponent extends HTMLElement {
                         OTP code is incorrect. Please try again.
                     </div>
                     <a id="a1" href="javascript:void(0);" class="pixel-font mt-3">Verify</a>
-					<a id="resendBtn" href="javascript:void(0);" class="pixel-font mt-2">Resend OTP</a>
+					<a id="a2" href="javascript:void(0);" class="pixel-font mt-2">Resend OTP</a>
                 </div>
                 <div class="screw-container">
                     <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -228,7 +240,7 @@ export default class OTPComponent extends HTMLElement {
             }
         });
 
-	document.getElementById("resendBtn").addEventListener("click", async function(e) {
+	document.getElementById("a2").addEventListener("click", async function(e) {
 		e.preventDefault();
 		try {
 			const response = await fetch('/api/resend-otp', {
@@ -255,7 +267,7 @@ export default class OTPComponent extends HTMLElement {
 
 	disconnectedCallback() {
 		this.querySelector("form").removeEventListener('submit', this);
-        this.querySelector("a").removeEventListener('click', this);
+        this.querySelectorAll("a").forEach( (e) => {e.removeEventListener('click', this)});
 	}
 }
 
