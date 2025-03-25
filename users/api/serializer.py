@@ -115,6 +115,9 @@ class MatchSerializer(serializers.ModelSerializer):
 		except User.DoesNotExist:
 			raise serializers.ValidationError(f"Player 2 with username {player2_username} does not exist.")
 
+		if player1 == player2:
+			raise serializers.ValidationError("Player 1 and Player 2 must be different.")
+
 		if winner_username:
 			try:
 				winner = User.objects.get(username=winner_username)
