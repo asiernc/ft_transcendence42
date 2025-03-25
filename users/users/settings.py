@@ -55,7 +55,6 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'corsheaders',
-	'django_crontab',
 	'channels',
 	'api',
 ]
@@ -223,9 +222,9 @@ FT_CLIENT_SECRET=os.environ['FT_CLIENT_SECRET']
 FT_REDIRECT_URI='https://localhost:3042/callback'
 
 # Cron tasks
-CRONJOBS = [
-	('*/2 * * * *', 'users.api.cron.check_expired_otps'),
-]
+# CRONJOBS = [
+# 	('*/2 * * * *', 'users.api.cron.check_expired_otps'),
+# ]
 
 #configuration cookies
 SESSION_COOKIE_SAMESITE = 'Lax'
