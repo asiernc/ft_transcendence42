@@ -43,12 +43,14 @@ export default class LeaderboardComponent extends HTMLElement {
             font-family: "Press Start 2P", Arial;
 		}
 	table{
-		border-collapse: collapse;
+		border-collapse: separate;
+		border-spacing: 0;
 	}
 	td{
 		overflow: hidden;
 		padding: 5px;
 		padding-left: 15px;
+		border-bottom: 2px solid rgb(34, 32, 24);
 	}
 	th{
 		text-align: left;
@@ -306,7 +308,7 @@ export default class LeaderboardComponent extends HTMLElement {
 		}
 
 		const num = Math.floor(Math.random() * BGcolors.length);
-		return `background-color: #${BGcolors[num]}; color: #${BRcolors[num]}; border-bottom: 2px solid #${BRcolors[num]};`;
+		return `background-color: #${BGcolors[num]}; color: #${BRcolors[num]};`; // border-bottom: 2px solid #${BRcolors[num]};`;
 	}
 
 	async tableUsers(users, refetch=false){

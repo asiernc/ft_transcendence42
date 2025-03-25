@@ -376,6 +376,9 @@ export default class ProfileComponent extends HTMLElement {
 		user['user']['losses'] = losses;
 		user['user']['matches'] = wins+losses;
 		user['user']['ratio'] = (wins / (wins+losses) * 100).toFixed(1) + "%";
+		if (wins+losses == 0){
+			user['user']['ratio'] = "0%";
+		}
 	}
 
 	async getUserInfo() {
