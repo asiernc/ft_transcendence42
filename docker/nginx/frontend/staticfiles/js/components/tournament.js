@@ -113,7 +113,10 @@ export default class TournamentComponent extends HTMLElement {
 				path += "&player2AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI;
 				path += "&player3AI=false&player4AI=false&tournament_id=" + localStorage.getItem("tournament_id");
 				path += "&p1username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
-				path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
+				console.log("p1username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username);
+				path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username;
+				console.log("p2username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username);
+				
 				g_round++;
 				navigateTo(path);
 			});
