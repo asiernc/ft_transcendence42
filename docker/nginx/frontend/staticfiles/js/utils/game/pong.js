@@ -228,84 +228,74 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 		}
 		animateConfetti();
 		
+		// petition to server 4 match
+
 		document.getElementById("modal_container").addEventListener("click", async function activate(e) {
 			if (e.target.id === "a1") {
+				const token = localStorage.getItem('access_token');
 				document.getElementById("modal_container").classList.remove("show");
 				document.getElementById("modal_container").removeEventListener('click', activate);
-				if (tournament_id) {
-					localStorage.setItem("gameResult", JSON.stringify({winner : results.winner,
-						score_p1 : results.score_player1, score_p2 : results.score_player2
-					}))
+				
+				try {
+					const response = await fetch('/api/create-match', {
+						method: 'POST',
+						headers: {
+							Authorization: `Bearer ${token}`,
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							"player1_username": p1username,
+							"player2_username": versus,
+							"winner_username": results.winner,
+							"score_player1": results.score_player1,
+							"score_player2": results.score_player2,
+							"tournament_id": tournament_id  // Puede ser null
+						}),
+					});
+					
+					if (!response.ok) {
+						console.log("Response: ", response);
+						const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+						throw Error(err_msg);
+					}
+				} catch (err) {
+					console.log(err);
+				}
+				
+				if (tournament_id != null) {
+					console.log("This is pre handle-tournament PUT", token);
 					try {
-		
-						const response = await fetch('/api/create-match', {
-							method: 'POST',
+						const response = await fetch('/api-tournament/handle-tournament', {
+							method: 'PUT',
 							headers: {
+								Authorization: `Bearer ${token}`,
 								'Content-Type': 'application/json',
-								'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
 							},
 							body: JSON.stringify({
-								"player1_username": p1username,
-								"player2_username": versus,
-								"winner_username": results.winner,
-								"score_player1": results.score_player1,
-								"score_player2": results.score_player2,
 								"tournament_id": tournament_id,
+								"winner": results.winner == p1username ? 1 : 2,
+								"new_match": {
+									'player1': p1username,
+									'player2': versus,
+								},
 							}),
 						});
-			
-						if (!response.ok)
-						{
-							const err_msg = await response.json()
-								.catch( () => new Error( "The match could not be stored correctly." ) );
-							  
+						
+						if (!response.ok) {
+							const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
 							throw Error(err_msg);
 						}
-					}
-					catch (err) {
+					} catch (err) {
 						console.log(err);
 					}
-					if (tournament_id != null)
-						{
-							console.log("This is pre handle-tournament PUT", localStorage.getItem('access_token'));
-							try {
-								const response = await fetch('/api-tournament/handle-tournament', {
-									method: 'PUT',
-									headers: {
-										'Content-Type': 'application/json',
-										'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-									},
-									body: JSON.stringify({
-										"tournament_id": tournament_id,
-										"winner": results.winner == p1username ? 1 : 2,
-										"new_match": {
-											'player1': p1username,
-											'player2': versus,
-										},
-									}),
-								});
-				
-								if (!response.ok)
-								{
-									const err_msg = await response.json()
-										.catch( () => new Error( "The match could not be stored correctly." ) );
-									
-									throw Error(err_msg);
-								}
-							}
-							catch (err) {
-								console.log(err);
-							}
-						}
-					navigateTo('/tournament');
 				}
+				
+				if (tournament_id != null)
+					navigateTo('/tournament');
 				else
 					navigateTo('/home');
 			}
 		});
-		
-		// petition to server 4 match
-	
 	}
 	return (0);
 }

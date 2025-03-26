@@ -8,10 +8,6 @@ COPY users /app
 
 RUN apt-get update && apt-get install -y netcat-openbsd
 
-RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
-
-RUN touch /var/log/cron.log
-
 # Make setup.sh executable
 RUN chmod +x /app/setup.sh
 
