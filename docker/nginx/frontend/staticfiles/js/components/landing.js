@@ -31,7 +31,7 @@ export default class LandingComponent extends HTMLElement {
 			}
 
 
-			header{
+			.container_showcase {
 				position: relative;
 				.container-text {
 					display: flex;
@@ -154,7 +154,7 @@ export default class LandingComponent extends HTMLElement {
 
 		const div = document.createElement('div');
 		div.innerHTML = `
-			<header class="pixel-font" style="text-align: center;">
+			<div class="container_showcase pixel-font" style="text-align: center;">
 				<div class="showcase">
 					<div class="container-text">
 						<h1>FT_TRANSCENDENCE</h1>
@@ -168,7 +168,7 @@ export default class LandingComponent extends HTMLElement {
 				<div class="video-container">
 					<video src="./staticfiles/js/utils/images/42_Barcelona.mp4" autoplay loop muted></video>
 				</div>
-			</header>
+			</div>
 		`;
 
 		this.appendChild(style);

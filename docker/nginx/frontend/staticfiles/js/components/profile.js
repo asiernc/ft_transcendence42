@@ -249,7 +249,7 @@ export default class ProfileComponent extends HTMLElement {
 		let editButton = "";
 		if (localStorage.getItem("username") === userData["user"]["username"]) {
 			editButton = `<div style="display:flex; align-items: flex-start">
-					<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
+					<button class="pixel-font" style="margin-right: 20px;" id="editProfile">Edit Profile</button>
 				</div>`;
 		}
 
