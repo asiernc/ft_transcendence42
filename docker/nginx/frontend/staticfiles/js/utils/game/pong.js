@@ -18,7 +18,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animate);
 	document.getElementById('game').appendChild( renderer.domElement );
-	const winScore = 1;
+	const winScore = 3;
 
 	// FOR TESTING (camera movment)
 	const controls = new OrbitControls(camera, renderer.domElement);
@@ -130,8 +130,10 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				results.score_player1 = scoreboard.p1Score;
 				results.score_player2 = scoreboard.p2Score;
 				// wait a little bit if you want
-				renderer.setAnimationLoop(null);
-				endGame(versus, tournament_id, results);
+				setTimeout(() => {
+					renderer.setAnimationLoop(null);
+					endGame(versus, tournament_id, results);
+				}, 100);
 			}
 			ball.mesh.removeFromParent();
 			ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -141,8 +143,6 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 
 	async function endGame(versus, tournament_id, results)
 	{
-		const username = localStorage.getItem("username");
-		
 		// show winner to user
 		document.getElementById("modal_container").classList.add("show");
 		document.getElementById("modal-content").innerHTML = `
