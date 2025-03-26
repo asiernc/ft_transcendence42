@@ -104,9 +104,9 @@ export default class Paddle
         if (Math.abs(this.mesh.position.z - this.targetZ) > 0.1)
 		{
 			if (this.mesh.position.z < this.targetZ)
-				this.mesh.position.z += 0.2;
+				this.mesh.position.z += this.isAi ? 0.08 : 0.15;
 			else if (this.mesh.position.z > this.targetZ)
-				this.mesh.position.z -= 0.2;
+				this.mesh.position.z -= this.isAi ? 0.08 : 0.15;
 		}
 	}
 }
