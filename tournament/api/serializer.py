@@ -42,7 +42,7 @@ class MatchSerializer(serializers.ModelSerializer):
 		except User.DoesNotExist:
 			raise serializers.ValidationError(f"Player 2 with username {player2_username} does not exist.")
 
-		if player1 == player2 and player1_username != 'local':
+		if player1 == player2 and player1_username != 'local' and player1_username != 'AI':
 			raise serializers.ValidationError("Player 1 and Player 2 must be different.")
 
 		if winner_username:
