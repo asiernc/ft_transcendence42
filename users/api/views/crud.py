@@ -146,6 +146,8 @@ def addFriend(request):
 		friend = User.objects.get(username=friend_username)
 		if user == friend:
 			return Response({'detail': 'User and friend must be differents.'}, status=status.HTTP_404_NOT_FOUND)
+		if friend.username == 'local' or friend.username == 'AI':
+			return Response({'detail': 'You can\'t add local or ai friend.'}, status=status.HTTP_400_BAD_REQUEST)
 	except User.DoesNotExist:
 		return Response({'detail': 'User or friend not found.'}, status=status.HTTP_404_NOT_FOUND)
 	
