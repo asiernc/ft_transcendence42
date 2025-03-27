@@ -280,10 +280,10 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 							}),
 						});
 						
-						if (!response.ok) {
-							const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
-							throw Error(err_msg);
-						}
+						//if (!response.ok) {
+						//	const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+						//	throw Error(err_msg);
+						//}
 					} catch (err) {
 						console.log(err);
 					}
