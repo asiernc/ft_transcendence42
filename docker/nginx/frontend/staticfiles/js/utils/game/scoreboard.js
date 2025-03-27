@@ -1,18 +1,24 @@
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { MeshBasicMaterial,  Mesh } from 'three';
+import { MeshBasicMaterial, Mesh, Color } from 'three';
 
-export default class Scoreboard
-{
-	constructor(scene, hexColor, height, depth)
-	{
+export default class Scoreboard {
+	constructor(scene, height, depth, paddle1, paddle2, paddle3, paddle4) {
 		this.loader = new FontLoader();
 
 		this.scene = scene;
-		this.hexColor = hexColor;
 		this.height = height;
 		this.depth = depth;
 		this.size = 3
+
+		if (!paddle3) {
+			this.p1Color = new Color(paddle1.hexColor);
+			this.p2Color = new Color(paddle2.hexColor);
+		}
+		else {
+			this.p1Color = new Color().addColors(new Color(paddle1.hexColor), new Color(paddle3.hexColor));
+			this.p2Color = new Color().addColors(new Color(paddle2.hexColor), new Color(paddle4.hexColor));
+		}
 
 		this.p1Score = 0;
 		this.p2Score = 0;
@@ -20,10 +26,9 @@ export default class Scoreboard
 		this.loadStartScore();
 	}
 
-	loadP1Score()
-	{
+	loadP1Score() {
 		this.loader.load("./staticfiles/js/utils/game/fonts/Press_Start_2P.json", (font) => {
-			
+
 			const geo = new TextGeometry(this.p1Score.toString(), {
 				font: font,
 				size: this.size,
@@ -31,8 +36,7 @@ export default class Scoreboard
 				curveSegments: 12,
 			});
 			const material = new MeshBasicMaterial({
-				color: this.hexColor,
-				wireframe: true,
+				color: this.p1Color,
 			});
 			this.p1Mesh = new Mesh(geo, material);
 			this.p1Mesh.position.y = this.height;
@@ -41,10 +45,9 @@ export default class Scoreboard
 		});
 	}
 
-	loadDash()
-	{
+	loadDash() {
 		this.loader.load("./staticfiles/js/utils/game/fonts/Press_Start_2P.json", (font) => {
-			
+
 			const geo = new TextGeometry("-", {
 				font: font,
 				size: 2,
@@ -52,8 +55,7 @@ export default class Scoreboard
 				curveSegments: 12,
 			});
 			const material = new MeshBasicMaterial({
-				color: this.hexColor,
-				wireframe: true,
+				color: new Color().addColors(this.p1Color, this.p2Color),
 			});
 			const mesh = new Mesh(geo, material);
 			mesh.position.y = this.height + 0.8;
@@ -62,10 +64,9 @@ export default class Scoreboard
 		});
 	}
 
-	loadP2Score()
-	{
+	loadP2Score() {
 		this.loader.load("./staticfiles/js/utils/game/fonts/Press_Start_2P.json", (font) => {
-			
+
 			const geo = new TextGeometry(this.p2Score.toString(), {
 				font: font,
 				size: this.size,
@@ -73,8 +74,7 @@ export default class Scoreboard
 				curveSegments: 12,
 			});
 			const material = new MeshBasicMaterial({
-				color: this.hexColor,
-				wireframe: true,
+				color: this.p2Color,
 			});
 			this.p2Mesh = new Mesh(geo, material);
 			this.p2Mesh.position.y = this.height;
@@ -83,22 +83,19 @@ export default class Scoreboard
 		});
 	}
 
-	loadStartScore()
-	{
+	loadStartScore() {
 		this.loadP1Score();
 		this.loadDash();
 		this.loadP2Score();
 	}
 
-	upgradeP1Score()
-	{
+	upgradeP1Score() {
 		this.p1Mesh.removeFromParent();
 		this.p1Score++;
 		this.loadP1Score();
 	}
 
-	upgradeP2Score()
-	{
+	upgradeP2Score() {
 		this.p2Mesh.removeFromParent();
 		this.p2Score++;
 		this.loadP2Score();

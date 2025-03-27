@@ -152,7 +152,7 @@ export default class LeaderboardComponent extends HTMLElement {
 					</td>
 					<td>${users["user"]["username"]}</td>
 					<td>${users["user"]["matches"]}</td>
-					<td>${users["user"]["ratio"]}</td>
+					<td>${(users["user"]["ratio"])}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -222,7 +222,7 @@ export default class LeaderboardComponent extends HTMLElement {
 				const userId = button.dataset.username;
 				let path = '/game?players=2';
 				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
-				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
+				path += `&player1AI=false&player2AI=${userId === 'AI' ? 'true' : 'false'}&player3AI=false&player4AI=false`;
 				console.log(path);
 				navigateTo(path);
 			});
@@ -286,7 +286,9 @@ export default class LeaderboardComponent extends HTMLElement {
 			}
 			if (user['username'] === localStorage.getItem("username")){
 				users["user"]["matches"] = user["matches"];
-				users["user"]["ratio"] = user["ratio"] + "%";
+				// let value = user["ratio"];
+				// console.log(typeof value);
+				users["user"]["ratio"] = user["ratio"].toFixed(2) + "%";
 			}
 		}
 		users['all_users'].sort(compare);

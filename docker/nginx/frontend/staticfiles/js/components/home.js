@@ -69,6 +69,7 @@ export default class HomeComponent extends HTMLElement {
                 margin-bottom: 1vh;
                 transition: padding 0.5s ease-in-out, margin 0.5s ease-in-out;
                 overflow: hidden;
+                cursor: pointer;
             }
 
             .longcards:hover {

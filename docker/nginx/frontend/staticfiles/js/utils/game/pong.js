@@ -18,7 +18,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animate);
 	document.getElementById('game').appendChild( renderer.domElement );
-	const winScore = 1;
+	const winScore = 3;
 
 	// FOR TESTING (camera movment)
 	const controls = new OrbitControls(camera, renderer.domElement);
@@ -56,12 +56,12 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	
 	// set plane (floor)
 	const planeGeo = new PlaneGeometry(mapSizes.width, mapSizes.height, mapSizes.width, mapSizes.height);
-	planeGeo.rotateX(Math.PI / 2);
+	planeGeo.rotateX(-Math.PI / 2);
 	const planeMaterial = new MeshBasicMaterial({
 		color: 0xffffff,
-		wireframe: true,
 	});
 	const plane = new Mesh(planeGeo, planeMaterial);
+	plane.position.y -= 1;
 	scene.add(plane);
 
 	// set movment functions
@@ -97,7 +97,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	});
 			
 	// set Scordeboard
-	const scoreboard = new Scoreboard(scene, 0xffffff, 4, 0.5);
+	const scoreboard = new Scoreboard(scene, 4, 0.5, paddle1, paddle2, paddle3, paddle4);
 			
 	// set sphere (ball)
 	let ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -130,8 +130,10 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				results.score_player1 = scoreboard.p1Score;
 				results.score_player2 = scoreboard.p2Score;
 				// wait a little bit if you want
-				renderer.setAnimationLoop(null);
-				endGame(versus, tournament_id, results);
+				setTimeout(() => {
+					renderer.setAnimationLoop(null);
+					endGame(versus, tournament_id, results);
+				}, 100);
 			}
 			ball.mesh.removeFromParent();
 			ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -141,8 +143,6 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 
 	async function endGame(versus, tournament_id, results)
 	{
-		const username = localStorage.getItem("username");
-		
 		// show winner to user
 		document.getElementById("modal_container").classList.add("show");
 		document.getElementById("modal-content").innerHTML = `
@@ -195,6 +195,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				speedY: Math.random() * 5 + 2,
 				rotation: Math.random() * 360
 			};
+			ball.speed = 0;
 			confettis.push(confetti);
 		}
 		
@@ -227,84 +228,70 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 		}
 		animateConfetti();
 		
+		// petition to server 4 match
+
 		document.getElementById("modal_container").addEventListener("click", async function activate(e) {
 			if (e.target.id === "a1") {
+				const token = localStorage.getItem('access_token');
 				document.getElementById("modal_container").classList.remove("show");
 				document.getElementById("modal_container").removeEventListener('click', activate);
-				if (tournament_id) {
-					localStorage.setItem("gameResult", JSON.stringify({winner : results.winner,
-						score_p1 : results.score_player1, score_p2 : results.score_player2
-					}))
+				
+				try {
+					const response = await fetch('/api/create-match', {
+						method: 'POST',
+						headers: {
+							Authorization: `Bearer ${token}`,
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							"player1_username": p1username,
+							"player2_username": versus,
+							"winner_username": results.winner,
+							"score_player1": results.score_player1,
+							"score_player2": results.score_player2,
+							"tournament_id": tournament_id  // Puede ser null
+						}),
+					});
+					
+					if (!response.ok) {
+						console.log("Response: ", response);
+						const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+						throw Error(err_msg);
+					}
+				} catch (err) {
+					console.log(err);
+				}
+				
+				if (tournament_id != null) {
+					console.log("This is pre handle-tournament PUT", token);
 					try {
-		
-						const response = await fetch('/api/create-match', {
-							method: 'POST',
+						const response = await fetch('/api-tournament/handle-tournament', {
+							method: 'PUT',
 							headers: {
+								Authorization: `Bearer ${token}`,
 								'Content-Type': 'application/json',
-								'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
 							},
 							body: JSON.stringify({
-								"player1_username": p1username,
-								"player2_username": versus,
-								"winner_username": results.winner,
-								"score_player1": results.score_player1,
-								"score_player2": results.score_player2,
 								"tournament_id": tournament_id,
+								"winner": results.winner == p1username ? 1 : 2,
 							}),
 						});
-			
-						if (!response.ok)
-						{
-							const err_msg = await response.json()
-								.catch( () => new Error( "The match could not be stored correctly." ) );
-							  
+						
+						if (!response.ok) {
+							const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
 							throw Error(err_msg);
 						}
-					}
-					catch (err) {
+					} catch (err) {
 						console.log(err);
 					}
-					if (tournament_id != null)
-						{
-							console.log("This is pre handle-tournament PUT", localStorage.getItem('access_token'));
-							try {
-								const response = await fetch('/api-tournament/handle-tournament', {
-									method: 'PUT',
-									headers: {
-										'Content-Type': 'application/json',
-										'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-									},
-									body: JSON.stringify({
-										"tournament_id": tournament_id,
-										"winner": results.winner == p1username ? 1 : 2,
-										"new_match": {
-											'player1': p1username,
-											'player2': versus,
-										},
-									}),
-								});
-				
-								if (!response.ok)
-								{
-									const err_msg = await response.json()
-										.catch( () => new Error( "The match could not be stored correctly." ) );
-									
-									throw Error(err_msg);
-								}
-							}
-							catch (err) {
-								console.log(err);
-							}
-						}
-					navigateTo('/tournament');
 				}
+				
+				if (tournament_id != null)
+					navigateTo('/tournament');
 				else
 					navigateTo('/home');
 			}
 		});
-		
-		// petition to server 4 match
-	
 	}
 	return (0);
 }

@@ -293,6 +293,7 @@ export default class OptionsAlias extends HTMLElement {
                         'players_alias': this.userInfo,
                     })
                 });
+				console.log('hasta qui bien');
                 const data = await response.json();
                 if (response.ok)
                 {

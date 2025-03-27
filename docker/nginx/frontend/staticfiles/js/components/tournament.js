@@ -108,14 +108,22 @@ export default class TournamentComponent extends HTMLElement {
 			});
 			this.a2button = document.getElementById('a2');
 			this.a2button.addEventListener('click', async function() {
-				let path = '/game?players=2';
-				path += "&player1AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].isAI;
-				path += "&player2AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI;
-				path += "&player3AI=false&player4AI=false&tournament_id=" + localStorage.getItem("tournament_id");
-				path += "&p1username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
-				path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
-				g_round++;
-				navigateTo(path);
+				if (tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].isAI && tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI) {
+					await playAIgame();
+					navigateTo('/tournament');
+				} else {
+					let path = '/game?players=2';
+					path += "&player1AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].isAI;
+					path += "&player2AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI;
+					path += "&player3AI=false&player4AI=false&tournament_id=" + localStorage.getItem("tournament_id");
+					path += "&p1username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
+					console.log("p1username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username);
+					path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username;
+					console.log("p2username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username);
+					
+					g_round++;
+					navigateTo(path);
+				}
 			});
     
         });
@@ -168,6 +176,7 @@ export default class TournamentComponent extends HTMLElement {
 		}
 		document.getElementById(div_id).textContent = winner;
 	}
+
 	render() {
 		console.log("there it goes!");
 		const style = document.createElement('style');
@@ -468,5 +477,53 @@ export default class TournamentComponent extends HTMLElement {
 		this.appendChild(div);	
 	}
 }
-
+async function playAIgame() {
+	const token = localStorage.getItem('access_token');
+	const tournament_id = localStorage.getItem('tournament_id');
+	const winner = Math.floor(Math.random() * 2) + 1;
+	try {
+		const response = await fetch('/api-tournament/handle-tournament', {
+			method: 'PUT',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				"tournament_id": tournament_id,
+				"winner": winner,
+			}),
+		});
+		if (!response.ok) {
+			const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+			throw Error(err_msg);
+		}
+	} catch (err) {
+		console.log(err);
+	}
+	try {
+		const response = await fetch('/api/create-match', {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				"player1_username": 'AI',
+				"player2_username": 'AI',
+				"winner_username": 'AI',
+				"score_player1": winner == 1 ? 3 : Math.floor(Math.random() * 3),
+				"score_player2": winner == 2 ? 3 : Math.floor(Math.random() * 3),
+				"tournament_id": tournament_id  // Puede ser null
+			}),
+		});
+		
+		if (!response.ok) {
+			console.log("Response: ", response);
+			const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+			throw Error(err_msg);
+		}
+	} catch (err) {
+		console.log(err);
+	}
+}
 window.customElements.define('tournament-component', TournamentComponent);
