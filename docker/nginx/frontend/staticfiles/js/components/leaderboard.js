@@ -1,4 +1,5 @@
 import { navigateTo } from "../app.js";
+import { displayAlert } from "../utils/alert.js";
 
 export default class LeaderboardComponent extends HTMLElement {
 	constructor() {
@@ -42,12 +43,14 @@ export default class LeaderboardComponent extends HTMLElement {
             font-family: "Press Start 2P", Arial;
 		}
 	table{
-		border-collapse: collapse;
+		border-collapse: separate;
+		border-spacing: 0;
 	}
 	td{
 		overflow: hidden;
 		padding: 5px;
 		padding-left: 15px;
+		border-bottom: 2px solid rgb(34, 32, 24);
 	}
 	th{
 		text-align: left;
@@ -121,21 +124,6 @@ export default class LeaderboardComponent extends HTMLElement {
 		padding: 1%;
 		width: 70%;
 	}
-	.alert {
-		position: fixed;
-		padding: 40px;
-		background-color: #97ED93;
-		border: 5px solid #1E6C1A;
-		top: 40%;
-		display: none;
-		font-size: larger;
-		z-index = 22;
-	}
-	.bad{
-		background-color: #EE7C7C;
-		border: 5px solid #701717;
-		color: 'white';
-	}
 	.pfp-container {
 		width: 70px;
 		height: 70px;
@@ -150,42 +138,6 @@ export default class LeaderboardComponent extends HTMLElement {
 
 		const users = await this.getUsersGlobal();
 		this.assignStats(users);
-
-		let friends_table = "";
-		let global_table = "";
-		let fi = 1;
-		let gi = 1;
-
-		users['all_users'].forEach((user) => {
-			user["avatar_field"] = this.cleanProfilePictures(user["avatar_42_url"],user["avatar_field"]);
-			if (user["username"] == "local" || user["username"] == "IA" || user["username"] == "ia") {
-				return;}
-			let temp_table = `
-			<tr style="${this.generateColors()}" class="global" id="tb${user["username"]}">
-				<td>#${gi}</td>
-				<td>
-					<div class="pfp-container">
-						<img src="${user["avatar_field"]}">
-					</div>
-				</td>
-				<td class="tbname" data-username="${user["username"]}">${user["username"]}</td>
-				<td>${user['matches']}</td>
-				<td>${(user['ratio'])}</td>
-				<td>
-					<img class="clickable-img match-btn versus" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png">
-					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
-				</td>
-			</tr>
-			`;
-			global_table += temp_table;
-			if (this.checkAlreadyFriend(users["friends"], user["username"])){
-				friends_table += temp_table;
-			}
-			++gi;
-		});
-		if (friends_table == "") {
-			friends_table = `<tr><td></td><td colspan=5>YOU HAVE NO FRIENDS :( SO SAD</td></tr>`;
-		}
 
 		users["user"]["avatar_field"] = this.cleanProfilePictures(users["user"]["avatar_42_url"],users["user"]["avatar_field"]);
 		const div = document.createElement("div");
@@ -217,22 +169,24 @@ export default class LeaderboardComponent extends HTMLElement {
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
-			${this.generateTable(global_table, "global_leaderboard")}
-			${this.generateTable(friends_table, "friends_leaderboard")}
+			<table style="width: 90%; margin-left: auto; margin-right: auto;" id="global_leaderboard">
+				${this.generateTable()}
+			</table>
+			<table style="width: 90%; margin-left: auto; margin-right: auto;" id="friends_leaderboard">
+				${this.generateTable()}
+			</table>
 			<div class="screw-container">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 			</div>
 			</div>
-			<div class="alert" id="successAlert">
-				Friend added successfully!!
-			</div>
         `;
 		this.shadowRoot.appendChild(style);
 		div.className = "bg";
 		this.shadowRoot.appendChild(div);
-		this.attachListeners();
+		await this.tableUsers(users, false);
 
+		this.attachListeners();
 		this.shadowRoot.getElementById("globallb").click();
 	}
 
@@ -288,37 +242,17 @@ export default class LeaderboardComponent extends HTMLElement {
 						body: JSON.stringify({ friend_username: userId }),
 					});
 					if (response.ok) {
-						button.style.display = "none";
-						this.friendAdd(userId);
+						displayAlert("Friend added successfully!!", "good");
+						button.style.display='none';
+						await this.tableUsers(null, true);
 					} else {
 						throw new Error("Error adding friend :(");
 					}
 				} catch (error) {
-					const resultAlert = this.shadowRoot.getElementById("successAlert");
-					resultAlert.innerText = error.message;
-					resultAlert.className += " bad";
-					resultAlert.style.display = "block";
-					setTimeout(() => {
-						resultAlert.style.display = "none";
-					}, 2000);
+					displayAlert(error.message, "bad");
 				}
 			});
 		});
-	}
-
-	friendAdd(username){
-		const resultAlert = this.shadowRoot.getElementById("successAlert");
-		resultAlert.style.display = "block";
-		resultAlert.innerText = "Friend added successfully!!";
-		resultAlert.className = resultAlert.className.replace(" bad", "");
-		setTimeout(() => {
-			resultAlert.style.display = "none";
-		}, 2000);
-		const row = this.shadowRoot.getElementById("tb"+username);
-		if (!row){return;}
-		const cpy = row.cloneNode(true);
-		const friendsTable = this.shadowRoot.getElementById("friends_leaderboard");
-		friendsTable.appendChild(cpy);
 	}
 
 	disconnectedCallback() {
@@ -363,18 +297,72 @@ export default class LeaderboardComponent extends HTMLElement {
 		}
 	}
 
-	generateColors() {
+	generateColors(i = 4) {
 		const BGcolors = ["EE7C7C", "7AA3EA", "97ED93", "D6CA73"];
 		const BRcolors = ["701717", "163977", "1E6C1A", "60560E"];
+		switch (i) {
+			case 1:
+				return `background-color: #FFD700; color:rgb(99, 85, 5); border-bottom: 2px solid rgb(99, 85, 5);`;
+			case 2:
+				return `background-color:rgb(212, 204, 204); color:rgb(78, 78, 78); border-bottom: 2px solid rgb(78, 78, 78);`;
+			case 3:
+				return `background-color: #CD7F32; color:rgb(83, 53, 22); border: 0px; border-bottom: 2px solid rgb(83, 53, 22);`;
+		}
 
-		const i = Math.floor(Math.random() * BGcolors.length);
-		// return "border-bottom: 1px solid black;";
-		return `background-color: #${BGcolors[i]}; color: #${BRcolors[i]}; border-bottom: 2px solid #${BRcolors[i]};`;
+		const num = Math.floor(Math.random() * BGcolors.length);
+		return `background-color: #${BGcolors[num]}; color: #${BRcolors[num]};`; // border-bottom: 2px solid #${BRcolors[num]};`;
 	}
 
-	generateTable(table, id) {
-		return `<table style="width: 90%; margin-left: auto; margin-right: auto;" id="${id}">
-				<thead>
+	async tableUsers(users, refetch=false){
+		const friendsTable = this.shadowRoot.getElementById("friends_leaderboard");
+		const globalTable = this.shadowRoot.getElementById("global_leaderboard");
+		if (!users || refetch){
+			users = await this.getUsersGlobal();
+			this.assignStats(users);
+			friendsTable.innerHTML = this.generateTable();
+		}
+		let fi = 1;
+		let gi = 1;
+		users['all_users'].forEach((user) => {
+			user["avatar_field"] = this.cleanProfilePictures(user["avatar_42_url"],user["avatar_field"]);
+			if (user["username"] == "local" || user["username"] == "AI") {
+				return;
+			}
+			const row = document.createElement('tr');
+			row.style = this.generateColors(gi);
+			row.id = 'tb'+user["username"];
+			row.innerHTML = `
+				<td id="position">#${gi}</td>
+				<td>
+					<div class="pfp-container">
+						<img src="${user["avatar_field"]}">
+					</div>
+				</td>
+				<td class="tbname" data-username="${user["username"]}">${user["username"]}</td>
+				<td>${user['matches']}</td>
+				<td>${user['ratio']}</td>
+				<td>
+					<img class="clickable-img match-btn versus" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png">
+					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
+				</td>
+			`;
+			if (!refetch){
+				globalTable.appendChild(row);
+			}
+			if (this.checkAlreadyFriend(users["friends"], user["username"])){
+				const clone = row.cloneNode(true);
+				clone.style = this.generateColors(fi);
+				clone.querySelector("#position").innerHTML = '#'+ fi;
+				friendsTable.appendChild(clone);
+				++fi;
+			}
+			++gi;
+		});
+
+	}
+
+	generateTable() {
+		return `<thead>
 				<tr style="border-bottom: 1px solid black;">
 					<th style="width: 50px;"></th>
 					<th style="width: 100px;"></th>
@@ -385,9 +373,7 @@ export default class LeaderboardComponent extends HTMLElement {
 				</tr>
 				</thead>
 				<tbody>
-					${table}
-				</tbody>
-			</table>`;
+				</tbody>`;
 	}
 
 	checkAlreadyFriend(friends, name) {

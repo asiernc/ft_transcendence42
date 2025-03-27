@@ -1,4 +1,6 @@
 import { navigateTo } from "../app.js";
+import { displayAlert } from "../utils/alert.js";
+
 
 export default class ProfileEditComponent extends HTMLElement {
 	constructor() {
@@ -53,6 +55,8 @@ export default class ProfileEditComponent extends HTMLElement {
 			background-color: rgb(185, 235, 196);
 			font-family: Arial;
 			padding: 0.7%;
+			margin-top: 30px;
+			text-align: center;
 			font-size: x-large;
 			cursor: pointer;
 			border: solid 2px black;
@@ -103,20 +107,12 @@ export default class ProfileEditComponent extends HTMLElement {
 			.profile-pic-container:hover .edit-icon {
 				opacity: 1;
 			}
-
-		.alert {
-			position: fixed;
-			padding: 40px;
-			background-color: #97ED93;
-            border: 5px solid #1E6C1A;
-			top: 40%;
-			display: none;
-			font-size: larger;
-			z-index = 22;
-		}
         `;
 
 		const user = await this.getUserInfo();
+		if (user['user']['intra_user']){
+			navigateTo('/profile/'+localStorage.getItem('username'));
+		}
 		if (user["user"]["avatar_42_url"]) {
 			user["user"]["avatar_field"] = user["user"]["avatar_42_url"];
 		}
@@ -141,19 +137,17 @@ export default class ProfileEditComponent extends HTMLElement {
 				</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
 					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user["user"]["first_name"]}" class="input"></input>
-					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user["user"]["username"]}" class="input"></input>
+					<input id="id_surname" type="text" name="surname" maxlength="50" placeholder="Surname" required="" value="${user["user"]["last_name"]}" class="input"></input>
 					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user["user"]["email"]}" class="input"></input>
 				</div>
 			</div>
-			<input id="submitBtn" value="Submit" class="submit-btn" style="margin-top: 30px; text-align: center;">
+			<button id="submitBtn" class="submit-btn">Save</button>
+			<button id="exitBtn" class="submit-btn" style="background-color: rgb(235, 185, 185);">Exit</button>
 		</form>
 		<div class="screw-container">
 			<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 			<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 		</div>
-		</div>
-		<div class="alert" id="successAlert">
-			Profile updated correctly!!
 		</div>
         `;
 		this.shadowRoot.appendChild(style);
@@ -164,6 +158,11 @@ export default class ProfileEditComponent extends HTMLElement {
 	}
 
 	attachListeners() {
+		
+		this.shadowRoot.getElementById("exitBtn").addEventListener("click", () => {
+			navigateTo("/profile/"+localStorage.getItem("username"));
+		});
+
 		this.pfpupload = this.shadowRoot.getElementById("profile-upload");
 		this.pfpupload.addEventListener("change", (event) => {
 			const file = event.target.files[0];
@@ -179,6 +178,9 @@ export default class ProfileEditComponent extends HTMLElement {
 		});
 
 		this.submit = this.shadowRoot.getElementById("submitBtn");
+		this.submit.addEventListener("click", function(event){
+			event.preventDefault();
+		});
 		this.submit.addEventListener("click", async () => {
 			const form = this.shadowRoot.getElementById("editProfileForm");
 			if (form.checkValidity()) {
@@ -192,31 +194,20 @@ export default class ProfileEditComponent extends HTMLElement {
 							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({
-							username: this.shadowRoot.getElementById("id_username").value,
-							email: this.shadowRoot.getElementById("id_email").value,
 							first_name: this.shadowRoot.getElementById("id_name").value,
+							last_name: this.shadowRoot.getElementById("id_surname").value,
+							email: this.shadowRoot.getElementById("id_email").value,
 						}),
 					});
 					const data = await response.json();
-					const resultAlert = this.shadowRoot.getElementById("successAlert");
-					if (!data["error"]) {
-						localStorage.setItem("username", data["username"]);
-						resultAlert.style.display = "block";
-						setTimeout(() => {
-							resultAlert.style.display = "none";
-						}, 2000);
+					if (!data["error"] && response.ok) {
+						// this.submit.style.display = 'none';
+						displayAlert("Profile updated correctly!!", "good");
 					} else {
-						resultAlert.style.display = "block";
-						resultAlert.style.backgroundColor = "#EE7C7C";
-						resultAlert.style.border = "5px solid #701717";
-						resultAlert.style.color = "white";
-						resultAlert.innerText = "Error updating profile :(";
-						setTimeout(() => {
-							resultAlert.style.display = "none";
-						}, 2000);
+						throw new Error("Error updating profile :(");
 					}
 				} catch (err) {
-					console.error("Error: Problem sending the petition");
+					displayAlert(err.message, "bad");
 				}
 			}
 
