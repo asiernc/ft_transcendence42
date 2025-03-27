@@ -236,6 +236,8 @@ export default class ProfileComponent extends HTMLElement {
 					<button style="margin-right: 20px;" id="editProfile">Edit Profile</button>
 				</div>`;
 		}
+		if (!userData["user"]["first_name"]) {userData["user"]["first_name"] = '';}
+		if (!userData["user"]["last_name"]) {userData["user"]["last_name"] = '';}
 
 		const div = document.createElement("div");
 		div.innerHTML = `
@@ -245,7 +247,7 @@ export default class ProfileComponent extends HTMLElement {
 				<img src="${userData["user"]["avatar_field"]}" id="usr_img">
 			</div>
 			<div class="name">
-				<h1 class="pixel-font" style="font-size: 40px">${userData["user"]["first_name"]}</h1>
+				<h1 class="pixel-font" style="font-size: 40px">${userData["user"]["first_name"]} ${userData["user"]["last_name"]}</h1>
 				<h3 class="pixel-font" style="font-size: larger;">${userData["user"]["username"]}</h3>
 			</div>
 		</div>

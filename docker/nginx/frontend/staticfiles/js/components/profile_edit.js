@@ -1,4 +1,6 @@
 import { navigateTo } from "../app.js";
+import { displayAlert } from "../utils/alert.js";
+
 
 export default class ProfileEditComponent extends HTMLElement {
 	constructor() {
@@ -135,7 +137,7 @@ export default class ProfileEditComponent extends HTMLElement {
 				</label>
 				<div style="display: flex; flex-direction: column; width: 50%; justify-content: space-around;">
 					<input id="id_name" type="text" name="name" maxlength="50" placeholder="Name" required="" value="${user["user"]["first_name"]}" class="input"></input>
-					<input id="id_username" type="text" name="username" maxlength="50" placeholder="Username" required="" value="${user["user"]["username"]}" class="input"></input>
+					<input id="id_surname" type="text" name="surname" maxlength="50" placeholder="Surname" required="" value="${user["user"]["last_name"]}" class="input"></input>
 					<input id="id_email" type="text" name="email" maxlength="50" placeholder="Email" value="${user["user"]["email"]}" class="input"></input>
 				</div>
 			</div>
@@ -176,6 +178,9 @@ export default class ProfileEditComponent extends HTMLElement {
 		});
 
 		this.submit = this.shadowRoot.getElementById("submitBtn");
+		this.submit.addEventListener("click", function(event){
+			event.preventDefault();
+		});
 		this.submit.addEventListener("click", async () => {
 			const form = this.shadowRoot.getElementById("editProfileForm");
 			if (form.checkValidity()) {
@@ -189,15 +194,14 @@ export default class ProfileEditComponent extends HTMLElement {
 							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({
-							username: this.shadowRoot.getElementById("id_username").value,
-							email: this.shadowRoot.getElementById("id_email").value,
 							first_name: this.shadowRoot.getElementById("id_name").value,
+							last_name: this.shadowRoot.getElementById("id_surname").value,
+							email: this.shadowRoot.getElementById("id_email").value,
 						}),
 					});
 					const data = await response.json();
 					if (!data["error"] && response.ok) {
 						// this.submit.style.display = 'none';
-						localStorage.setItem("username", data["username"]);
 						displayAlert("Profile updated correctly!!", "good");
 					} else {
 						throw new Error("Error updating profile :(");
