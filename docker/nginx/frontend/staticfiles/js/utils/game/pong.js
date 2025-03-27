@@ -18,7 +18,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setAnimationLoop(animate);
 	document.getElementById('game').appendChild( renderer.domElement );
-	const winScore = 1;
+	const winScore = 3;
 
 	// FOR TESTING (camera movment)
 	const controls = new OrbitControls(camera, renderer.domElement);
@@ -56,12 +56,12 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	
 	// set plane (floor)
 	const planeGeo = new PlaneGeometry(mapSizes.width, mapSizes.height, mapSizes.width, mapSizes.height);
-	planeGeo.rotateX(Math.PI / 2);
+	planeGeo.rotateX(-Math.PI / 2);
 	const planeMaterial = new MeshBasicMaterial({
 		color: 0xffffff,
-		wireframe: true,
 	});
 	const plane = new Mesh(planeGeo, planeMaterial);
+	plane.position.y -= 1;
 	scene.add(plane);
 
 	// set movment functions
@@ -97,7 +97,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 	});
 			
 	// set Scordeboard
-	const scoreboard = new Scoreboard(scene, 0xffffff, 4, 0.5);
+	const scoreboard = new Scoreboard(scene, 4, 0.5, paddle1, paddle2, paddle3, paddle4);
 			
 	// set sphere (ball)
 	let ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -130,8 +130,10 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				results.score_player1 = scoreboard.p1Score;
 				results.score_player2 = scoreboard.p2Score;
 				// wait a little bit if you want
-				renderer.setAnimationLoop(null);
-				endGame(versus, tournament_id, results);
+				setTimeout(() => {
+					renderer.setAnimationLoop(null);
+					endGame(versus, tournament_id, results);
+				}, 100);
 			}
 			ball.mesh.removeFromParent();
 			ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
@@ -141,8 +143,6 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 
 	async function endGame(versus, tournament_id, results)
 	{
-		const username = localStorage.getItem("username");
-		
 		// show winner to user
 		document.getElementById("modal_container").classList.add("show");
 		document.getElementById("modal-content").innerHTML = `
@@ -195,6 +195,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				speedY: Math.random() * 5 + 2,
 				rotation: Math.random() * 360
 			};
+			ball.speed = 0;
 			confettis.push(confetti);
 		}
 		

@@ -15,8 +15,7 @@ export default class Ball
         // ball config
         this.geo = new SphereGeometry(this.radius, 16, 8);
         this.material = new MeshBasicMaterial({
-			color: 0xffff00,
-            wireframe: true,
+			color: 0xffc300 ,
         });
         this.mesh = new Mesh(this.geo, this.material);
         scene.add(this.mesh);
@@ -29,8 +28,17 @@ export default class Ball
 		//save collision objects
 		this.p1 = paddle1;
 		this.p2 = paddle2;
-		this.p3 = paddle3;
-		this.p4 = paddle4;
+		paddle1.ball = this;
+		paddle2.ball = this;
+		
+		if (paddle3)
+		{
+			this.p3 = paddle3;
+			this.p4 = paddle4;
+			paddle3.ball = this;
+			paddle4.ball = this;
+		}
+
 		this.scoreboard = scoreboard;
 		
 		//if there is AI call AI Predict
