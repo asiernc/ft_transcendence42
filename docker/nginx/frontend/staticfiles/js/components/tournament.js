@@ -47,34 +47,128 @@ export default class TournamentComponent extends HTMLElement {
 		}
 	}
 
-	setBoxResult(MatchList, gameResult) {
-		const divp1_id = "pb-m" + g_round + "-p1";
-		const divp2_id = "pb-m" + g_round + "-p2";
-		if (gameResult.score_p1 > gameResult.score_p2) {
-			document.getElementById(divp1_id).style.backgroundColor = "#24831e";
-			document.getElementById(divp2_id).style.backgroundColor = "#cf1206";
-			document.getElementById(divp2_id).style.textDecoration = "line-through"
-			document.getElementById(divp2_id).style.textDecorationThickness = "0.2rem"
-			//MatchList[g_round - 1].;
-		} else {
-			document.getElementById(divp1_id).style.backgroundColor = "#cf1206";
-			document.getElementById(divp1_id).style.textDecoration = "line-through"
-			document.getElementById(divp1_id).style.textDecorationThickness = "0.2rem"
-			document.getElementById(divp2_id).style.backgroundColor = "#24831e";
-		}
-	}
 	async init(tournament_id) {
 		this.tournamentObject = null;
 		this.tournamentObject = await this.loadTournament(tournament_id);
-		console.log("Data is loaded!!!!");
-		this.render();
-		this.setPlayersBox();
+		if (this.tournamentObject.match >= 7)
+		{
+			this.render();
+			await this.endOfTournament();
+		} else {
+			await this.addMatchIntoTournament(this.tournamentObject.match);
+			this.render();
+			console.log("Data is loaded!!!!", this.tournamentObject);
+			this.setPlayersBox();
+		}
 		this.attachListeners(this.tournamentObject);
+	}
+
+	async addMatchIntoTournament(match_id) {
+		console.log('add match match id: ', match_id);
+		if (!match_id || match_id % 2 != 0) {
+			return ;
+		}
+		let match_id_response = 0;
+		switch (match_id) {
+			case 2:
+					match_id_response = 5;
+					break ;
+			case 4:
+					match_id_response = 6;
+					break ;
+			case 6:
+					match_id_response = 7;
+					break ;
+		}
+		const new_match = {
+			winner : 0,
+			player1_id : getPlayerID(this.tournamentObject, match_id - 1),
+			player2_id : getPlayerID(this.tournamentObject, match_id)
+		}
+		console.log("new_match_response", new_match, match_id_response);
+		try {
+			const response = await fetch('/api-tournament/add-match', {
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"tournament_id": localStorage.getItem('tournament_id'),
+					"match_id" : match_id_response,
+					"matchObject" : new_match,
+				}),
+			});
+			if (!response.ok) {
+				const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+				throw Error(err_msg);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+		this.tournamentObject.matches_json["match" + match_id_response] = new_match;
+	}
+	async endOfTournament() {
+		if (this.tournamentObject.match != 7)
+			return ;
+		const winner_id = this.tournamentObject.matches_json["match7"].winner;
+		const player_id = winner_id == 1 ? this.tournamentObject.matches_json["match7"].player1_id : this.tournamentObject.matches_json["match7"].player2_id;
+		const winner_username = this.tournamentObject.players_alias["player" + player_id].username;
+		try {
+			const response = await fetch('/api-tournament/handle-tournament', {
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					"tournament_id": localStorage.getItem('tournament_id'),
+					"tournament_winner": winner_username,
+				}),
+			});
+			if (!response.ok) {
+				const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
+				throw Error(err_msg);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+		document.getElementById("modal_container").classList.add("show");
+            document.getElementById("modal-content").innerHTML = `
+                    <div class="screw-container" style="top: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right: 0; width:5%; height: 5%;">
+                    </div>
+					<div class="d-flex justify-content-center align-items-center">
+                        <h1 class="button-text">AND THE WINNER IS</h1>
+                    </div>
+					&nbsp
+					<div class="d-flex justify-content-center align-items-center">
+                        <p class="button-text">${winner_username}</p>
+					</div>
+					&nbsp
+					<div class="options-container">
+						<div class="d-flex justify-content-center align-items-center">
+						<a id="a3" href="javascript:void(0);" class="button-text">RETURN TO HOME</a>
+						</div>
+					</div>
+					<div class="screw-container" style="bottom: 0;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
+                        <img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right:0; width:5%; height: 5%;">
+                    </div>
+                `;
+		this.a3button = document.getElementById('a3');
+		this.a3button.addEventListener('click', async function() {
+			navigateTo('/home');
+		});
+		
+		
 	}
 	attachListeners(tournamentObject) {
         this.nextmatch = document.getElementById("next-match-button");
 		this.nextmatch.addEventListener("click", async function ()
         {
+			console.log("fk this", tournamentObject, tournamentObject.match + 1);
 			document.getElementById("modal_container").classList.add("show");
             document.getElementById("modal-content").innerHTML = `
                     <div class="screw-container" style="top: 0;">
@@ -125,7 +219,6 @@ export default class TournamentComponent extends HTMLElement {
 					navigateTo(path);
 				}
 			});
-    
         });
 	}
 
@@ -136,7 +229,9 @@ export default class TournamentComponent extends HTMLElement {
 	}
 	setPlayersBox() {
 		let	div_id, player_id;
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < 7; i++) {
+			if (!this.tournamentObject.matches_json["match" + (i + 1)])
+				break ;
 			for (let j = 0; j < 2; j++) {
 				player_id = this.tournamentObject.matches_json["match" + (i + 1)]["player" + (j + 1) + "_id"];
 				div_id = "pb-m" + (i + 1) + "-p" + (j + 1);
@@ -172,8 +267,15 @@ export default class TournamentComponent extends HTMLElement {
 							break;
 			case "match4":
 							div_id = "m6-p2";
-							break ;
+							break;
+			case "match5":
+							div_id = "m7-p1";
+							break;
+			case "match6":
+							div_id = "m7-p2";
+							break;		
 		}
+		console.log('matchnum', match_id);
 		document.getElementById(div_id).textContent = winner;
 	}
 
@@ -364,6 +466,23 @@ export default class TournamentComponent extends HTMLElement {
                 background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
 				cursor: pointer;
             }
+			#a3 {
+				width: 30%;
+                height: 10%;
+                font-size: 15px;
+				color: #c900a7;
+				border-style: solid;
+				text-decoration: none;
+            }
+            #a3:hover {
+                border: 1px solid transparent;
+                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
+                transition-delay: 0.8s;
+                background-size: 180px;
+                animation: animate var(--speed-fast) steps(8) forwards;
+                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
+				cursor: pointer;
+            }
 			.options-container {
 				width: 100%;
 				heigth: 100%;			
@@ -525,5 +644,11 @@ async function playAIgame() {
 	} catch (err) {
 		console.log(err);
 	}
+}
+
+function getPlayerID(tournamentObject, match_id) {
+	if (tournamentObject.matches_json["match" + match_id].winner == 1)
+		return tournamentObject.matches_json["match" + match_id].player1_id;
+	return tournamentObject.matches_json["match" + match_id].player2_id
 }
 window.customElements.define('tournament-component', TournamentComponent);
