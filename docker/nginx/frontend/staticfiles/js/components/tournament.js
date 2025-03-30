@@ -50,21 +50,14 @@ export default class TournamentComponent extends HTMLElement {
 	async init(tournament_id) {
 		this.tournamentObject = null;
 		this.tournamentObject = await this.loadTournament(tournament_id);
-		if (this.tournamentObject.match >= 7)
-		{
-			this.render();
-			await this.endOfTournament();
-		} else {
-			await this.addMatchIntoTournament(this.tournamentObject.match);
-			this.render();
-			console.log("Data is loaded!!!!", this.tournamentObject);
-			this.setPlayersBox();
-		}
+		await this.addMatchIntoTournament(this.tournamentObject.match);
+		this.render();
+		this.setPlayersBox();
+		await this.endOfTournament();
 		this.attachListeners(this.tournamentObject);
 	}
 
 	async addMatchIntoTournament(match_id) {
-		console.log('add match match id: ', match_id);
 		if (!match_id || match_id % 2 != 0) {
 			return ;
 		}
@@ -251,7 +244,7 @@ export default class TournamentComponent extends HTMLElement {
 		}
 	}
 	setWinner(match_id, winner_id, player_id) {
-		if (!winner_id)
+		if (!winner_id || match_id == "match7")
 				return ;
 		let	div_id;
 		const winner = this.tournamentObject.players_alias["player" + player_id].alias;	
@@ -275,7 +268,6 @@ export default class TournamentComponent extends HTMLElement {
 							div_id = "m7-p2";
 							break;		
 		}
-		console.log('matchnum', match_id);
 		document.getElementById(div_id).textContent = winner;
 	}
 
@@ -519,21 +511,21 @@ export default class TournamentComponent extends HTMLElement {
 				<div class="players-grid" style="left: 6.5%; top: 20%;"> <!-- Box left-up -->
 					<div class="player-box" id="pb-m1-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p1"> temp </p>
+						<p class="players-text" id="m1-p1"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match1"].player1_id].alias} </p>
 					</div>
 					<div class="player-box" id="pb-m1-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m1-p2"> temp </p>
+						<p class="players-text" id="m1-p2"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match1"].player2_id].alias} </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 6.5%; top: 70%;"> <!-- Box left-bottom -->
 					<div class="player-box" id="pb-m2-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p1"> temp </p>
+						<p class="players-text" id="m2-p1"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match2"].player1_id].alias} </p>
 					</div>
 					<div class="player-box" id="pb-m2-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m2-p2"> temp </p>
+						<p class="players-text" id="m2-p2"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match2"].player2_id].alias} </p>
 					</div>
 				</div>
 				<div class="players-grid" style="left: 22%;"> <!-- Box left-center -->
@@ -569,21 +561,21 @@ export default class TournamentComponent extends HTMLElement {
 				<div class="players-grid" style="right: 6.5%; top: 20%;"> <!-- Box right-up -->
 					<div class="player-box" id="pb-m3-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p1"> temp </p>
+						<p class="players-text" id="m3-p1"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match3"].player1_id].alias} </p>
 					</div>
 					<div class="player-box" id="pb-m3-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m3-p2"> temp </p>
+						<p class="players-text" id="m3-p2"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match3"].player2_id].alias} </p>
 					</div>
 				</div>
 				<div class="players-grid" style="right: 6.5%; top: 70%;"> <!-- Box right-bottom -->
 					<div class="player-box" id="pb-m4-p1">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p1"> temp </p>
+						<p class="players-text" id="m4-p1"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match4"].player1_id].alias} </p>
 					</div>
 					<div class="player-box" id="pb-m4-p2">
 						<img src="./staticfiles/js/utils/images/screw_head.png" style="max-width: 33%; width: 100%; height: 100%" alt="Screw Head">
-						<p class="players-text" id="m4-p2"> temp </p>
+						<p class="players-text" id="m4-p2"> ${this.tournamentObject.players_alias["player" + this.tournamentObject.matches_json["match4"].player2_id].alias} </p>
 					</div>
 				</div>
 			</div>
