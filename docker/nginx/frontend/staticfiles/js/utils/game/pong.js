@@ -254,7 +254,6 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 					});
 					
 					if (!response.ok) {
-						console.log("Response: ", response);
 						const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
 						throw Error(err_msg);
 					}
@@ -263,7 +262,6 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				}
 				
 				if (tournament_id != null) {
-					console.log("This is pre handle-tournament PUT", token);
 					try {
 						const response = await fetch('/api-tournament/handle-tournament', {
 							method: 'PUT',

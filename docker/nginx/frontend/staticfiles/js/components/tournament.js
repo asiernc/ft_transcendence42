@@ -5,27 +5,30 @@ let	g_round = 0;
 export default class TournamentComponent extends HTMLElement {
 	constructor() {
 		super();
-		const MatchList = []; //
 		const tournament_id = localStorage.getItem('tournament_id');
 		this.tournamentObject = null;
 		this.init(tournament_id);
-		//const tournamentObject = this.loadTournamentData(tournament_id);
-	
-		/*const gameResultItem = localStorage.getItem("gameResult");
-		if (gameResultItem) {
-			this.setBoxResult(MatchList, JSON.parse(gameResultItem));
-			localStorage.removeItem("gameResult");
-		}
-		else
-			console.log('not gameResult found');*/
 	}
 
-	async loadTournament() {
-		// check if tournament exists if not go to options_tournament
+	async init(tournament_id) {
+		this.tournamentObject = null;
+		this.nextmatch = null;
+		this.a1button = null;
+		this.a2button = null;
+		this.a3button = null;
+		this.tournamentObject = await this.loadTournament(tournament_id);
+		await this.addMatchIntoTournament(this.tournamentObject.match, tournament_id);
+		this.render();
+		this.setPlayersBox();
+		await this.endOfTournament(tournament_id);
+		this.attachListeners(this.tournamentObject);
+		this.disconnectedCallback();
+	}
+
+	async loadTournament(tournament_id) {
 		try
 		{
 			const token = localStorage.getItem("access_token");
-			const tournament_id = localStorage.getItem('tournament_id')
 			const response = await fetch(`/api-tournament/tournament/${tournament_id}`, {
 				method: 'GET',
 				headers: {
@@ -35,10 +38,7 @@ export default class TournamentComponent extends HTMLElement {
 			});
 			const data = await response.json();
 			if (response.ok)
-			{
-				console.log(data);
 				return data;
-			}
 			else
 				throw Error(data.error);
 		} catch (err) {
@@ -47,17 +47,8 @@ export default class TournamentComponent extends HTMLElement {
 		}
 	}
 
-	async init(tournament_id) {
-		this.tournamentObject = null;
-		this.tournamentObject = await this.loadTournament(tournament_id);
-		await this.addMatchIntoTournament(this.tournamentObject.match);
-		this.render();
-		this.setPlayersBox();
-		await this.endOfTournament();
-		this.attachListeners(this.tournamentObject);
-	}
 
-	async addMatchIntoTournament(match_id) {
+	async addMatchIntoTournament(match_id, tournament_id) {
 		if (!match_id || match_id % 2 != 0) {
 			return ;
 		}
@@ -78,7 +69,6 @@ export default class TournamentComponent extends HTMLElement {
 			player1_id : getPlayerID(this.tournamentObject, match_id - 1),
 			player2_id : getPlayerID(this.tournamentObject, match_id)
 		}
-		console.log("new_match_response", new_match, match_id_response);
 		try {
 			const response = await fetch('/api-tournament/add-match', {
 				method: 'PUT',
@@ -87,7 +77,7 @@ export default class TournamentComponent extends HTMLElement {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					"tournament_id": localStorage.getItem('tournament_id'),
+					"tournament_id": tournament_id,
 					"match_id" : match_id_response,
 					"matchObject" : new_match,
 				}),
@@ -101,7 +91,7 @@ export default class TournamentComponent extends HTMLElement {
 		}
 		this.tournamentObject.matches_json["match" + match_id_response] = new_match;
 	}
-	async endOfTournament() {
+	async endOfTournament(tournament_id) {
 		if (this.tournamentObject.match != 7)
 			return ;
 		const winner_id = this.tournamentObject.matches_json["match7"].winner;
@@ -115,7 +105,7 @@ export default class TournamentComponent extends HTMLElement {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					"tournament_id": localStorage.getItem('tournament_id'),
+					"tournament_id": tournament_id,
 					"tournament_winner": winner_username,
 				}),
 			});
@@ -161,7 +151,6 @@ export default class TournamentComponent extends HTMLElement {
         this.nextmatch = document.getElementById("next-match-button");
 		this.nextmatch.addEventListener("click", async function ()
         {
-			console.log("fk this", tournamentObject, tournamentObject.match + 1);
 			document.getElementById("modal_container").classList.add("show");
             document.getElementById("modal-content").innerHTML = `
                     <div class="screw-container" style="top: 0;">
@@ -204,9 +193,7 @@ export default class TournamentComponent extends HTMLElement {
 					path += "&player2AI=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].isAI;
 					path += "&player3AI=false&player4AI=false&tournament_id=" + localStorage.getItem("tournament_id");
 					path += "&p1username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username;
-					console.log("p1username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].username);
 					path += "&p2username=" + tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username;
-					console.log("p2username, ", tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].username);
 					
 					g_round++;
 					navigateTo(path);
@@ -216,9 +203,14 @@ export default class TournamentComponent extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-       //this.nextmatch.removeEventListener('click', this);
-	   //this.a1button.removeEventListener('click', this);
-	   //this.a2button.removeEventListener('click', this);
+		if (this.nextmatch)
+			this.nextmatch.removeEventListener('click', this);
+		if (this.a1button)
+			this.a1button.removeEventListener('click', this);
+		if (this.a2button)
+			this.a2button.removeEventListener('click', this);
+		if (this.a3button)
+			this.a3button.removeEventListener('click', this);
 	}
 	setPlayersBox() {
 		let	div_id, player_id;
@@ -272,7 +264,6 @@ export default class TournamentComponent extends HTMLElement {
 	}
 
 	render() {
-		console.log("there it goes!");
 		const style = document.createElement('style');
 		style.textContent = `
 			.bg {
@@ -629,7 +620,6 @@ async function playAIgame() {
 		});
 		
 		if (!response.ok) {
-			console.log("Response: ", response);
 			const err_msg = await response.json().catch(() => new Error("The match could not be stored correctly."));
 			throw Error(err_msg);
 		}

@@ -293,11 +293,9 @@ export default class OptionsAlias extends HTMLElement {
                         'players_alias': this.userInfo,
                     })
                 });
-				console.log('hasta qui bien');
                 const data = await response.json();
                 if (response.ok)
                 {
-                    console.log(data);
 					localStorage.setItem('tournament_id', data.id);
                     navigateTo('/tournament');
                 }
