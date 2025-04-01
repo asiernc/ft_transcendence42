@@ -10,7 +10,7 @@ from .views.refresh_tokens import refresh_tokens
 from .views.login42 import login42
 from .views.callback42 import callback42
 from .views.matchs import (createMatch,
-    getMatches, getMatchesByUsername )
+    getMatches, getMatchesByUsername, get_wallet_key )
 from .views.profile import (getProfile, getLeaderboard)
 
 urlpatterns = [
@@ -35,4 +35,5 @@ urlpatterns = [
 	path('delete/<int:pk>', deleteUser),
 	path('profile/<str:username>', getProfile),
 	path('leaderboard', getLeaderboard),
+	path('get-wallet-key', get_wallet_key),
 ]

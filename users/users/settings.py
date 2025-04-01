@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", 'django-insecure-^23e-v^g9+j69lw0l&1w#2+eg4$4jjo%t3kd)fvbw9b5o7&pk=')
-
+WALLET_KEY = os.environ.get('WALLET_PRIV_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
