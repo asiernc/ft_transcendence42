@@ -5,6 +5,7 @@ import Paddle from './paddle.js';
 import Scoreboard from './scoreboard.js';
 import { navigateTo } from '../../app.js';
 import { uploadToBlockchain } from '../blockchain/blockchain.js';
+
 export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2AI, p3AI, p4AI)
 {
 	// set scene
@@ -260,7 +261,17 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				} catch (err) {
 					console.log(err);
 				}
-				uploadToBlockchain(p1username, versus, results, tournament_id);
+				if (numPlayers > 2) {
+					const players = {
+						'player1' : p1username,
+						'player2' : p2AI === true ? "AI" : "local",
+						'player3' : p3AI === true ? "AI" : "local",
+						'player4' : p4AI === true ? "AI" : "local",
+					}			
+					await uploadToBlockchain(p1username, versus, results, null, players);
+				} else {
+					await uploadToBlockchain(p1username, versus, results, tournament_id, null);
+				}
 				if (tournament_id != null) {
 					try {
 						const response = await fetch('/api-tournament/handle-tournament', {
