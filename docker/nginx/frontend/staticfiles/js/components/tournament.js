@@ -1,4 +1,5 @@
 import { navigateTo } from '../app.js';
+import { uploadToBlockchain } from '../utils/blockchain/blockchain.js';
 
 let	g_round = 0;
 
@@ -602,6 +603,7 @@ async function playAIgame() {
 	} catch (err) {
 		console.log(err);
 	}
+	const random_score = Math.floor(Math.random() * 3);
 	try {
 		const response = await fetch('/api/create-match', {
 			method: 'POST',
@@ -613,9 +615,9 @@ async function playAIgame() {
 				"player1_username": 'AI',
 				"player2_username": 'AI',
 				"winner_username": 'AI',
-				"score_player1": winner == 1 ? 3 : Math.floor(Math.random() * 3),
-				"score_player2": winner == 2 ? 3 : Math.floor(Math.random() * 3),
-				"tournament_id": tournament_id  // Puede ser null
+				"score_player1": winner == 1 ? 3 : random_score,
+				"score_player2": winner == 2 ? 3 : random_score,
+				"tournament_id": tournament_id,
 			}),
 		});
 		
@@ -626,6 +628,11 @@ async function playAIgame() {
 	} catch (err) {
 		console.log(err);
 	}
+	uploadToBlockchain("AI", "AI", {
+		'score_player1' : winner == 1 ? 3 : random_score,
+		'score_player2' : winner == 2 ? 3 : random_score,
+		'winner': "AI",
+	}, tournament_id);
 }
 
 function getPlayerID(tournamentObject, match_id) {
