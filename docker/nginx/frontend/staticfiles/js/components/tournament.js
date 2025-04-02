@@ -628,7 +628,7 @@ async function playAIgame() {
 	} catch (err) {
 		console.log(err);
 	}
-	await uploadToBlockchain("AI", "AI", {
+	uploadToBlockchain("AI", "AI", {
 		'score_player1' : winner == 1 ? 3 : random_score,
 		'score_player2' : winner == 2 ? 3 : random_score,
 		'winner': "AI",

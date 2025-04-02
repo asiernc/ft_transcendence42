@@ -268,9 +268,9 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 						'player3' : p3AI === true ? "AI" : "local",
 						'player4' : p4AI === true ? "AI" : "local",
 					}			
-					await uploadToBlockchain(p1username, versus, results, null, players);
+					uploadToBlockchain(p1username, versus, results, null, players);
 				} else {
-					await uploadToBlockchain(p1username, versus, results, tournament_id, null);
+					uploadToBlockchain(p1username, versus, results, tournament_id, null);
 				}
 				if (tournament_id != null) {
 					try {

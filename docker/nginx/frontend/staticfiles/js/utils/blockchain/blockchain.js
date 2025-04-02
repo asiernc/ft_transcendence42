@@ -1,3 +1,5 @@
+let nonce_g = null;
+
 export async function uploadToBlockchain(player1, player2, results, tournament_id, players) {
 	const web3 = new Web3("https://rpc.ankr.com/eth_sepolia/72a3339d99c6f70098e3f3859a3de371ab0ba6c90f1fae252204225ff8f3e355");
 	const contract_address = "0x6207C869B67B2d6C5A96F92c82399269A74aFEfD";
@@ -236,22 +238,27 @@ export async function uploadToBlockchain(player1, player2, results, tournament_i
 		console.log(err);
 	}
 	const account = web3.eth.accounts.wallet.add("0x" + wallet_priv_key);
+	if (nonce_g == null)
+		nonce_g = await web3.eth.getTransactionCount(account[0].address, "latest");
+	const nonce = nonce_g;
+	nonce_g++;
+	console.log('nonce', nonce);
 	console.log('data', results, tournament_id);
 	let estimateGas, txReceipt;
 	if (tournament_id == null) {
 		if (players == null) {
 			estimateGas = await contract.methods.recordMatch(player1, player2, results.score_player1, results.score_player2, results.winner).estimateGas({from: account[0].address});
-			txReceipt = await contract.methods.recordMatch(player1, player2, results.score_player1, results.score_player2, results.winner).send({from: account[0].address, gas: estimateGas});
+			txReceipt = await contract.methods.recordMatch(player1, player2, results.score_player1, results.score_player2, results.winner).send({from: account[0].address, gas: estimateGas, nonce : nonce});
 		} else {
 			const team1 = players.player1 + "/" + players.player3;
 			const team2 = players.player2 + "/" + players.player4;
 			results.winner = results.winner == player1 ? team1 : team2;
 			estimateGas = await contract.methods.recordMatch(team1, team2, results.score_player1, results.score_player2, results.winner).estimateGas({from: account[0].address});
-			txReceipt = await contract.methods.recordMatch(team1, team2, results.score_player1, results.score_player2, results.winner).send({from: account[0].address, gas: estimateGas});
+			txReceipt = await contract.methods.recordMatch(team1, team2, results.score_player1, results.score_player2, results.winner).send({from: account[0].address, gas: estimateGas, nonce : nonce});
 		}
 	} else {
 		estimateGas = await contract.methods.recordTournamentMatch(player1, player2, results.score_player1, results.score_player2, results.winner, tournament_id).estimateGas({from: account[0].address});
-		txReceipt = await contract.methods.recordTournamentMatch(player1, player2, results.score_player1, results.score_player2, results.winner, tournament_id).send({from: account[0].address, gas: estimateGas});
+		txReceipt = await contract.methods.recordTournamentMatch(player1, player2, results.score_player1, results.score_player2, results.winner, tournament_id).send({from: account[0].address, gas: estimateGas, nonce : nonce});
 	}
 	console.log('txReceipt: ', txReceipt);
 }
