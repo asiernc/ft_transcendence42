@@ -229,7 +229,6 @@ export async function uploadToBlockchain(player1, player2, results, tournament_i
 		});
 		const data = await response.json();
 		wallet_priv_key = data.wallet_key;
-		console.log('wallet_key', wallet_priv_key);
 		if (!response.ok) {
 			const err_msg = await response.json().catch(() => new Error("Private key is not valid."));
 			throw Error(err_msg);
@@ -242,8 +241,6 @@ export async function uploadToBlockchain(player1, player2, results, tournament_i
 		nonce_g = await web3.eth.getTransactionCount(account[0].address, "latest");
 	const nonce = nonce_g;
 	nonce_g++;
-	console.log('nonce', nonce);
-	console.log('data', results, tournament_id);
 	let estimateGas, txReceipt;
 	if (tournament_id == null) {
 		if (players == null) {
@@ -260,5 +257,4 @@ export async function uploadToBlockchain(player1, player2, results, tournament_i
 		estimateGas = await contract.methods.recordTournamentMatch(player1, player2, results.score_player1, results.score_player2, results.winner, tournament_id).estimateGas({from: account[0].address});
 		txReceipt = await contract.methods.recordTournamentMatch(player1, player2, results.score_player1, results.score_player2, results.winner, tournament_id).send({from: account[0].address, gas: estimateGas, nonce : nonce});
 	}
-	console.log('txReceipt: ', txReceipt);
 }

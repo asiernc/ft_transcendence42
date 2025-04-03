@@ -176,58 +176,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 				document.getElementById("game").style.zIndex = "-1";
 				
 				//confetti
-				const confettiCanvas = document.getElementById("confetti");
-				const ctx = confettiCanvas.getContext("2d");
-				
-				confettiCanvas.width = window.innerWidth;
-				confettiCanvas.height = window.innerHeight;
-				
-				
-				const confettis = [];
-				const colors = ["#FF007A", "#7A00FF", "#00FF7A", "#FFD700", "#00D4FF"];
-				
-				function createConfetti() {
-					const confetti = {
-				x: Math.random() * confettiCanvas.width,
-				y: Math.random() * confettiCanvas.height - confettiCanvas.height,
-				size: Math.random() * 10 + 5,
-				color: colors[Math.floor(Math.random() * colors.length)],
-				speedX: Math.random() * 3 - 1.5,
-				speedY: Math.random() * 5 + 2,
-				rotation: Math.random() * 360
-			};
-			ball.speed = 0;
-			confettis.push(confetti);
-		}
-		
-		for (let i = 0; i < 200; i++) {
-			createConfetti();
-		}
-	
-		function animateConfetti() {
-			ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-			confettis.forEach((confetti, index) => {
-				confetti.x += confetti.speedX;
-				confetti.y += confetti.speedY;
-				confetti.rotation += confetti.speedX;
-				
-				ctx.save();
-				ctx.translate(confetti.x, confetti.y);
-				ctx.rotate((confetti.rotation * Math.PI) / 180);
-				ctx.fillStyle = confetti.color;
-				ctx.fillRect(-confetti.size / 2, -confetti.size / 2, confetti.size, confetti.size);
-				ctx.restore();
-				
-				if (confetti.y > confettiCanvas.height) {
-					confettis.splice(index, 1);
-				}
-			});
-			
-			if (confettis.length > 0) {
-				requestAnimationFrame(animateConfetti);
-			}
-		}
-		animateConfetti();
+		do_confetti();
 		
 		// petition to server 4 match
 
@@ -303,4 +252,59 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 		});
 	}
 	return (0);
+}
+
+export function do_confetti() {
+	const confettiCanvas = document.getElementById("confetti");
+	const ctx = confettiCanvas.getContext("2d");
+	
+	confettiCanvas.width = window.innerWidth;
+	confettiCanvas.height = window.innerHeight;
+			
+			
+	const confettis = [];
+	const colors = ["#FF007A", "#7A00FF", "#00FF7A", "#FFD700", "#00D4FF"];
+
+	for (let i = 0; i < 200; i++) {
+		createConfetti(confettis, confettiCanvas, colors);
+	}
+	animateConfetti(ctx, confettis, confettiCanvas);	
+}
+
+function createConfetti(confettis, confettiCanvas, colors) {
+	const confetti = {
+		x: Math.random() * confettiCanvas.width,
+		y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+		size: Math.random() * 10 + 5,
+		color: colors[Math.floor(Math.random() * colors.length)],
+		speedX: Math.random() * 3 - 1.5,
+		speedY: Math.random() * 5 + 2,
+		rotation: Math.random() * 360
+	};
+	confettis.push(confetti);
+
+}
+
+function animateConfetti(ctx, confettis, confettiCanvas) {
+	ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+	confettis.forEach((confetti, index) => {
+		confetti.x += confetti.speedX;
+		confetti.y += confetti.speedY;
+		confetti.rotation += confetti.speedX;
+		
+		ctx.save();
+		ctx.translate(confetti.x, confetti.y);
+		ctx.rotate((confetti.rotation * Math.PI) / 180);
+		ctx.fillStyle = confetti.color;
+		ctx.fillRect(-confetti.size / 2, -confetti.size / 2, confetti.size, confetti.size);
+		ctx.restore();
+		
+		if (confetti.y > confettiCanvas.height) {
+			confettis.splice(index, 1);
+		}
+	});
+	
+	if (confettis.length > 0) {
+		requestAnimationFrame(() => animateConfetti(ctx, confettis, confettiCanvas));
+	}
 }

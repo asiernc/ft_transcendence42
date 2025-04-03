@@ -359,13 +359,13 @@ export default class AboutUsComponent extends HTMLElement {
                         <div class="col-md-4 col-sm-6">
                             <div class="our-team pink-c">
                                 <div class="team-image">
-                                    <img src="./staticfiles/js/utils/images/team_members/rcortes-.jpg" style="height: 348px;">
+                                    <img src="./staticfiles/js/utils/images/team_members/rcortes-.jpg" style="min-height: 408px">
                                     <p class="description">
-                                        Hinge Enjoyer de los buenos.
+                                        Yes.
                                     </p>
                                     <ul class="social">
-                                        <li><a href="#" target="_blank"><i class="fa-brands fa-github"></i></a></li>
-                                        <li><a href="#" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="https://github.com/rcortes-b/" target="_blank"><i class="fa-brands fa-github"></i></a></li>
+                                        <li><a href="https://www.linkedin.com/in/ra%C3%BAl-cort%C3%A9s-ben%C3%ADtez-138999317/" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="team-info">
@@ -379,8 +379,6 @@ export default class AboutUsComponent extends HTMLElement {
                                 <div class="team-image">
                                     <img src="./staticfiles/js/utils/images/team_members/mvallhon.png">
                                     <p class="description">
-                                        42Barcelona student.
-                                        <br>
                                         In constant learning.
                                     </p>
                                     <ul class="social">

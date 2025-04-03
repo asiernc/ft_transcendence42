@@ -1,5 +1,6 @@
 import { navigateTo } from '../app.js';
 import { uploadToBlockchain } from '../utils/blockchain/blockchain.js';
+import { do_confetti } from '../utils/game/pong.js';
 
 let	g_round = 0;
 
@@ -117,6 +118,7 @@ export default class TournamentComponent extends HTMLElement {
 		} catch (err) {
 			console.log(err);
 		}
+		do_confetti();
 		document.getElementById("modal_container").classList.add("show");
             document.getElementById("modal-content").innerHTML = `
                     <div class="screw-container" style="top: 0;">
@@ -571,9 +573,10 @@ export default class TournamentComponent extends HTMLElement {
 					</div>
 				</div>
 			</div>
-			<div class="modal-container" id="modal_container">
+			<div class="modal-container" id="modal_container" style="z-index: 1">
 				<div id="modal-content" class="modal-content"></div>
 			</div>
+			<canvas style="position: absolute" id="confetti"></canvas>
 			`;
 		this.appendChild(style);
         div.className = 'bg';
