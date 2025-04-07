@@ -321,7 +321,7 @@ export default class AboutUsComponent extends HTMLElement {
                                 <div class="team-image">
                                     <img src="./staticfiles/js/utils/images/team_members/anovio-c.png">
                                     <p class="description">
-                                        Charizard is on fire.
+                                        Charizard está tan on fire que Dumbledore lo fichó para reemplazar a Fawkes.
                                     </p>
                                     <ul class="social">
                                         <li><a href="https://github.com/asiernc" target="_blank"><i class="fa-brands fa-github"></i></a></li>
@@ -330,7 +330,7 @@ export default class AboutUsComponent extends HTMLElement {
                                 </div>
                                 <div class="team-info">
                                     <h3 class="title">Asier Novio</h3>
-                                    <span class="post">Web Designer</span>
+                                    <span class="post">Backend Developer and devOps</span>
                                 </div>
                             </div>
                         </div>
