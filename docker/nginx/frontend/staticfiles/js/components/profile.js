@@ -353,7 +353,8 @@ export default class ProfileComponent extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		this.editProfile.removeEventListener("click", this);
+		if (this.editProfile)
+			this.editProfile.removeEventListener("click", this);
 	}
 
 	cleanProfilePictures(avatar_42, avatar) {

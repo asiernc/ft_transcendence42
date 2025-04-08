@@ -140,6 +140,9 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 			ball = new Ball(scene, mapSizes, scoreboard, paddle1, paddle2, paddle3, paddle4);
 		}
 		renderer.render(scene, camera);
+
+		if (window.location.pathname != '/game')
+			renderer.setAnimationLoop(null);
 	}
 
 	async function endGame(versus, tournament_id, results)

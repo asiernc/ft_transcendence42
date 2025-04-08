@@ -132,7 +132,7 @@ The Security Team
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def verifyCredentials(request):
 	username = request.data.get('username')
 	password = request.data.get('password')
@@ -140,7 +140,7 @@ def verifyCredentials(request):
 	user = authenticate(request, username=username, password=password)
 	if user is None:
 		raise Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
-	return Response({'detail': 'Credentials are valid.'}, status=status.HTTP_200_OK)
+	return Response({'username': username}, status=status.HTTP_200_OK)
 
 
 #logout view

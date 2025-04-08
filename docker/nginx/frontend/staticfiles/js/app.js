@@ -1,7 +1,6 @@
 import { HomeView } from "./views/HomeView.js";
 import { LoginView } from "./views/LoginView.js";
 import { RegisterView } from "./views/RegisterView.js";
-``;
 import { OTPView } from "./views/OTPView.js";
 import { PlayView } from "./views/PlayView.js";
 import { OptionsGameView } from "./views/OptionsGameView.js";
@@ -33,6 +32,7 @@ function connectWebSocket(username) {
 
 	ws.onclose = function (event) {
 		//logout
+		localStorage.clear();
 		console.log("Websocket is closed.");
 	};
 
@@ -56,6 +56,12 @@ function connectWebSocket(username) {
 	window.addEventListener("beforeunload", function () {
 		ws.close();
 	});
+}
+
+function closeWebSocket()
+{
+	if (ws)
+		ws.close();
 }
 
 function displayMessage(from, message) {
@@ -138,4 +144,4 @@ function navigateTo(path) {
 window.addEventListener("load", handleRoute);
 window.addEventListener("popstate", handleRoute);
 
-export { navigateTo };
+export { navigateTo, closeWebSocket };

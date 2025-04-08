@@ -1,14 +1,5 @@
 
 services:
-
-  init_postgres_data:
-    image: alpine
-    command: sh -c "mkdir -p /data/postgres && chmod -R 777 /data/postgres"
-    volumes:
-      - ./data:/data
-    networks:
-      - transcendence
-    restart: "no"
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -19,15 +10,13 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d transcendence"]
       interval: 30s
       timeout: 15s
       retries: 5
       start_period: 10s
-    depends_on:
-      - init_postgres_data
 
   backend_user:
     depends_on:
@@ -88,7 +77,7 @@ networks:
 volumes:
   postgres_data:
     driver: local
-    # driver_opts:
-    #   type: none
-    #   device: "./data/postgres"
-    #   o: bind
+    driver_opts:
+      type: none
+      device: "./data/postgres"
+      o: bind

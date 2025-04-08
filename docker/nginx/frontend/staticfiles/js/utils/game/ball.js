@@ -55,7 +55,7 @@ export default class Ball
 		}
     }
 
-	#paddleHit(pd, riv1, riv2, team1)
+	#paddleHit(pd, team1)
 	{
 		const diff = pd.mesh.position.z - this.mesh.position.z;
 
@@ -111,19 +111,19 @@ export default class Ball
 		{
 			//check paddle1
 			if (targetPos.x < 0)
-				return (this.#paddleHit(this.p1, this.p2, this.p4, true));
+				return (this.#paddleHit(this.p1, true));
 			//check paddle2
 			else
-				return (this.#paddleHit(this.p2, this.p1, this.p3, false));
+				return (this.#paddleHit(this.p2, false));
 		}
 		else if (this.p3 != undefined && this.p4 != undefined)
 		{
 			const limitRadius = this.speedVec.x < 0 ? targetPos.x - this.radius : targetPos.x + this.radius;
 
 			if (limitRadius <= this.p3.mesh.position.x + this.p3.radius && limitRadius >= this.p3.mesh.position.x - this.p3.radius)
-				this.#paddleHit(this.p3, this.p2, this.p4);
+				this.#paddleHit(this.p3);
 			else if (limitRadius <= this.p4.mesh.position.x + this.p4.radius && limitRadius >= this.p4.mesh.position.x - this.p4.radius)
-				this.#paddleHit(this.p4, this.p1, this.p3);
+				this.#paddleHit(this.p4);
 		}
 		return (0);
 	}

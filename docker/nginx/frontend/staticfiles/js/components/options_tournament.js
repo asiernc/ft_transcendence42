@@ -489,7 +489,7 @@ export default class OptionsTournament extends HTMLElement {
             
                             try {
                         
-                                const response = await fetch('/api/verify_credentials', {
+                                const response = await fetch('/api/verify-credentials', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -501,11 +501,11 @@ export default class OptionsTournament extends HTMLElement {
                 
                                 if (response.ok) {
                                     succesMsg.style.display = "flex";
-                                    document.getElementById("radioUser" + playerNum).value = response.username;
+                                    document.getElementById("radioUser" + playerNum).value = data.username;
                                     setTimeout(() => document.getElementById("modal_container").classList.remove("show"), 800);
                                     document.getElementById("modal_container").removeEventListener('click', activate);
                                 } else {
-                                    console.log(data.error);
+                                    console.log(response.error);
                                     alertMsg.style.display = "flex";
                                 }
                             }
@@ -525,11 +525,14 @@ export default class OptionsTournament extends HTMLElement {
 
             let userInfo = {};
             document.querySelectorAll("form").forEach((e, i) => {
-                
-                const radioValue = e.querySelector('input[type="radio"]:checked').value;
-                userInfo["player" + (i + 1)]  = {
-                    username: radioValue,
-                };
+				if (e.id != "form-confirm")
+				{
+					console.log(e);
+					const radioValue = e.querySelector('input[type="radio"]:checked').value;
+					userInfo["player" + (i + 1)]  = {
+						username: radioValue,
+					};
+				}
             });
             localStorage.setItem('user_info', JSON.stringify(userInfo));
 

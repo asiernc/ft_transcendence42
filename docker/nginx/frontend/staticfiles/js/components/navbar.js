@@ -1,4 +1,4 @@
-import { navigateTo } from "../app.js";
+import { navigateTo, closeWebSocket } from "../app.js";
 
 export default class NavbarComponent extends HTMLElement {
 	constructor() {
@@ -98,6 +98,7 @@ export default class NavbarComponent extends HTMLElement {
 				});
 
 				if (response.ok) {
+					closeWebSocket();
 					localStorage.clear();
 					navigateTo("/login");
 				} else {
@@ -112,11 +113,6 @@ export default class NavbarComponent extends HTMLElement {
 			}
 		});
 	}
-
-	// async logout(){
-	// 	let resp = fetch('api/logout', {method: 'GET'});
-	// 	console.log(resp);
-	// }
 
 	disconnectedCallback() {
 		this.profile.removeEventListener("click", this);
