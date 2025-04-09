@@ -132,8 +132,8 @@ export default class TournamentComponent extends HTMLElement {
 					</div>
 					&nbsp
 					<div class="options-container">
-						<div class="d-flex justify-content-center align-items-center">
-						<a id="a3" href="javascript:void(0);" class="button-text">RETURN TO HOME</a>
+						<div id="a3" class="modal-button">
+							<p class="mb-0">RETURN TO HOME</p>
 						</div>
 					</div>
 					<div class="screw-container" style="bottom: 0;">
@@ -158,30 +158,34 @@ export default class TournamentComponent extends HTMLElement {
 				document.getElementById("modal_container").classList.add("show");
 				document.getElementById("modal-content").innerHTML = `
 						<div class="screw-container" style="top: 0;">
-							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
-							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right: 0; width:5%; height: 5%;">
+							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 						</div>
 						<div class="d-flex justify-content-center align-items-center">
-							<h1 class="button-text">MATCH Nº${tournamentObject.match + 1}</h1>
+							<p class="button-text" style="font-size: 25px; width: 100%; white-space: nowrap;">MATCH Nº${tournamentObject.match + 1}</p>
 						</div>
 						&nbsp
-						<div class="d-flex justify-content-center align-items-center">
-							<p class="button-text">${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].alias}<br>VS<br>${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].alias}</p>
+						<div class="d-flex flex-column justify-content-center align-items-center mt-3 mb-3">
+							<p class="button-text" id="modaltext-p1">${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player1_id)].alias}</p>
+							<p class="button-text mt-2 mb-2" style="font-size: 20px">vs<br></p>
+							<p class="button-text" id="modaltext-p2">${tournamentObject.players_alias["player" + (tournamentObject.matches_json["match" + (tournamentObject.match + 1)].player2_id)].alias}</p>
 						</div>
 						&nbsp
-						<div class="options-container">
-							<div class="d-flex justify-content-center align-items-center">
-							<a id="a2" href="javascript:void(0);" class="button-text">GO!</a>
+						<div class="options-container mb-3">
+							<div id="a2" class="modal-button" style="background-color: #FF51E2; color: #c900a7;">
+								<p class="mb-0">Go!</p>
 							</div>
-							<div class="d-flex justify-content-center align-items-center">
-							<a id="a1" href="javascript:void(0);" class="button-text">Not Yet!</a>
+							<div id="a1" class="modal-button" style="background-color: #f73636; color: #ff0000;">
+								<p class="mb-0">Not Yet!</p>
 							</div>
 						</div>
 						<div class="screw-container" style="bottom: 0;">
-							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="left:0; width:5%; height: 5%;">
-							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw" style="right:0; width:5%; height: 5%;">
+							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
+							<img src="./staticfiles/js/utils/images/screw_head.png" alt="screw">
 						</div>
 					`;
+				setTimeout(() => document.getElementById("modaltext-p1").style.animation = "slideLeft 1s ease forwards", 100);
+				setTimeout(() => document.getElementById("modaltext-p2").style.animation = "slideRight 1s ease forwards", 100);
 				this.a1button = document.getElementById('a1');
 				this.a1button.addEventListener('click', async function() {
 					document.getElementById("modal_container").classList.remove("show");
@@ -269,6 +273,10 @@ export default class TournamentComponent extends HTMLElement {
 	render() {
 		const style = document.createElement('style');
 		style.textContent = `
+		    img {
+                width: 30px;
+                height: 30px;
+            }
 			.bg {
 				display: flex;
 				align-items: center;
@@ -301,7 +309,6 @@ export default class TournamentComponent extends HTMLElement {
 				justify-content: space-between;
 				align-items: center;
 				overflow: hidden;
-				-webkit-text-stroke: 0.08em black;
 				font-weight: bold;
 				color: #c900a7;
 				top: 80%;
@@ -314,10 +321,10 @@ export default class TournamentComponent extends HTMLElement {
 				border-color: #c900a7;
 			}
 			.next-match-button:hover {
-				background-color: aqua;
 				cursor: url(https://cur.cursors-4u.net/sports/spo-1/spo15.cur), pointer;
 			}
 			.svg-sword {
+				fill: #c900a7;
 				max-width: 30%;
 				width: 100%;
 				height: 100%;
@@ -395,6 +402,17 @@ export default class TournamentComponent extends HTMLElement {
             transition: opacity 0.3s ease;
             }
 
+			#modaltext-p1 {
+				font-size: 35px;
+				color: blue;
+				padding-left: 100px;
+			}
+			#modaltext-p2 {
+				font-size: 35px;
+				color: red;
+				padding-right: 100px;
+			}
+
             .modal-container.show {
             display: flex;
             pointer-events: auto;
@@ -407,7 +425,7 @@ export default class TournamentComponent extends HTMLElement {
             border: 2px solid#31353C ;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             padding: 30px 50px;
-            width: 45%;
+            width: 40%;
             max-width: 100%;
             text-align: center;
             }
@@ -418,64 +436,44 @@ export default class TournamentComponent extends HTMLElement {
                 justify-content: space-between;
                 align-content: center;
             }
-			#a2 {
-				width: 30%;
-                height: 10%;
-                font-size: 15px;
-				color: #c900a7;
+			.modal-button {
+				width: 80%;
+				height: 45px;
+				display: flex;
+				justify-content: center;
+				align-content: center;
+				padding: 5px;
+				font-family: "Press Start 2P";
+				font-size: 20px;
 				border-style: solid;
-				text-decoration: none;
             }
-            #a2:hover {
-                border: 1px solid transparent;
-                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
-                transition-delay: 0.8s;
-                background-size: 180px;
-                animation: animate var(--speed-fast) steps(8) forwards;
-                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
+            .modal-button:hover {
 				cursor: pointer;
             }
-			#a1 {
-				width: 30%;
-                height: 10%;
-                font-size: 15px;
-				color: red;
-				border-style: solid;
-				text-decoration: none;
-            }
-            #a1:hover {
-                border: 1px solid transparent;
-                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
-                transition-delay: 0.8s;
-                background-size: 180px;
-                animation: animate var(--speed-fast) steps(8) forwards;
-                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
-				cursor: pointer;
-            }
-			#a3 {
-				width: 30%;
-                height: 10%;
-                font-size: 15px;
-				color: #c900a7;
-				border-style: solid;
-				text-decoration: none;
-            }
-            #a3:hover {
-                border: 1px solid transparent;
-                background: var(--color-red) url(https://i.postimg.cc/wBXGXbWN/pixel.png);
-                transition-delay: 0.8s;
-                background-size: 180px;
-                animation: animate var(--speed-fast) steps(8) forwards;
-                background: var(--color-purple) url(https://i.postimg.cc/FzBWFtKM/pixel2.png);
-				cursor: pointer;
-            }
+			@keyframes slideLeft {
+				from {
+					transform: translateX(0);
+				}
+				to {
+					transform: translateX(-120px);
+				}
+			}
+			@keyframes slideRight {
+				from {
+					transform: translateX(0);
+				}
+				to {
+					transform: translateX(120px);
+				}
+			}
 			.options-container {
 				width: 100%;
-				heigth: 100%;			
+				heigth: min-height;			
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
-                align-content: center;
+                justify-content: center;
+                align-items: center;
+				gap: 10px;
 			}
     		`;
 

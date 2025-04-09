@@ -8,6 +8,12 @@ import { uploadToBlockchain } from '../blockchain/blockchain.js';
 
 export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2AI, p3AI, p4AI)
 {
+	// check requirements
+	if (p1username != "AI" && p1username != "local" && p1username == versus)
+	{
+		navigateTo('/options_game');
+		return (1);
+	}
 	// set scene
 	const scene = new Scene();
 	const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -50,8 +56,10 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 		paddle4 = new Paddle(scene, mapSizes, 0xff00ff, (mapSizes.width / 2 * 0.66), p4AI);
 	}
 	else
+	{
+		navigateTo('/options_game');
 		return (1);
-		
+	}	
 	const paddle1 = new Paddle(scene, mapSizes, 0x0000ff, -(mapSizes.width / 2), p1AI);
 	const paddle2 = new Paddle(scene, mapSizes, 0xff0000, mapSizes.width / 2, p2AI);
 	
@@ -254,6 +262,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 			}
 		});
 	}
+
 	return (0);
 }
 
