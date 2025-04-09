@@ -32,7 +32,7 @@ function connectWebSocket(username) {
 
 	ws.onclose = function (event) {
 		//logout
-		//localStorage.clear();
+		localStorage.clear();
 		console.log("Websocket is closed.");
 	};
 
