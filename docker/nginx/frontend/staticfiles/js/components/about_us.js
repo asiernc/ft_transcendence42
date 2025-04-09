@@ -359,7 +359,7 @@ export default class AboutUsComponent extends HTMLElement {
                         <div class="col-md-4 col-sm-6">
                             <div class="our-team pink-c">
                                 <div class="team-image">
-                                    <img src="./staticfiles/js/utils/images/team_members/rcortes-.jpg" style="height: 348px; width: 348px">
+                                    <img src="./staticfiles/js/utils/images/team_members/rcortes-.jpg" style="width: 100%">
                                     <p class="description">
                                         Yes.
                                     </p>

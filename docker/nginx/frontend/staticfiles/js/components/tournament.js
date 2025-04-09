@@ -172,10 +172,10 @@ export default class TournamentComponent extends HTMLElement {
 						</div>
 						&nbsp
 						<div class="options-container mb-3">
-							<div id="a2" class="modal-button" style="background-color: #FF51E2; color: #c900a7;">
+							<div id="a2" class="modal-button" style="background-color: #FF51E2; color: #C900A7;">
 								<p class="mb-0">Go!</p>
 							</div>
-							<div id="a1" class="modal-button" style="background-color: #f73636; color: #ff0000;">
+							<div id="a1" class="modal-button" style="background-color: #EE7C7C; color: #701717;">
 								<p class="mb-0">Not Yet!</p>
 							</div>
 						</div>
@@ -229,13 +229,13 @@ export default class TournamentComponent extends HTMLElement {
 				div_id = "pb-m" + (i + 1) + "-p" + (j + 1);
 				document.getElementById("m" + (i + 1) + "-p" + (j + 1)).textContent = this.tournamentObject.players_alias["player" + player_id].alias;
 				if (this.tournamentObject.matches_json["match" + (i + 1)].winner == (j + 1)) {
-					document.getElementById(div_id).style.backgroundColor = "#24831e";
+					document.getElementById(div_id).style.backgroundColor = "#97ED93";
+					document.getElementById(div_id).style.color = "#1E6C1A";
 					this.setWinner("match" + (i + 1), j + 1, player_id);
 				}
 				else if (this.tournamentObject.matches_json["match" + (i + 1)].winner != 0) {
-					document.getElementById(div_id).style.backgroundColor = "#cf1206";
-					document.getElementById(div_id).style.textDecoration = "line-through"
-					document.getElementById(div_id).style.textDecorationThickness = "0.2rem"
+					document.getElementById(div_id).style.backgroundColor = "#EE7C7C";
+					document.getElementById(div_id).style.color = "#701717";
 				}
 					
 				
@@ -288,19 +288,27 @@ export default class TournamentComponent extends HTMLElement {
 				background-size: 400% 400%;
 				animation: gradient 10s ease infinite;
 				height: 100vh;
+				
 			}
+            @keyframes gradient {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
 			.trophy-icon {
 				position: absolute;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				top: 13%;
-				width: 20%;
-				height: 18%;
-				background-color: #d13ab7;
-				border-style: solid;
-				border-width: thick;
-				border-color: #c900a7;
+				top: 2%;
+				width: 25%;
+				height: 40%;
 			}
 			.next-match-button {
 				position: absolute;
@@ -481,7 +489,7 @@ export default class TournamentComponent extends HTMLElement {
 		div.innerHTML = `
 			<div class="bg">
 				<div class="trophy-icon">
-					<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 96 96">
+					<svg style="fill: #c900a7;" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 96 96">
 						<title>Trophy</title>
 						<g id="trophy">
 							<rect x="21" y="53.92" width="22" height="2.16"></rect>
