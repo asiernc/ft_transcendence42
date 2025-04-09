@@ -505,12 +505,12 @@ export default class OptionsTournament extends HTMLElement {
                                     setTimeout(() => document.getElementById("modal_container").classList.remove("show"), 800);
                                     document.getElementById("modal_container").removeEventListener('click', activate);
                                 } else {
-                                    console.log(response.error);
+                                    
                                     alertMsg.style.display = "flex";
                                 }
                             }
                             catch (err) {
-                                console.log("Error: Problem sending the petition");
+                                
                             }
                         }
                         else {
@@ -527,7 +527,7 @@ export default class OptionsTournament extends HTMLElement {
             document.querySelectorAll("form").forEach((e, i) => {
 				if (e.id != "form-confirm")
 				{
-					console.log(e);
+					
 					const radioValue = e.querySelector('input[type="radio"]:checked').value;
 					userInfo["player" + (i + 1)]  = {
 						username: radioValue,

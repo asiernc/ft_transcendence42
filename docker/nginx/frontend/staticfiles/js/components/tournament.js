@@ -42,7 +42,7 @@ export default class TournamentComponent extends HTMLElement {
 			else
 				throw Error(data.error);
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			navigateTo('/options_tournament')
 		}
 	}
@@ -87,7 +87,7 @@ export default class TournamentComponent extends HTMLElement {
 				throw Error(err_msg);
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 		this.tournamentObject.matches_json["match" + match_id_response] = new_match;
 	}
@@ -114,7 +114,7 @@ export default class TournamentComponent extends HTMLElement {
 				throw Error(err_msg);
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 		do_confetti();
 		document.getElementById("modal_container").classList.add("show");
@@ -599,7 +599,7 @@ async function playAIgame() {
 			throw Error(err_msg);
 		}
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 	}
 	const random_score = Math.floor(Math.random() * 3);
 	try {
@@ -624,7 +624,7 @@ async function playAIgame() {
 			throw Error(err_msg);
 		}
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 	}
 	uploadToBlockchain("AI", "AI", {
 		'score_player1' : winner == 1 ? 3 : random_score,

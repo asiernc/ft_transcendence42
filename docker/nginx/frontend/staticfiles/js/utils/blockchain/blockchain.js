@@ -234,7 +234,7 @@ export async function uploadToBlockchain(player1, player2, results, tournament_i
 			throw Error(err_msg);
 		}
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 	}
 	const account = web3.eth.accounts.wallet.add("0x" + wallet_priv_key);
 	if (nonce_g == null)

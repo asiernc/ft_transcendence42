@@ -27,28 +27,29 @@ function connectWebSocket(username) {
 	ws = new WebSocket(`wss://localhost:3042/ws/friends/${username}/`);
 
 	ws.onopen = function (event) {
-		console.log("Websocket is connected.");
+		
 	};
 
 	ws.onclose = function (event) {
 		//logout
 		localStorage.clear();
-		console.log("Websocket is closed.");
+		
 	};
 
 	ws.onerror = function (event) {
-		console.log("Websocket error: ", event);
+		
 	};
 
 	ws.onmessage = function (event) {
 		const data = JSON.parse(event.data);
-		console.log("Websocket message received: ", data);
+		
 		if (data.type === "message") {
 			// todos los componentes salvo el juego (no queremos notificaciones mientras estamos jugando?)
 			// mostrar x amigo se ha conectado, x amigo se ha desconectado
 			displayMessage(data.from, data.message);
 		} else if (data.type === "status") {
 			// cambiar color boton
+			console.log("SOCKEEEEEEEEEEEET");
 			displayStatus(data.message);
 		}
 	};

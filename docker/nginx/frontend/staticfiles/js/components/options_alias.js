@@ -302,7 +302,7 @@ export default class OptionsAlias extends HTMLElement {
                 else
                     throw Error(data.error);
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         });
     }

@@ -219,7 +219,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 						throw Error(err_msg);
 					}
 				} catch (err) {
-					console.log(err);
+					console.error(err);
 				}
 				if (numPlayers > 2) {
 					const players = {
@@ -251,7 +251,7 @@ export function pongGame(numPlayers, p1username, versus, tournament_id, p1AI, p2
 							throw Error(err_msg);
 						}
 					} catch (err) {
-						console.log(err);
+						console.error(err);
 					}
 				}
 				

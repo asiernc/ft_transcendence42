@@ -229,11 +229,11 @@ export default class OTPComponent extends HTMLElement {
                     }
                     else
                     {
-                        console.log(data.error);
+                        
                         document.getElementById("alert").style.display = "flex";
                     }
                 } catch (err) {
-                   console.log("Error: Problem sending the petition");
+                   
                 }
             } else {
                 form.reportValidity();
@@ -255,12 +255,12 @@ export default class OTPComponent extends HTMLElement {
 
 			const data = await response.json();
 			if (response.ok) {
-				console.log("OTP resend succesfully");
+				
 			} else {
-				console.log("Error resending OTP: ", data.error);
+				
 			}
 		} catch (err) {
-			console.log("Error: problem sending the request ", err);
+			
 		}
 	});
 	}

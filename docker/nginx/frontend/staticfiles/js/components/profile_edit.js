@@ -231,7 +231,7 @@ export default class ProfileEditComponent extends HTMLElement {
 					body: formData,
 				});
 				const data = await response.json();
-				console.log(data);
+				
 			} catch (err) {
 				console.error("Error: Problem changing profile picture");
 				console.error(err);
@@ -260,7 +260,7 @@ export default class ProfileEditComponent extends HTMLElement {
 				},
 			});
 			const data = await response.json();
-			console.log(data);
+			
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");

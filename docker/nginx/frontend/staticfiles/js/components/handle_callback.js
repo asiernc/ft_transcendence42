@@ -4,7 +4,7 @@ export function handleCallback() {
 	const urlParameters = new URLSearchParams(window.location.search);
 	const code = urlParameters.get('code');
 	const state = urlParameters.get('state');
-	console.log("inside handleCallback");
+	
 
 	if ( code && state ) {
 		fetch('https://localhost:3042/api/callback42/', {
@@ -25,7 +25,7 @@ export function handleCallback() {
 			if (data.access_token && data.refresh_token) {
 				localStorage.setItem('access_token', data.access_token);
 				localStorage.setItem('refresh_token', data.refresh_token);
-				console.log("Tokens stored, navigating to home");
+				
 				localStorage.setItem("username", data.username);
 				navigateTo('/home');
 			}

@@ -109,7 +109,7 @@ export default class NavbarComponent extends HTMLElement {
 					throw Error(err_msg);
 				}
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			}
 		});
 	}

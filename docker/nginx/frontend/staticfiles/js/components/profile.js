@@ -172,7 +172,7 @@ export default class ProfileComponent extends HTMLElement {
         `;
 
 		const userData = await this.getUserInfo();
-		console.log(userData);
+		
 		this.calculateStats(userData);
 		let match_history = "";
 		let matchCount = 0;
@@ -321,7 +321,7 @@ export default class ProfileComponent extends HTMLElement {
 				let path = '/game?players=2';
 				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
 				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
-				console.log(path);
+				
 				navigateTo(path);
 			});
         });
