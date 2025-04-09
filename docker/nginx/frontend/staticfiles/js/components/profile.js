@@ -1,4 +1,5 @@
 import { navigateTo } from "../app.js";
+import { ws } from "../app.js";
 import { displayAlert } from "../utils/alert.js";
 
 
@@ -172,7 +173,7 @@ export default class ProfileComponent extends HTMLElement {
         `;
 
 		const userData = await this.getUserInfo();
-		
+
 		this.calculateStats(userData);
 		let match_history = "";
 		let matchCount = 0;
@@ -201,32 +202,6 @@ export default class ProfileComponent extends HTMLElement {
 		});
 		if (match_history === "") {
 			match_history = "No matches played";
-		}
-
-		let friends = "";
-		userData["friends"].forEach((friend) => {
-			friend["avatar_field"] = this.cleanProfilePictures(friend["avatar_42_url"],friend["avatar_field"]);
-			let friendBtns = '<div style="margin-left: auto;"></div>';
-			if (localStorage.getItem("username") === userData["user"]["username"]) {
-				friendBtns = `
-				<div style="margin-left: auto; flex-shrink: 0;">
-					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Match">
-					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Unfriend">
-				</div>`;
-			}
-			friends += `
-			<div class="friend" id="friend${friend["username"]}">
-				<label class="pfp-container" style="flex-shrink: 0;">
-					<img src="${friend["avatar_field"]}" width="60px">
-					<div class="online-status" style="background-color: ${friend["online_status"] ? "green" : "orange"}"></div>
-				</label>
-				<h2 style="padding-left: 3%; overflow: hidden; flex-shrink: 1;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
-				${friendBtns}
-			</div>
-			`;
-		});
-		if (friends === "") {
-			friends = "No friends :(";
 		}
 
 		userData["user"]["avatar_field"] = this.cleanProfilePictures(userData["user"]["avatar_42_url"],userData["user"]["avatar_field"]);
@@ -281,7 +256,8 @@ export default class ProfileComponent extends HTMLElement {
 				<h1 class="pixel-font" style="margin-left: 20%;">FRIENDS</h1>
 				<img class="clickable-img" id="reloadFriends" src="https://www.freeiconspng.com/thumbs/reload-icon/arrow-refresh-reload-icon-29.png" title="Reload status">
 			</div>
-				${friends}
+			<div id="friendsContainer">
+			</div>
 			<div class="screw-container">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
 				<img src="../staticfiles/js/utils/images/screw_head.png" alt="screw">
@@ -293,7 +269,15 @@ export default class ProfileComponent extends HTMLElement {
 		div.className = "bg";
 		this.shadowRoot.appendChild(div);
 
+		await this.loadFriends(userData);
+		if (ws){
+			ws.onmessage = (async () => {
+				await this.loadFriends(null);
+				this.attachFriendsListeners();
+			});
+		}
 		this.attachListeners();
+		this.attachFriendsListeners();
 	}
 
 	attachListeners() {
@@ -304,27 +288,13 @@ export default class ProfileComponent extends HTMLElement {
 			});
 		}
 		this.reload = this.shadowRoot.getElementById("reloadFriends");
-		this.reload.addEventListener("click", () => {
-			this.render();
+		this.reload.addEventListener("click", async () => {
+			await this.loadFriends(null);
+			this.attachFriendsListeners();
 		});
+	}
 
-		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
-		friendNames.forEach((button) => {
-			button.addEventListener("click", () => {
-				const userId = button.dataset.username;
-				navigateTo("/profile/" + userId);
-			});
-		});
-		this.shadowRoot.querySelectorAll(".versus").forEach((button) => {
-			button.addEventListener("click", function (){
-				const userId = button.dataset.username;
-				let path = '/game?players=2';
-				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
-				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
-				
-				navigateTo(path);
-			});
-        });
+	attachFriendsListeners(){
 		let unfriend = this.shadowRoot.querySelectorAll(".unfriend");
 		unfriend.forEach((button) => {
 			button.addEventListener("click", async () => {
@@ -350,6 +320,25 @@ export default class ProfileComponent extends HTMLElement {
 				}
 			});
 		});
+
+
+		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
+				friendNames.forEach((button) => {
+					button.addEventListener("click", () => {
+						const userId = button.dataset.username;
+						navigateTo("/profile/" + userId);
+					});
+				});
+				this.shadowRoot.querySelectorAll(".versus").forEach((button) => {
+					button.addEventListener("click", function (){
+						const userId = button.dataset.username;
+						let path = '/game?players=2';
+						path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
+						path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
+						console.log(path);
+						navigateTo(path);
+					});
+        });
 	}
 
 	disconnectedCallback() {
@@ -382,6 +371,37 @@ export default class ProfileComponent extends HTMLElement {
 		if (wins+losses == 0){
 			user['user']['ratio'] = "0%";
 		}
+	}
+
+	async loadFriends(usr){
+		const cont = this.shadowRoot.getElementById("friendsContainer");
+		cont.innerHTML = '';
+		if (!usr){
+			usr = await this.getUserInfo()
+		}
+		usr['friends'].forEach((friend) => {
+			friend["avatar_field"] = this.cleanProfilePictures(friend["avatar_42_url"],friend["avatar_field"]);
+			let friendBtns = '<div style="margin-left: auto;"></div>';
+			if (localStorage.getItem("username") === usr["user"]["username"]) {
+				friendBtns = `
+				<div style="margin-left: auto; flex-shrink: 0;">
+					<img src="https://cdn-icons-png.flaticon.com/512/842/842184.png" class="versus clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Match">
+					<img src="https://cdn-icons-png.flaticon.com/512/8184/8184225.png" class="unfriend clickable-img" data-username="${friend["username"]}" style="width: 40px; height: 40px;" title="Unfriend">
+				</div>`;
+			}
+			const row = document.createElement('div');
+			row.className = 'friend';
+			row.id = 'friend'+friend["username"];
+			row.innerHTML += `
+				<label class="pfp-container" style="flex-shrink: 0;">
+					<img src="${friend["avatar_field"]}" width="60px">
+					<div class="online-status" style="background-color: ${friend["online_status"] ? "green" : "orange"}"></div>
+				</label>
+				<h2 style="padding-left: 3%; overflow: hidden; flex-shrink: 1;" class="friendName" data-username="${friend["username"]}">${friend["username"]}</h2>
+				${friendBtns}
+			`;
+			cont.appendChild(row);
+		});
 	}
 
 	async getUserInfo() {

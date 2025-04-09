@@ -342,7 +342,7 @@ export default class LeaderboardComponent extends HTMLElement {
 				<td>${user['matches']}</td>
 				<td>${user['ratio']}</td>
 				<td>
-					<img class="clickable-img match-btn versus" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png">
+					${user['username'] == localStorage.getItem("username") ? "" : `<img class="clickable-img match-btn versus" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/842/842184.png">`}
 					${this.checkAlreadyFriend(users["friends"], user["username"]) ? "" : `<img class="clickable-img friend-btn" data-username="${user["username"]}" src="https://cdn-icons-png.flaticon.com/512/4458/4458537.png">`}
 				</td>
 			`;

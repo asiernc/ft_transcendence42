@@ -14,6 +14,7 @@ import { LeaderboardView } from "./views/LeaderboardView.js";
 import { AboutUsView } from "./views/AboutUsView.js";
 import { LandingView } from "./views/LandingView.js";
 import { TournamentComponentView } from "./views/TournamentView.js";
+import ProfileComponent from "./components/profile.js";
 
 // creo que no deberiamos alojar las cookies en el localstorage,
 // como las estamos seteando en el navegador, podemos hacer lo
@@ -21,38 +22,41 @@ import { TournamentComponentView } from "./views/TournamentView.js";
 // que se llame get cookies y nos la guardamos como variable en
 // el frontent, pero no en el local
 
-let ws = null;
+export let ws = null;
 
 function connectWebSocket(username) {
 	ws = new WebSocket(`wss://localhost:3042/ws/friends/${username}/`);
 
 	ws.onopen = function (event) {
-		
+
 	};
 
 	ws.onclose = function (event) {
 		//logout
 		localStorage.clear();
-		
+
 	};
 
 	ws.onerror = function (event) {
-		
+
 	};
 
-	ws.onmessage = function (event) {
-		const data = JSON.parse(event.data);
-		
-		if (data.type === "message") {
-			// todos los componentes salvo el juego (no queremos notificaciones mientras estamos jugando?)
-			// mostrar x amigo se ha conectado, x amigo se ha desconectado
-			displayMessage(data.from, data.message);
-		} else if (data.type === "status") {
-			// cambiar color boton
-			console.log("SOCKEEEEEEEEEEEET");
-			displayStatus(data.message);
-		}
-	};
+
+	// ws.onmessage = function (event) {
+	// 	const data = JSON.parse(event.data);
+	// 	console.log("Websocket message received: ", data);
+	// 	if (data.type === "message") {
+	// 		// todos los componentes salvo el juego (no queremos notificaciones mientras estamos jugando?)
+	// 		// mostrar x amigo se ha conectado, x amigo se ha desconectado
+	// 		displayMessage(data.from, data.message);
+	// 	} else if (data.type === "status") {
+	// 		// cambiar color boton
+	// 		// displayStatus(data.message);
+	// 		if (window.location.pathname.startsWith("/profile/")){
+
+	// 		}
+	// 	}
+	// };
 
 	window.addEventListener("beforeunload", function () {
 		ws.close();
