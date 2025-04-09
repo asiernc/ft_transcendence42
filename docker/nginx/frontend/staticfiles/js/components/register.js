@@ -239,8 +239,15 @@ export default class RegisterComponent extends HTMLElement {
 			const password = document.getElementById("password");
 			const repeatPassword = document.getElementById("repeatPassword");
 			
+			if (!/^[a-zA-Z0-9_-]$/.test(username.value)) {
+				console.log("dwadawd");
+				username.setCustomValidity("Only characters, digits and underscore permited");
+			} else {
+				username.setCustomValidity("");
+			}
+
 			if (!/[A-Z]/.test(password.value) || !/[a-z]/.test(password.value) || !/[0-9]/.test(password.value)) {
-				password.setCustomValidity("lowercase, uppercase, and digit required");
+				password.setCustomValidity("Lowercase, uppercase, and digit required");
 			} else {
 				password.setCustomValidity("");
 			}
@@ -280,7 +287,7 @@ export default class RegisterComponent extends HTMLElement {
 					}
 
 				} catch (err) {
-				   console.log(err);
+				   console.error(err);
 				}
 
 				document.querySelectorAll("input").forEach((e) => { e.value = null });

@@ -28,17 +28,17 @@ function connectWebSocket(username) {
 	ws = new WebSocket(`wss://localhost:3042/ws/friends/${username}/`);
 
 	ws.onopen = function (event) {
-		console.log("Websocket is connected.");
+		
 	};
 
 	ws.onclose = function (event) {
 		//logout
 		localStorage.clear();
-		console.log("Websocket is closed.");
+		
 	};
 
 	ws.onerror = function (event) {
-		console.log("Websocket error: ", event);
+		
 	};
 
 	// ws.onmessage = function (event) {

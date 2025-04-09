@@ -173,7 +173,7 @@ export default class ProfileComponent extends HTMLElement {
         `;
 
 		const userData = await this.getUserInfo();
-		console.log(userData);
+		
 		this.calculateStats(userData);
 		let match_history = "";
 		let matchCount = 0;
@@ -295,6 +295,23 @@ export default class ProfileComponent extends HTMLElement {
 	}
 
 	attachFriendsListeners(){
+// 		let friendNames = this.shadowRoot.querySelectorAll(".friendName");
+// 		friendNames.forEach((button) => {
+// 			button.addEventListener("click", () => {
+// 				const userId = button.dataset.username;
+// 				navigateTo("/profile/" + userId);
+// 			});
+// 		});
+// 		this.shadowRoot.querySelectorAll(".versus").forEach((button) => {
+// 			button.addEventListener("click", function (){
+// 				const userId = button.dataset.username;
+// 				let path = '/game?players=2';
+// 				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
+// 				path += "&player1AI=false&player2AI=false&player3AI=false&player4AI=false";
+				
+// 				navigateTo(path);
+// 			});
+//         });
 		let unfriend = this.shadowRoot.querySelectorAll(".unfriend");
 		unfriend.forEach((button) => {
 			button.addEventListener("click", async () => {

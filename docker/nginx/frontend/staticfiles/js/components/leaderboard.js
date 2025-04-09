@@ -223,14 +223,14 @@ export default class LeaderboardComponent extends HTMLElement {
 				let path = '/game?players=2';
 				path += "&player1="+localStorage.getItem("username") + "&vs="+userId;
 				path += `&player1AI=false&player2AI=${userId === 'AI' ? 'true' : 'false'}&player3AI=false&player4AI=false`;
-				console.log(path);
+				
 				navigateTo(path);
 			});
         });
 		this.shadowRoot.querySelectorAll(".friend-btn").forEach((button) => {
 			button.addEventListener("click", async () => {
 				const userId = button.dataset.username;
-				console.log(userId);
+				
 				const token = localStorage.getItem("access_token");
 				try {
 					const response = await fetch("/api/add-friend", {
@@ -287,7 +287,7 @@ export default class LeaderboardComponent extends HTMLElement {
 			if (user['username'] === localStorage.getItem("username")){
 				users["user"]["matches"] = user["matches"];
 				// let value = user["ratio"];
-				// console.log(typeof value);
+				// 
 				users["user"]["ratio"] = user["ratio"].toFixed(2) + "%";
 			}
 		}
@@ -408,7 +408,7 @@ export default class LeaderboardComponent extends HTMLElement {
 				},
 			});
 			const data = await response.json();
-			console.log(data);
+			
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");

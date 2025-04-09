@@ -1,8 +1,9 @@
 
 services:
   postgres:
-    image: postgres:latest
-    container_name: postgres
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
     env_file:
       - .env
     ports:
@@ -77,7 +78,3 @@ networks:
 volumes:
   postgres_data:
     driver: local
-    driver_opts:
-      type: none
-      device: "./data/postgres"
-      o: bind

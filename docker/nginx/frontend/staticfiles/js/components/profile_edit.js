@@ -267,7 +267,7 @@ export default class ProfileEditComponent extends HTMLElement {
 				},
 			});
 			const data = await response.json();
-			console.log(data);
+			
 			return data;
 		} catch (err) {
 			console.error("Error: Problem sending the petition");

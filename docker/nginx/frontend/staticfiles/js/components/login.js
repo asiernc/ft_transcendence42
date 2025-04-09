@@ -291,7 +291,7 @@ export default class LoginComponent extends HTMLElement {
 					}
 				}
 				catch (err) {
-					console.log(err);
+					console.error(err);
 				}
 				
 			} else {
