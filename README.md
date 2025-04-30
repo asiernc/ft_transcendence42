@@ -1,41 +1,79 @@
-# ft_transcendence42
+# ft_transcendence
 
-desde la carpeta del repo clonado
+**ft_transcendence** is the final project of the Common Core at 42 Barcelona. It consists of building a web platform where users can play the classic Pong game, participate in online tournaments, and experience a secure, scalable, and modern application. The project aims to consolidate the skills developed throughout the curriculum by implementing real-world technologies, secure practices, and advanced modules.
 
-mkdir -p data/postgres
-chmod 755 data/postgres
+## Technologies Used
 
-vim .env
+- **Frontend**: Vanilla JavaScript, HTML5, CSS3, Bootstrap
+- **Backend**: Django (Python)
+- **Database**: PostgreSQL
+- **Infrastructure**: Docker, Docker Compose
+- **Others**: WebSockets, JWT, Two-Factor Authentication, Blockchain (Ethereum), Three.js/WebGL
 
-ENVIRONMENT
+## Implemented Modules
 
+### Web
+
+- **Backend Framework (Django)**  
+  We used Django to structure the backend, handle API logic, WebSocket connections, user authentication, and database interactions.
+
+- **Frontend Toolkit (Bootstrap)**  
+  Bootstrap was used as a UI toolkit to ensure a responsive and visually consistent user interface.
+
+- **Backend Database (PostgreSQL)**  
+  PostgreSQL was integrated for secure and reliable storage of users, matches, statistics, and tournament data.
+
+- **Blockchain Score Storage**  
+  Tournament scores are securely stored on a test Ethereum blockchain using Solidity smart contracts, ensuring transparency and immutability.
+
+### User Management
+
+- **Standard User Management**  
+  Includes user registration, secure login, custom profiles, avatars, friend system, and game history tracking.
+
+- **Remote Authentication (OAuth)**  
+  Implemented OAuth 2.0 login via 42’s intra system for seamless authentication using institutional credentials.
+
+### Gameplay
+
+- **Multiplayer Mode (More than 2 players)**  
+  Expanded gameplay supports multiple concurrent players with adapted logic for dynamic matches.
+
+- **AI Opponent**  
+  An AI-controlled bot simulates a human player with a limited reaction time, providing a challenging solo gameplay option.
+
+### Statistics and Visualization
+
+- **User and Game Dashboards**  
+  Users can access dashboards showing personal and game-wide statistics, win/loss ratios, and historical performance.
+
+### Security
+
+- **Two-Factor Authentication and JWT**  
+  Implemented 2FA alongside JSON Web Tokens to ensure secure session management and enhanced account protection.
+
+### Architecture
+
+- **Backend Microservices Design**  
+  The backend is structured as multiple independent services to improve scalability, maintainability, and modularity.
+
+### Graphics
+
+- **Advanced 3D Techniques with Three.js/WebGL**  
+  Pong was redesigned using Three.js to provide a 3D interactive game experience with real-time rendering.
+
+### Accessibility
+
+- **Extended Browser Compatibility**  
+  The application was tested and adjusted for compatibility with multiple modern browsers to improve accessibility.
+
+## Installation
+
+Clone the repository and run:
+
+```bash
+docker-compose up --build
 ```
-DJANGO_SECRET_KEY=leviosa4242
 
-
-POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
-
-POSTGRES_USER=devuser
-POSTGRES_PASSWORD=leviosa
-POSTGRES_DB=transcendence
-POSTGRES_EMAIL=harryasecas
-
-DATABASE_NAME=transcendence
-
-# DJANGO CREDENTIALS
-DJANGO_SUPERUSER_USERNAME=harryasecas
-DJANGO_SUPERUSER_PASSWORD=leviosa
-
-FT_CLIENT_ID=u-s4t2ud-4f2c62fe59223d4091a4d91bd020de8dff20d48a3b5b3bee74cdad641187be5f
-FT_CLIENT_SECRET=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
-
-WALLET_PRIV_KEY=f2820309c99fabbd9acc89638b3002c1075940a8f50527384985012b6f9c8d0b
-
-```
-
-make up
-
-https://localhost:3042
-
-si pones cualquier cosa en el formulario y submit te da acceso a home
+May be you need the env file? 
+  up2you
